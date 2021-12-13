@@ -10,6 +10,9 @@
 _For each clause, the ratio is the number of positive literals/number of negative literals.
 These ratios are then aggregated, and statistics on them output._
 
+26-27. Fraction of binary and ternary clauses: Fraction of clauses that have 2 literals over total number of clauses,
+fraction of clauses with 3 literals, over total number of clauses
+
 ### Proximity to Horn Formula
 #### A clause is a Horn clause if it contains at most one positive literal
 28. Fraction of Horn clauses
