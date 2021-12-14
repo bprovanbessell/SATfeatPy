@@ -40,6 +40,5 @@ Clause is a disjunction of literal(s)
 CNF (Conjunctive Normal Form): Conjunction (and) of disjunction (or) of literals.
 
 ##Useful libraries/notes
-- networkX
-- cnfgen
-- python-nnf
+- NetworkX - for graph creation and statistics
+- cnfgen - for creating part of the testbed

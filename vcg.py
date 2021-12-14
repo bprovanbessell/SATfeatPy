@@ -36,8 +36,10 @@ def create_vcg(clauses, c, v):
 
     return v_node_degrees, c_node_degrees
 
-def create_vg(clauses, c, v):
-    # A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause
+
+def create_vg(clauses):
+    # A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at
+    # least one clause
 
     vg = nx.Graph()
 
@@ -52,7 +54,7 @@ def create_vg(clauses, c, v):
     node_degrees = []
 
     for n in vg.nodes:
-        degree = len(nx.edges(vg, "v_" + str(i)))
+        degree = len(nx.edges(vg, n))
         node_degrees.append(degree)
 
     return node_degrees

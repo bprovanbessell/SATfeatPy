@@ -42,6 +42,9 @@ with open("cnf_examples/basic.cnf") as f:
     print("VCG clause node degrees")
     print(c_node_degrees[0:10])
 
+    print("VG node degrees")
+    print(vcg.create_vg(clauses_list))
+
     for clause in clauses_list:
         # print("clause", clause)
 
