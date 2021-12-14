@@ -1,9 +1,17 @@
-#Feature extraction implemented
+#Feature extraction implementation
+This file documents the features that can be extracted by this software, and gives a brief explanation of each feature.
 
 ### Size features
 1. Number of clauses: denoted c
 2. Number of variables: denoted v
 3. Ratio: c/v
+
+### Variable-Clause Graph features
+#### A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause,
+#### and an edge between them whenever a variable occurs in a clause
+4-8. Variable nodes degree statistics: mean, coefficient of variation, min, max and entropy.
+9-13. Clause nodes degree statistics: mean, coefficient of variation, min, max and entropy.
+_The degree of a node is the number of edges incident (connected) to that node._
 
 ###Balance features
 18-20. Ratio of positive and negative literals in each clause: mean, variation coefficient and entropy (see extra notes). 

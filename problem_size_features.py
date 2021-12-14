@@ -1,4 +1,5 @@
 import cnfgen
+import vcg
 import statistics as stats
 with open("cnf_examples/basic.cnf") as f:
     pos_neg_clause_ratios = []
@@ -17,17 +18,13 @@ with open("cnf_examples/basic.cnf") as f:
             continue
         if line[0] == 'p':
             sizes = line.split(" ")
-            variables = int(sizes[2])
-            clauses = int(sizes[3])
-            ratio = clauses / variables
+            v = int(sizes[2])
+            c = int(sizes[3])
+            cv_ratio = c / v
 
-            print("c: ", clauses)
-            print("v: ", variables)
-            print("ratio: ", ratio)
-
-            c = clauses
-            v = variables
-            cv_ratio = ratio
+            print("c: ", c)
+            print("v: ", v)
+            print("ratio: ", cv_ratio)
 
         else:
             clauses_list.append([int(x) for x in line.split(" ")[:-1]])
@@ -37,6 +34,13 @@ with open("cnf_examples/basic.cnf") as f:
     variables_count = [0] * v * 2
     variables_count_ratio = []
     # positive counts at variable -1, negative literal counts at v + literal -1
+
+    v_node_degrees, c_node_degrees = vcg.create_vcg(clauses_list, c, v)
+
+    print("VCG variable node degrees")
+    print(v_node_degrees[0:10])
+    print("VCG clause node degrees")
+    print(c_node_degrees[0:10])
 
     for clause in clauses_list:
         # print("clause", clause)
