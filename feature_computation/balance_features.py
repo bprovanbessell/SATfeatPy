@@ -1,51 +1,19 @@
-import cnfgen
-import vcg
 import statistics as stats
-with open("cnf_examples/basic.cnf") as f:
-    pos_neg_clause_ratios = []
-    num_horn_clauses = 0
-    num_binary_clauses = 0
-    num_ternary_clauses = 0
 
-    clauses_list = []
 
-    c = 0
-    v = 0
-    cv_ratio = 0
-
-    for line in f:
-        if line[0] == 'c':
-            continue
-        if line[0] == 'p':
-            sizes = line.split(" ")
-            v = int(sizes[2])
-            c = int(sizes[3])
-            cv_ratio = c / v
-
-            print("c: ", c)
-            print("v: ", v)
-            print("ratio: ", cv_ratio)
-
-        else:
-            clauses_list.append([int(x) for x in line.split(" ")[:-1]])
-
-        # parse first the problem size features, and then do all of the clauses
+def compute_balance_features(clauses, c, v):
+    # parse first the problem size features, and then do all of the clauses
 
     variables_count = [0] * v * 2
     variables_count_ratio = []
     # positive counts at variable -1, negative literal counts at v + literal -1
 
-    v_node_degrees, c_node_degrees = vcg.create_vcg(clauses_list, c, v)
+    pos_neg_clause_ratios = []
+    num_horn_clauses = 0
+    num_binary_clauses = 0
+    num_ternary_clauses = 0
 
-    print("VCG variable node degrees")
-    print(v_node_degrees[0:10])
-    print("VCG clause node degrees")
-    print(c_node_degrees[0:10])
-
-    print("VG node degrees")
-    print(vcg.create_vg(clauses_list))
-
-    for clause in clauses_list:
+    for clause in clauses:
         # print("clause", clause)
 
         if len(clause) == 2:
@@ -53,8 +21,6 @@ with open("cnf_examples/basic.cnf") as f:
         if len(clause) == 3:
             num_ternary_clauses += 1
 
-        # all following lines should represent a clause, so literals separated by spaces, with a 0 at the end,
-        # denoting the end of the line.
         pos = 0
         neg = 0
 
