@@ -35,3 +35,25 @@ def create_vcg(clauses, c, v):
         v_node_degrees.append(degree)
 
     return v_node_degrees, c_node_degrees
+
+def create_vg(clauses, c, v):
+    # A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause
+
+    vg = nx.Graph()
+
+    for clause in clauses:
+        if len(clause) >= 2:
+            for i in range(0, len(clause)-1):
+                v_node_i = "v_" + str(abs(clause[i]))
+                v_node_i_1 = "v_" + str(abs(clause[i+1]))
+
+                vg.add_edge(v_node_i, v_node_i_1)
+
+    node_degrees = []
+
+    for n in vg.nodes:
+        degree = len(nx.edges(vg, "v_" + str(i)))
+        node_degrees.append(degree)
+
+    return node_degrees
+

@@ -13,6 +13,10 @@ This file documents the features that can be extracted by this software, and giv
 9-13. Clause nodes degree statistics: mean, coefficient of variation, min, max and entropy.
 _The degree of a node is the number of edges incident (connected) to that node._
 
+### Variable Graph features
+#### A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause
+14-17. Nodes degree statistics: mean , coefficient of variation, min and max.
+
 ###Balance features
 18-20. Ratio of positive and negative literals in each clause: mean, variation coefficient and entropy (see extra notes). 
 _For each clause, the ratio is the number of positive literals/number of negative literals.
