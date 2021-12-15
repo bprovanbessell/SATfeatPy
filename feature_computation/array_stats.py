@@ -16,8 +16,16 @@ def get_stats(l):
 """
 Find theoretical basis for entropy, reference here
 For now, this will be based on the implementation from SATzilla
+
+(posneg-ratio-clause-entropy)
+What is int num -> number of clauses/variables -> length of input array
+What is int vals?
+
+100, 1
+
+array_entropy(horny_var+1,numActiveVars,numActiveClauses+1)
 """
-def entropy_array(l):
+def entropy_array(l, num, vals):
     pass
 
 """
