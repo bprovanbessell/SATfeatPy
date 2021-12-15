@@ -6,8 +6,11 @@ output = stream.read()
 
 output = output.split("\n")
 
-results_names = output[-3]
-results = output[-2]
+features_names = output[-3].split(',')
+features = map(float, output[-2].split(','))
 
-print("feature names: ", results_names)
-print("features: ", results)
+features_dict = dict(zip(features_names, features))
+
+print("feature names: ", features_names)
+print("features: ", features)
+print(features_dict)
