@@ -6,8 +6,8 @@ output = stream.read()
 
 output = output.split("\n")
 
-results_names = output[-2]
-results = output[-1]
+results_names = output[-3]
+results = output[-2]
 
 print("feature names: ", results_names)
 print("features: ", results)
