@@ -1,6 +1,7 @@
 import os
 
-stream = os.popen('./../SAT-features-competition2012/features basic.cnf')
+os.chdir("/../SAT-features-competition2012")
+stream = os.popen('./features basic.cnf')
 output = stream.read()
 
 output = output.split("\n")
