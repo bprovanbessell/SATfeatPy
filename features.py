@@ -8,12 +8,18 @@ Main file to control extraction of features
 
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # parse cnf, and get problem size features
+
+    features_dict = {}
+
     clauses, c, v = parse_cnf.parse_cnf(cnf_path)
     cv_ratio = c/v
     # 1-3.
     print("c: ", c)
     print("v: ", v)
     print("ratio: ", cv_ratio)
+    features_dict["c"] = c
+    features_dict["v"] = v
+    features_dict["ratio"] = cv_ratio
 
     # Variable Clause Graph features
     # 4-8
@@ -32,6 +38,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     balance_features.compute_balance_features(clauses, c, v)
 
+    return features_dict
 
 
 if __name__ == "__main__":
