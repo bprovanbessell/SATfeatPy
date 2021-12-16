@@ -24,8 +24,14 @@ What is int vals?
 100, 1
 
 array_entropy(horny_var+1,numActiveVars,numActiveClauses+1)
+
+
+writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
 """
-def entropy_array(l, num, vals):
+def entropy_float_array(l, num, vals):
+    pass
+
+def entropy_int_array():
     pass
 
 """

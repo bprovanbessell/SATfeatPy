@@ -12,7 +12,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict = {}
 
     clauses, c, v = parse_cnf.parse_cnf(cnf_path)
-    cv_ratio = c/v
+    cv_ratio = v/c
     # 1-3.
     print("c: ", c)
     print("v: ", v)
@@ -43,17 +43,22 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
 if __name__ == "__main__":
     cnf_path = "cnf_examples/basic.cnf"
-    # compute_features_from_file(cnf_path)
+    features_dict = compute_features_from_file(cnf_path)
 
     test_labels = ["nvarsOrig","nclausesOrig","nvars","nclauses","reducedVars","reducedClauses","Pre-featuretime","vars-clauses-ratio","POSNEG-RATIO-CLAUSE-mean",
                    "POSNEG-RATIO-CLAUSE-coeff-variation","POSNEG-RATIO-CLAUSE-min","POSNEG-RATIO-CLAUSE-max","POSNEG-RATIO-CLAUSE-entropy","VCG-CLAUSE-mean",
-                   "VCG-CLAUSE-coeff-variation","VCG-CLAUSE-min","VCG-CLAUSE-max","VCG-CLAUSE-entropy","UNARY","BINARY+","TRINARY+","Basic-featuretime","VCG-VAR-mean","VCG-VAR-coeff-variation"]
-    # ,VCG-VAR-min,VCG-VAR-max,VCG-VAR-entropy,POSNEG-RATIO-VAR-mean,POSNEG-RATIO-VAR-stdev,POSNEG-RATIO-VAR-min,POSNEG-RATIO-VAR-max,POSNEG-RATIO-VAR-entropy,HORNY-VAR-mean,HORNY-VAR-coeff-variation,HORNY-VAR-min,HORNY-VAR-max,HORNY-VAR-entropy,horn-clauses-fraction,VG-mean,VG-coeff-variation,VG-min,VG-max,KLB-featuretime,CG-mean,CG-coeff-variation,CG-min,CG-max,CG-entropy,cluster-coeff-mean,cluster-coeff-coeff-variation,cluster-coeff-min,cluster-coeff-max,cluster-coeff-entropy,CG-featuretime]
+                   "VCG-CLAUSE-coeff-variation","VCG-CLAUSE-min","VCG-CLAUSE-max","VCG-CLAUSE-entropy","UNARY","BINARY+","TRINARY+","Basic-featuretime","VCG-VAR-mean","VCG-VAR-coeff-variation",
+                   "VCG-VAR-min","VCG-VAR-max","VCG-VAR-entropy","POSNEG-RATIO-VAR-mean","POSNEG-RATIO-VAR-stdev","POSNEG-RATIO-VAR-min","POSNEG-RATIO-VAR-max","POSNEG-RATIO-VAR-entropy",
+                   "HORNY-VAR-mean","HORNY-VAR-coeff-variation","HORNY-VAR-min","HORNY-VAR-max","HORNY-VAR-entropy","horn-clauses-fraction","VG-mean","VG-coeff-variation","VG-min","VG-max",
+                   "KLB-featuretime","CG-mean","CG-coeff-variation","CG-min","CG-max","CG-entropy","cluster-coeff-mean","cluster-coeff-coeff-variation","cluster-coeff-min","cluster-coeff-max","cluster-coeff-entropy","CG-featuretime"]
     test_vals = [20.000000000,45.000000000,15.000000000,40.000000000,0.333333333,0.125000000,0.000000000,0.375000000,1.000000000,0.000000000,1.000000000,1.000000000,-0.000000000,0.200000000,0.577350269,0.133333333,0.400000000,0.562335145,0.000000000,0.750000000,0.750000000,0.000000000,0.200000000,0.000000000,0.200000000,0.200000000,-0.000000000,0.000000000,0.000000000,0.000000000,0.000000000,-0.000000000,0.100000000,0.000000000,0.100000000,0.100000000,-0.000000000,0.750000000,0.350000000,0.000000000,0.350000000,0.350000000,0.000000000,0.262500000,0.577350269,0.175000000,0.525000000,0.562335145,0.210227273,0.327685288,0.090909091,0.250000000,0.562335145,0.000000000]
 
-    for i, x in enumerate(test_labels):
-        if "VCG-VAR-coeff" in x:
+    satzilla_features = dict(zip(test_labels, test_vals))
 
-            index = i
 
-    print(test_vals[index])
+    print("WE ARE CHECKING")
+    print(features_dict["ratio"])
+    print(satzilla_features["vars-clauses-ratio"])
+
+
+

@@ -59,6 +59,7 @@ def compute_balance_features(clauses, c, v):
     print("Positive/negative literals per clause ratios: ", pos_neg_clause_ratios)
 
     pos_neg_ratios_mean = stats.mean(pos_neg_clause_ratios)
+    print("pos fraction mean in clause: ", pos_neg_ratios_mean)
     pos_neg_ratios_std = stats.stdev(pos_neg_clause_ratios)
     pos_neg_ratios_coefficient_of_variation = pos_neg_ratios_mean/pos_neg_ratios_std
 
