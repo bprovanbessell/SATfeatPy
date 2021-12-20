@@ -1,4 +1,4 @@
-from feature_computation import parse_cnf, balance_features, graph_features, array_stats
+from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features
 
 '''
 Main file to control extraction of features
@@ -12,7 +12,10 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict = {}
 
     clauses, c, v = parse_cnf.parse_cnf(cnf_path)
-    cv_ratio = v/c
+
+    num_active_vars, num_active_clauses, clause_states, clauses = active_features.get_active_features(clauses, c, v)
+
+    cv_ratio = c/v
     # 1-3.
     print("c: ", c)
     print("v: ", v)
@@ -20,6 +23,10 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict["c"] = c
     features_dict["v"] = v
     features_dict["ratio"] = cv_ratio
+
+    print("Active clauses: ", num_active_clauses)
+    print("Active variables: ", num_active_vars)
+    print("Active ration v/c: ", num_active_vars/num_active_clauses)
 
     # Variable Clause Graph features
     # 4-8

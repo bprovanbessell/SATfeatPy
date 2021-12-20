@@ -6,9 +6,10 @@ First we need to compute the active variables and clauses
 
 def get_active_features(clauses, c, v):
     # int *lits = new int[numVars+1];
-    lits = []
     clause_states = [False] * c
-    num_active_clauses_with_var = [0] * v
+    num_active_clauses_with_var = [0] * (v + 1)
+
+    num_active_clauses = c
 
     # These are used at some point...
     unit_clauses = []
@@ -24,7 +25,7 @@ def get_active_features(clauses, c, v):
 
     for clause_i in range(c):
 
-        clause = clauses[i]
+        clause = clauses[clause_i]
         num_literals = len(clause)
         clause.sort(key=lambda x: abs(x))
 
@@ -40,6 +41,9 @@ def get_active_features(clauses, c, v):
         # remove duplicates
         clause = list(set(clause))
         clauses[clause_i] = clause
+        # print(clause)
+
+        # Clause is sorted in terms of literals, and duplicates have been removed
 
         if not tautology:
             clause_states[clause_i] = True
@@ -60,7 +64,28 @@ def get_active_features(clauses, c, v):
                 #     negClausesWithVar[ABS(lits[litNum])].push_back(clauseNum);
                 #     else
                 #     posClausesWithVar[lits[litNum]].push_back(clauseNum);
+
+                # print(i)
+                # print(num_active_clauses_with_var)
                 num_active_clauses_with_var[abs(clause[i])] += 1
+
+        else:
+            # the clause was a tautology, so we can ignore it
+            num_active_clauses -= 1
+
+    # Now remove the redundant variables
+    num_active_vars = v
+    var_states = [False] * (v+1)
+
+    for i in range(1, v+1):
+        if num_active_clauses_with_var[i] > 0:
+            var_states[i] = True
+        else:
+            num_active_vars -= 1
+
+    return num_active_vars, num_active_clauses, clause_states, clauses
+
+
 
 
     # for clause_num, clause in enumerate(clauses):

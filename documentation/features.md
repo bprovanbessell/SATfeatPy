@@ -22,6 +22,9 @@ _The degree of a node is the number of edges incident (connected) to that node._
 _For each clause, the ratio is the number of positive literals/number of negative literals.
 These ratios are then aggregated, and statistics on them output._
 
+The _fraction_ is not actually a fraction, but a measure of the offset between the positive and negative
+2 * abs(0.5 - pos/(pos + neg))
+
 26-27. Fraction of binary and ternary clauses: Fraction of clauses that have 2 literals over total number of clauses,
 fraction of clauses with 3 literals, over total number of clauses
 
