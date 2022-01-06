@@ -16,6 +16,8 @@ def compute_balance_features(clauses, c, v):
     num_binary_clauses = 0
     num_ternary_clauses = 0
 
+    horn_clause_variable_count = [0] * v
+
     for clause in clauses:
         # print("clause", clause)
 
@@ -50,6 +52,9 @@ def compute_balance_features(clauses, c, v):
         if pos <= 1:
             num_horn_clauses += 1
 
+            for literal in clause:
+                horn_clause_variable_count[abs(literal) - 1] += 1
+
     # calculate the ratio of positive and negative literals
     # per variable
     for i in range(v):
@@ -71,5 +76,5 @@ def compute_balance_features(clauses, c, v):
     print("binary clause fraction: ", num_binary_clauses/c)
     print("ternary clause fraction: ", num_ternary_clauses/c)
 
-    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, num_binary_clauses, num_ternary_clauses
+    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count
 

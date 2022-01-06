@@ -22,7 +22,7 @@ _The degree of a node is the number of edges incident (connected) to that node._
 _For each clause, the ratio is the number of positive literals/number of negative literals.
 These ratios are then aggregated, and statistics on them output._
 
-n.b. The _ratio_ is not actually a ration, but a measure of the offset between the positive and negative
+n.b. The _ratio_ is not actually a ratio, but a measure of the offset/bias between the positive and negative values:
 2 * abs(0.5 - pos/(pos + neg))
 
 26-27. Fraction of binary and ternary clauses: Fraction of clauses that have 2 literals over total number of clauses,
@@ -32,6 +32,9 @@ fraction of clauses with 3 literals, over total number of clauses.
 ### Proximity to Horn Formula
 #### A clause is a Horn clause if it contains at most one positive literal
 28. Fraction of Horn clauses
+
+29-33. Number of occurrences in a Horn clause for each variable: mean, co-efficient of variation, minimum, maximum, entropy.
+The number of times a variable appears in all horn clauses.
 
 ###Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 

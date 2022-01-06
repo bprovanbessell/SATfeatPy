@@ -6,6 +6,7 @@ Main file to control extraction of features
 
 '''
 
+
 def satelite_preprocess(cnf_path="cnf_examples/basic.cnf"):
     # pre process using SatELite binary files
     preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
@@ -28,8 +29,8 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # print("ratio: ", c/v)
     features_dict["c"] = c
     features_dict["v"] = v
-    features_dict["clauses_vars_ratio"] = c/v
-    features_dict["vars_clauses_ratio"] = v/c
+    features_dict["clauses_vars_ratio"] = c / v
+    features_dict["vars_clauses_ratio"] = v / c
 
     # print("Active clauses: ", num_active_clauses)
     # print("Active variables: ", num_active_vars)
@@ -50,7 +51,9 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     vg_node_degrees = graph_features.create_vg(clauses)
 
-    pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, num_binary_clauses, num_ternary_clauses = balance_features.compute_balance_features(clauses, c, v)
+    pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance,\
+        num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count = \
+        balance_features.compute_balance_features(clauses, c, v)
 
     pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
 
@@ -67,9 +70,18 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict["pnv_ratio_max"] = pnv_ratios_max
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
-    features_dict["binary_ratio"] = num_binary_clauses/c
-    features_dict["ternary_ratio"] = num_ternary_clauses/c
-    features_dict["ternary+"] = (num_binary_clauses + num_ternary_clauses)/c
+    features_dict["binary_ratio"] = num_binary_clauses / c
+    features_dict["ternary_ratio"] = num_ternary_clauses / c
+    features_dict["ternary+"] = (num_binary_clauses + num_ternary_clauses) / c
+
+    features_dict["horn_clauses_fraction"] = num_horn_clauses / c
+
+    hc_var_mean, hc_var_coeff, hc_var_min, hc_var_max = array_stats.get_stats(horn_clause_variable_count)
+
+    features_dict["hc_var_mean"] = hc_var_mean
+    features_dict["hc_var_coeff"] = hc_var_coeff
+    features_dict["hc_var_min"] = hc_var_min
+    features_dict["hc_var_max"] = hc_var_max
 
     return features_dict
 
@@ -80,16 +92,29 @@ if __name__ == "__main__":
     satelite_preprocess(cnf_path)
     features_dict = compute_features_from_file(preprocessed_path)
 
-    test_labels = ["nvarsOrig","nclausesOrig","nvars","nclauses","reducedVars","reducedClauses","Pre-featuretime","vars-clauses-ratio","POSNEG-RATIO-CLAUSE-mean",
-                   "POSNEG-RATIO-CLAUSE-coeff-variation","POSNEG-RATIO-CLAUSE-min","POSNEG-RATIO-CLAUSE-max","POSNEG-RATIO-CLAUSE-entropy","VCG-CLAUSE-mean",
-                   "VCG-CLAUSE-coeff-variation","VCG-CLAUSE-min","VCG-CLAUSE-max","VCG-CLAUSE-entropy","UNARY","BINARY+","TRINARY+","Basic-featuretime","VCG-VAR-mean","VCG-VAR-coeff-variation",
-                   "VCG-VAR-min","VCG-VAR-max","VCG-VAR-entropy","POSNEG-RATIO-VAR-mean","POSNEG-RATIO-VAR-stdev","POSNEG-RATIO-VAR-min","POSNEG-RATIO-VAR-max","POSNEG-RATIO-VAR-entropy",
-                   "HORNY-VAR-mean","HORNY-VAR-coeff-variation","HORNY-VAR-min","HORNY-VAR-max","HORNY-VAR-entropy","horn-clauses-fraction","VG-mean","VG-coeff-variation","VG-min","VG-max",
-                   "KLB-featuretime","CG-mean","CG-coeff-variation","CG-min","CG-max","CG-entropy","cluster-coeff-mean","cluster-coeff-coeff-variation","cluster-coeff-min","cluster-coeff-max","cluster-coeff-entropy","CG-featuretime"]
-    test_vals = [20.000000000,45.000000000,15.000000000,40.000000000,0.333333333,0.125000000,0.000000000,0.375000000,1.000000000,0.000000000,1.000000000,1.000000000,-0.000000000,0.200000000,0.577350269,0.133333333,0.400000000,0.562335145,0.000000000,0.750000000,0.750000000,0.000000000,0.200000000,0.000000000,0.200000000,0.200000000,-0.000000000,0.000000000,0.000000000,0.000000000,0.000000000,-0.000000000,0.100000000,0.000000000,0.100000000,0.100000000,-0.000000000,0.750000000,0.350000000,0.000000000,0.350000000,0.350000000,0.000000000,0.262500000,0.577350269,0.175000000,0.525000000,0.562335145,0.210227273,0.327685288,0.090909091,0.250000000,0.562335145,0.000000000]
+    test_labels = ["nvarsOrig", "nclausesOrig", "nvars", "nclauses", "reducedVars", "reducedClauses", "Pre-featuretime",
+                   "vars-clauses-ratio", "POSNEG-RATIO-CLAUSE-mean",
+                   "POSNEG-RATIO-CLAUSE-coeff-variation", "POSNEG-RATIO-CLAUSE-min", "POSNEG-RATIO-CLAUSE-max",
+                   "POSNEG-RATIO-CLAUSE-entropy", "VCG-CLAUSE-mean",
+                   "VCG-CLAUSE-coeff-variation", "VCG-CLAUSE-min", "VCG-CLAUSE-max", "VCG-CLAUSE-entropy", "UNARY",
+                   "BINARY+", "TRINARY+", "Basic-featuretime", "VCG-VAR-mean", "VCG-VAR-coeff-variation",
+                   "VCG-VAR-min", "VCG-VAR-max", "VCG-VAR-entropy", "POSNEG-RATIO-VAR-mean", "POSNEG-RATIO-VAR-stdev",
+                   "POSNEG-RATIO-VAR-min", "POSNEG-RATIO-VAR-max", "POSNEG-RATIO-VAR-entropy",
+                   "HORNY-VAR-mean", "HORNY-VAR-coeff-variation", "HORNY-VAR-min", "HORNY-VAR-max", "HORNY-VAR-entropy",
+                   "horn-clauses-fraction", "VG-mean", "VG-coeff-variation", "VG-min", "VG-max",
+                   "KLB-featuretime", "CG-mean", "CG-coeff-variation", "CG-min", "CG-max", "CG-entropy",
+                   "cluster-coeff-mean", "cluster-coeff-coeff-variation", "cluster-coeff-min", "cluster-coeff-max",
+                   "cluster-coeff-entropy", "CG-featuretime"]
+    test_vals = [20.000000000, 45.000000000, 15.000000000, 40.000000000, 0.333333333, 0.125000000, 0.000000000,
+                 0.375000000, 1.000000000, 0.000000000, 1.000000000, 1.000000000, -0.000000000, 0.200000000,
+                 0.577350269, 0.133333333, 0.400000000, 0.562335145, 0.000000000, 0.750000000, 0.750000000, 0.000000000,
+                 0.200000000, 0.000000000, 0.200000000, 0.200000000, -0.000000000, 0.000000000, 0.000000000,
+                 0.000000000, 0.000000000, -0.000000000, 0.100000000, 0.000000000, 0.100000000, 0.100000000,
+                 -0.000000000, 0.750000000, 0.350000000, 0.000000000, 0.350000000, 0.350000000, 0.000000000,
+                 0.262500000, 0.577350269, 0.175000000, 0.525000000, 0.562335145, 0.210227273, 0.327685288, 0.090909091,
+                 0.250000000, 0.562335145, 0.000000000]
 
     satzilla_features = dict(zip(test_labels, test_vals))
-
 
     print("WE ARE CHECKING")
     print("v, c")
@@ -99,15 +124,22 @@ if __name__ == "__main__":
     print(features_dict["vars_clauses_ratio"])
     print(satzilla_features["vars-clauses-ratio"])
 
-
     print("pos neg clauses features")
-    print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"], features_dict["pnc_ratio_max"])
-    print(satzilla_features["POSNEG-RATIO-CLAUSE-mean"], satzilla_features["POSNEG-RATIO-CLAUSE-coeff-variation"], satzilla_features["POSNEG-RATIO-CLAUSE-min"],satzilla_features["POSNEG-RATIO-CLAUSE-max"])
+    print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"],
+          features_dict["pnc_ratio_max"])
+    print(satzilla_features["POSNEG-RATIO-CLAUSE-mean"], satzilla_features["POSNEG-RATIO-CLAUSE-coeff-variation"],
+          satzilla_features["POSNEG-RATIO-CLAUSE-min"], satzilla_features["POSNEG-RATIO-CLAUSE-max"])
 
     print("pos neg variable features")
-    print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_stdev"], features_dict["pnv_ratio_min"], features_dict["pnv_ratio_max"])
-    print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-stdev"], satzilla_features["POSNEG-RATIO-VAR-min"],satzilla_features["POSNEG-RATIO-VAR-max"])
+    print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_stdev"], features_dict["pnv_ratio_min"],
+          features_dict["pnv_ratio_max"])
+    print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-stdev"],
+          satzilla_features["POSNEG-RATIO-VAR-min"], satzilla_features["POSNEG-RATIO-VAR-max"])
 
-    print("binary, ternary")
-    print(features_dict["binary_ratio"], features_dict["ternary+"])
-    print(satzilla_features["BINARY+"], satzilla_features["TRINARY+"])
+    print("binary, ternary, horn_clauses")
+    print(features_dict["binary_ratio"], features_dict["ternary+"], features_dict["horn_clauses_fraction"])
+    print(satzilla_features["BINARY+"], satzilla_features["TRINARY+"], satzilla_features["horn-clauses-fraction"])
+
+    print("horn clause variables count")
+    print(features_dict["hc_var_mean"], features_dict["hc_var_coeff"], features_dict["hc_var_min"], features_dict["hc_var_max"])
+    print(satzilla_features["HORNY-VAR-mean"], satzilla_features["HORNY-VAR-coeff-variation"], satzilla_features["HORNY-VAR-min"], satzilla_features["HORNY-VAR-max"])
