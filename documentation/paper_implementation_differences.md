@@ -14,4 +14,7 @@ of the balance between positive and negative literals in the clause, as opposed 
 for each clause, the ratio of the clause is: 2 x | 0.5 X (pos/(pos + neg))|, where pos and neg represent the number of
 positive and  negative literals in the clause respectively.
 
-Satzilla code does not compute the variation co-efficient for positive and negative variable ratios, but instead uses std
+Satzilla code does not compute the variation co-efficient for positive and negative variable ratios, but instead uses std.
+
+The ratio of binary clauses is the number of binary plus unary clauses over the total number of clauses.
+Similarly with ternary clauses, the ratio is the number of unary plus binary plus ternary clauses over the total number of clauses.

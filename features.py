@@ -69,6 +69,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     features_dict["binary_ratio"] = num_binary_clauses/c
     features_dict["ternary_ratio"] = num_ternary_clauses/c
+    features_dict["ternary+"] = (num_binary_clauses + num_ternary_clauses)/c
 
     return features_dict
 
@@ -108,5 +109,5 @@ if __name__ == "__main__":
     print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-stdev"], satzilla_features["POSNEG-RATIO-VAR-min"],satzilla_features["POSNEG-RATIO-VAR-max"])
 
     print("binary, ternary")
-    print(features_dict["binary_ratio"], features_dict["ternary_ratio"])
+    print(features_dict["binary_ratio"], features_dict["ternary+"])
     print(satzilla_features["BINARY+"], satzilla_features["TRINARY+"])
