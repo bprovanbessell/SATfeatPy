@@ -50,9 +50,9 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     vg_node_degrees = graph_features.create_vg(clauses)
 
-    pos_neg_clause_ratios = balance_features.compute_balance_features(clauses, c, v)
+    pos_neg_clause_ratios, pos_neg_clause_balance = balance_features.compute_balance_features(clauses, c, v)
 
-    pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_ratios)
+    pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
 
     features_dict["pnc_ratio_mean"] = pnc_ratios_mean
     features_dict["pnc_ratio_coeff"] = pnc_ratios_coeff
@@ -80,8 +80,8 @@ if __name__ == "__main__":
 
 
     print("WE ARE CHECKING")
-    print("c, v")
-    print(features_dict["c"], features_dict["v"])
+    print("v, c")
+    print(features_dict["v"], features_dict["c"])
     print(satzilla_features["nvars"], satzilla_features["nclauses"])
     print("vars clauses ratio")
     print(features_dict["vars_clauses_ratio"])
