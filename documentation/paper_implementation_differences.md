@@ -2,6 +2,9 @@
 There are a lot of differences between the description of the features in the SATzilla paper, and the actual implementation of them.
 This documents and describes the differences.
 
+Pre-processing is first done by SatELite (http://minisat.se/SatELite.html). Apparently outdated and obsolete, but will
+be necessary to use to compare with versions of SATzilla.
+
 For all features, pre-processing, and clause reduction is performed on the clauses, before and features are computed.
 
 

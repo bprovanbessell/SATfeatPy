@@ -1,5 +1,8 @@
 # CNF Pre-processing implementation
-The cnf undergoes pre-processing after the initial file has been parsed
+
+First, the cnf is pre-processed by SatELite (http://minisat.se/SatELite.html).
+
+The cnf undergoes further pre-processing after the initial file has been parsed:
 
 ### Tautology filtering
 If a clause is a tautology, it is not used for computation, and is considered inactive. A clause is considered a tautology

@@ -1,9 +1,16 @@
+import os
 from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features
 
 '''
 Main file to control extraction of features
 
 '''
+
+def satelite_preprocess(cnf_path="cnf_examples/basic.cnf"):
+    # pre process using SatELite binary files
+    preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
+    satelite_command = "./SatELite/SatELite_v1.0_linux " + cnf_path + " " + newpath
+    os.system(satelite_command)
 
 
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
@@ -50,7 +57,9 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
 if __name__ == "__main__":
     cnf_path = "cnf_examples/basic.cnf"
-    features_dict = compute_features_from_file(cnf_path)
+    preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
+    satelite_preprocess(cnf_path)
+    features_dict = compute_features_from_file(preprocessed_path)
 
     test_labels = ["nvarsOrig","nclausesOrig","nvars","nclauses","reducedVars","reducedClauses","Pre-featuretime","vars-clauses-ratio","POSNEG-RATIO-CLAUSE-mean",
                    "POSNEG-RATIO-CLAUSE-coeff-variation","POSNEG-RATIO-CLAUSE-min","POSNEG-RATIO-CLAUSE-max","POSNEG-RATIO-CLAUSE-entropy","VCG-CLAUSE-mean",
