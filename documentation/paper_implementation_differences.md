@@ -13,3 +13,5 @@ Ration of positive and negative literals in each clause. In the implementation, 
 of the balance between positive and negative literals in the clause, as opposed the the ratio. It is implemented as:
 for each clause, the ratio of the clause is: 2 x | 0.5 X (pos/(pos + neg))|, where pos and neg represent the number of
 positive and  negative literals in the clause respectively.
+
+Satzilla code does not compute the variation co-efficient for positive and negative variable ratios, but instead uses std

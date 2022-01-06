@@ -5,6 +5,11 @@ File to control the computation and aggregation of statistics for arrays of valu
 
 
 def get_stats(l):
+    """
+    Gets the four basic stats used for most features
+    :param l: List to generate statistics from.
+    :return: mean, co-efficient of variation, minimum and maximum.
+    """
     mean = stats.mean(l)
     min_val = min(l)
     max_val = max(l)
@@ -12,6 +17,10 @@ def get_stats(l):
     coefficient_of_variation = calc_coefficient_of_variation(mean, std)
 
     return mean, coefficient_of_variation, min_val, max_val
+
+
+def get_stdev(l):
+    return stats.stdev(l)
 
 
 def entropy_float_array(l, num, vals):

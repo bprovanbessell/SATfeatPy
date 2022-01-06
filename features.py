@@ -65,6 +65,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict["pnv_ratio_coeff"] = pnv_ratios_coeff
     features_dict["pnv_ratio_min"] = pnv_ratios_min
     features_dict["pnv_ratio_max"] = pnv_ratios_max
+    features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_ratios)
 
     return features_dict
 
@@ -100,8 +101,8 @@ if __name__ == "__main__":
     print(satzilla_features["POSNEG-RATIO-CLAUSE-mean"], satzilla_features["POSNEG-RATIO-CLAUSE-coeff-variation"], satzilla_features["POSNEG-RATIO-CLAUSE-min"],satzilla_features["POSNEG-RATIO-CLAUSE-max"])
 
     print("pos neg variable features")
-    print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_coeff"], features_dict["pnv_ratio_min"], features_dict["pnv_ratio_max"])
-    print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-coeff-variation"], satzilla_features["POSNEG-RATIO-VAR-min"],satzilla_features["POSNEG-RATIO-VAR-max"])
+    print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_stdev"], features_dict["pnv_ratio_min"], features_dict["pnv_ratio_max"])
+    print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-stdev"], satzilla_features["POSNEG-RATIO-VAR-min"],satzilla_features["POSNEG-RATIO-VAR-max"])
 
 
 
