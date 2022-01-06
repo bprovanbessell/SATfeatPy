@@ -13,32 +13,38 @@ def get_stats(l):
 
     return mean, coefficient_of_variation, min_val, max_val
 
-"""
-Find theoretical basis for entropy, reference here
-For now, this will be based on the implementation from SATzilla
 
-(posneg-ratio-clause-entropy)
-What is int num -> number of clauses/variables -> length of input array
-What is int vals?
-
-100, 1
-
-array_entropy(horny_var+1,numActiveVars,numActiveClauses+1)
-
-
-writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
-"""
 def entropy_float_array(l, num, vals):
+    """
+    Find theoretical basis for entropy, reference here
+    For now, this will be based on the implementation from SATzilla
+
+    (posneg-ratio-clause-entropy)
+    What is int num -> number of clauses/variables -> length of input array
+    What is int vals?
+
+    100, 1
+
+    array_entropy(horny_var+1,numActiveVars,numActiveClauses+1)
+
+
+    writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
+    """
     pass
+
 
 def entropy_int_array():
+    """
+
+    :return:
+    """
     pass
 
-"""
-The coefficient of variation is a statistical measure of the relative dispersion of data points in a data series around the mean.
-"""
 
 def calc_coefficient_of_variation(mean, std):
+    """
+    The coefficient of variation is a statistical measure of the relative dispersion of data points in a data series around the mean.
+    """
     if std == 0:
         return 0
     else:

@@ -22,18 +22,18 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     num_active_vars, num_active_clauses, clause_states, clauses = active_features.get_active_features(clauses, c, v)
 
-    cv_ratio = c/v
     # 1-3.
-    print("c: ", c)
-    print("v: ", v)
-    print("ratio: ", cv_ratio)
+    # print("c: ", c)
+    # print("v: ", v)
+    # print("ratio: ", c/v)
     features_dict["c"] = c
     features_dict["v"] = v
-    features_dict["ratio"] = cv_ratio
+    features_dict["clauses_vars_ratio"] = c/v
+    features_dict["vars_clauses_ratio"] = v/c
 
-    print("Active clauses: ", num_active_clauses)
-    print("Active variables: ", num_active_vars)
-    print("Active ration v/c: ", num_active_vars/num_active_clauses)
+    # print("Active clauses: ", num_active_clauses)
+    # print("Active variables: ", num_active_vars)
+    # print("Active ration v/c: ", num_active_vars/num_active_clauses)
 
     # Variable Clause Graph features
     # 4-8
@@ -41,16 +41,23 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     vcg_v_mean, vcg_v_coeff, vcg_v_min, vcg_v_max = array_stats.get_stats(vcg_v_node_degrees)
 
-    print("Variable-Clause Graph features")
-    print("Variable nodes degree statistics")
-    print("mean: ", vcg_v_mean)
-    print("coefficient of variation: ", vcg_v_coeff)
-    print("min: ", vcg_v_min)
-    print("max: ", vcg_v_max)
+    # print("Variable-Clause Graph features")
+    # print("Variable nodes degree statistics")
+    # print("mean: ", vcg_v_mean)
+    # print("coefficient of variation: ", vcg_v_coeff)
+    # print("min: ", vcg_v_min)
+    # print("max: ", vcg_v_max)
 
     vg_node_degrees = graph_features.create_vg(clauses)
 
-    balance_features.compute_balance_features(clauses, c, v)
+    pos_neg_clause_ratios = balance_features.compute_balance_features(clauses, c, v)
+
+    pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_ratios)
+
+    features_dict["pnc_ratio_mean"] = pnc_ratios_mean
+    features_dict["pnc_ratio_coeff"] = pnc_ratios_coeff
+    features_dict["pnc_ratio_min"] = pnc_ratios_min
+    features_dict["pnc_ratio_max"] = pnc_ratios_max
 
     return features_dict
 
@@ -73,8 +80,16 @@ if __name__ == "__main__":
 
 
     print("WE ARE CHECKING")
-    print(features_dict["ratio"])
+    print("c, v")
+    print(features_dict["c"], features_dict["v"])
+    print(satzilla_features["nvars"], satzilla_features["nclauses"])
+    print("vars clauses ratio")
+    print(features_dict["vars_clauses_ratio"])
     print(satzilla_features["vars-clauses-ratio"])
+
+    print("pos neg clauses features")
+    print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"], features_dict["pnc_ratio_max"])
+    print(satzilla_features["POSNEG-RATIO-CLAUSE-mean"], satzilla_features["POSNEG-RATIO-CLAUSE-coeff-variation"], satzilla_features["POSNEG-RATIO-CLAUSE-min"],satzilla_features["POSNEG-RATIO-CLAUSE-max"])
 
 
 
