@@ -109,4 +109,4 @@ if __name__ == "__main__":
 
     print("binary, ternary")
     print(features_dict["binary_ratio"], features_dict["ternary_ratio"])
-    print(satzilla_features["BINARY+"], satzilla_features["TERNARY+"])
+    print(satzilla_features["BINARY+"], satzilla_features["TRINARY+"])
