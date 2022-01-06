@@ -71,5 +71,5 @@ def compute_balance_features(clauses, c, v):
     print("binary clause fraction: ", num_binary_clauses/c)
     print("ternary clause fraction: ", num_ternary_clauses/c)
 
-    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance
+    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, num_binary_clauses, num_ternary_clauses
 

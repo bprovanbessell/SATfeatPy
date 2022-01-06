@@ -50,7 +50,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     vg_node_degrees = graph_features.create_vg(clauses)
 
-    pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance = balance_features.compute_balance_features(clauses, c, v)
+    pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, num_binary_clauses, num_ternary_clauses = balance_features.compute_balance_features(clauses, c, v)
 
     pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
 
@@ -66,6 +66,9 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict["pnv_ratio_min"] = pnv_ratios_min
     features_dict["pnv_ratio_max"] = pnv_ratios_max
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
+
+    features_dict["binary_ratio"] = num_binary_clauses/c
+    features_dict["ternary_ratio"] = num_ternary_clauses/c
 
     return features_dict
 
@@ -104,5 +107,6 @@ if __name__ == "__main__":
     print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_stdev"], features_dict["pnv_ratio_min"], features_dict["pnv_ratio_max"])
     print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-stdev"], satzilla_features["POSNEG-RATIO-VAR-min"],satzilla_features["POSNEG-RATIO-VAR-max"])
 
-
-
+    print("binary, ternary")
+    print(features_dict["binary_ratio"], features_dict["ternary_ratio"])
+    print(satzilla_features["BINARY+"], satzilla_features["TERNARY+"])
