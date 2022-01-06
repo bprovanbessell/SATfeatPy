@@ -7,6 +7,7 @@ def compute_balance_features(clauses, c, v):
     variables_pos_count = [0] * v
     variables_neg_count = [0] * v
     pos_neg_variable_ratios = []
+    pos_neg_variable_balance = []
     # positive and negative counts of variables (literal instances)
 
     pos_neg_clause_ratios = []
@@ -60,6 +61,7 @@ def compute_balance_features(clauses, c, v):
             vi_ratio = pos_instances/neg_instances
 
         pos_neg_variable_ratios.append(vi_ratio)
+        pos_neg_variable_balance.append(2.0 * abs(0.5 - (pos_instances / (pos_instances + neg_instances))))
 
 
     # print("Number of Horn clauses: ", num_horn_clauses)
@@ -69,5 +71,5 @@ def compute_balance_features(clauses, c, v):
     print("binary clause fraction: ", num_binary_clauses/c)
     print("ternary clause fraction: ", num_ternary_clauses/c)
 
-    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios
+    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance
 
