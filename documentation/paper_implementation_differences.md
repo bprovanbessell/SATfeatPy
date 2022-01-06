@@ -18,3 +18,7 @@ Satzilla code does not compute the variation co-efficient for positive and negat
 
 The ratio of binary clauses is the number of binary plus unary clauses over the total number of clauses.
 Similarly with ternary clauses, the ratio is the number of unary plus binary plus ternary clauses over the total number of clauses.
+
+
+For the statistics of number of variable occurrences in horn clauses, the statistics are calculated for normalized variable counts,
+(each count is divided by the number of active clauses)

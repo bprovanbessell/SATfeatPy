@@ -76,7 +76,9 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     features_dict["horn_clauses_fraction"] = num_horn_clauses / c
 
-    hc_var_mean, hc_var_coeff, hc_var_min, hc_var_max = array_stats.get_stats(horn_clause_variable_count)
+    horn_clause_variable_count_norm = [x/c for x in horn_clause_variable_count]
+
+    hc_var_mean, hc_var_coeff, hc_var_min, hc_var_max = array_stats.get_stats(horn_clause_variable_count_norm)
 
     features_dict["hc_var_mean"] = hc_var_mean
     features_dict["hc_var_coeff"] = hc_var_coeff
