@@ -1,4 +1,5 @@
 import statistics as stats
+import math
 """
 File to control the computation and aggregation of statistics for arrays of values.
 """
@@ -23,7 +24,8 @@ def get_stdev(l):
     return stats.stdev(l)
 
 
-def entropy_float_array(l, num, vals):
+def entropy_float_array(l, num, vals, maxval):
+    # afaik num could be len(l)...
     """
     Find theoretical basis for entropy, reference here
     For now, this will be based on the implementation from SATzilla
@@ -38,16 +40,57 @@ def entropy_float_array(l, num, vals):
 
 
     writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
+    https://en.wikipedia.org/wiki/Entropy_(information_theory)
     """
-    pass
+
+    p = [0] * vals
+
+    res = 0
+    entropy = 0
+
+    # make the distribution
+    for t in range(num):
+        # if l[t] == reserved_value ?:
+    #       res ++
+    #         continue
+        index = math.floor(l[t] / (maxval/vals))
+
+        if index > vals :
+            index = vals
+        if index < 0:
+            index = 0
+
+        p[index] += 1
+
+    for t in range(vals):
+        if p[t] != 0:
+            pval = p[t]/(num-res)
+            entropy += pval * math.log(pval)
+
+    return -1 * entropy
 
 
-def entropy_int_array():
+def entropy_int_array(l, num, vals):
     """
 
     :return:
+
+    array_entropy(clause_array,numClauses,numActiveVars+1))
     """
-    pass
+
+    p = [0] * vals
+    res = 0
+    entropy = 0
+
+    for t in range(num):
+        p[l[t]] += 1
+
+    for t in range(vals):
+        if p[t] != 0:
+            pval = p[t]/(num - res)
+            entropy += pval * math.log(pval)
+
+    return -1 * entropy
 
 
 def calc_coefficient_of_variation(mean, std):
