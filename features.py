@@ -50,7 +50,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     vg_node_degrees = graph_features.create_vg(clauses)
 
-    pos_neg_clause_ratios, pos_neg_clause_balance = balance_features.compute_balance_features(clauses, c, v)
+    pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios = balance_features.compute_balance_features(clauses, c, v)
 
     pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
 
@@ -58,6 +58,13 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict["pnc_ratio_coeff"] = pnc_ratios_coeff
     features_dict["pnc_ratio_min"] = pnc_ratios_min
     features_dict["pnc_ratio_max"] = pnc_ratios_max
+
+    pnv_ratios_mean, pnv_ratios_coeff, pnv_ratios_min, pnv_ratios_max = array_stats.get_stats(pos_neg_variable_ratios)
+
+    features_dict["pnv_ratio_mean"] = pnv_ratios_mean
+    features_dict["pnv_ratio_coeff"] = pnv_ratios_coeff
+    features_dict["pnv_ratio_min"] = pnv_ratios_min
+    features_dict["pnv_ratio_max"] = pnv_ratios_max
 
     return features_dict
 
@@ -87,9 +94,14 @@ if __name__ == "__main__":
     print(features_dict["vars_clauses_ratio"])
     print(satzilla_features["vars-clauses-ratio"])
 
+
     print("pos neg clauses features")
     print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"], features_dict["pnc_ratio_max"])
     print(satzilla_features["POSNEG-RATIO-CLAUSE-mean"], satzilla_features["POSNEG-RATIO-CLAUSE-coeff-variation"], satzilla_features["POSNEG-RATIO-CLAUSE-min"],satzilla_features["POSNEG-RATIO-CLAUSE-max"])
+
+    print("pos neg variable features")
+    print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_coeff"], features_dict["pnv_ratio_min"], features_dict["pnv_ratio_max"])
+    print(satzilla_features["POSNEG-RATIO-VAR-mean"], satzilla_features["POSNEG-RATIO-VAR-coeff-variation"], satzilla_features["POSNEG-RATIO-VAR-min"],satzilla_features["POSNEG-RATIO-VAR-max"])
 
 
 

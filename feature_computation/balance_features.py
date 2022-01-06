@@ -4,9 +4,10 @@ import statistics as stats
 def compute_balance_features(clauses, c, v):
     # parse first the problem size features, and then do all of the clauses
 
-    variables_count = [0] * v * 2
-    variables_count_ratio = []
-    # positive counts at variable -1, negative literal counts at v + literal -1
+    variables_pos_count = [0] * v
+    variables_neg_count = [0] * v
+    pos_neg_variable_ratios = []
+    # positive and negative counts of variables (literal instances)
 
     pos_neg_clause_ratios = []
     pos_neg_clause_balance = []
@@ -30,11 +31,11 @@ def compute_balance_features(clauses, c, v):
                 neg += 1
                 literal = abs(literal)
 
-                variables_count[literal + v - 1] += 1
+                variables_neg_count[literal - 1] += 1
 
             else:
                 pos += 1
-                variables_count[literal - 1] += 1
+                variables_pos_count[literal - 1] += 1
 
         if neg == 0:
             ratio = 1
@@ -44,44 +45,29 @@ def compute_balance_features(clauses, c, v):
 
         pos_neg_clause_balance.append(2.0 * abs(0.5 - (pos / (pos + neg))))
 
-        for i in range(v):
-            pos_instances = variables_count[i]
-            neg_instances = variables_count[i + v]
-            if neg_instances == 0:
-                vi_ratio = 1
-            else:
-                vi_ratio = pos_instances/neg_instances
-
-            variables_count_ratio.append(vi_ratio)
-
         # clause is a horn clause if it has at most 1 positive literal
         if pos <= 1:
             num_horn_clauses += 1
 
-    print("Number of Horn clauses: ", num_horn_clauses)
-    print("Positive/negative literals per clause ratios: ", pos_neg_clause_ratios)
-    print("Positive/negative literals per clause ratios2: ", pos_neg_clause_balance)
+    # calculate the ratio of positive and negative literals
+    # per variable
+    for i in range(v):
+        pos_instances = variables_pos_count[i]
+        neg_instances = variables_neg_count[i]
+        if neg_instances == 0:
+            vi_ratio = 1
+        else:
+            vi_ratio = pos_instances/neg_instances
+
+        pos_neg_variable_ratios.append(vi_ratio)
 
 
-    pos_neg_ratios_mean = stats.mean(pos_neg_clause_ratios)
-    print("pos fraction mean in clause: ", pos_neg_ratios_mean)
-    pos_neg_ratios_std = stats.stdev(pos_neg_clause_ratios)
-    pos_neg_ratios_coefficient_of_variation = pos_neg_ratios_mean/pos_neg_ratios_std
-
-    pos_neg_ratio_all_mean = stats.mean(variables_count_ratio)
-    pos_neg_ratio_all_std = stats.mean(variables_count_ratio)
-    pos_neg_ratios_all_coefficient_of_variation = pos_neg_ratio_all_mean/pos_neg_ratio_all_std
-    pos_neg_ratio_all_min = min(variables_count_ratio)
-    pos_neg_ratio_all_min = max(variables_count_ratio)
-
-    # entropy?
-
-    print(pos_neg_ratios_coefficient_of_variation)
-
-    # what is the entropy??
+    # print("Number of Horn clauses: ", num_horn_clauses)
+    # print("Positive/negative literals per clause ratios: ", pos_neg_clause_ratios)
+    # print("Positive/negative literals per clause ratios2: ", pos_neg_clause_balance)
 
     print("binary clause fraction: ", num_binary_clauses/c)
     print("ternary clause fraction: ", num_ternary_clauses/c)
 
-    return pos_neg_clause_ratios, pos_neg_clause_balance
+    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios
 
