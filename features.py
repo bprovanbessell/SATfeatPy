@@ -86,14 +86,14 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # features_dict["pnc_ratio_min"] = pnc_ratios_min
     # features_dict["pnc_ratio_max"] = pnc_ratios_max
 
-    write_stats_to_dict(pos_neg_variable_balance, "pnv_ratio", features_dict)
+    write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
     # pnv_ratios_mean, pnv_ratios_coeff, pnv_ratios_min, pnv_ratios_max = array_stats.get_stats(pos_neg_variable_balance)
     #
     # features_dict["pnv_ratio_mean"] = pnv_ratios_mean
     # features_dict["pnv_ratio_coeff"] = pnv_ratios_coeff
     # features_dict["pnv_ratio_min"] = pnv_ratios_min
     # features_dict["pnv_ratio_max"] = pnv_ratios_max
-    # features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
+    features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
     features_dict["binary_ratio"] = num_binary_clauses / c
     features_dict["ternary_ratio"] = num_ternary_clauses / c
@@ -150,6 +150,11 @@ if __name__ == "__main__":
     print("vars clauses ratio")
     print(features_dict["vars_clauses_ratio"])
     print(satzilla_features["vars-clauses-ratio"])
+
+    print("vcg variable stats")
+    print(features_dict["vcg_var_mean"], features_dict["vcg_var_coeff"], features_dict["vcg_var_min"], features_dict["vcg_var_max"])
+    print(satzilla_features["VCG-CLAUSE-mean"], satzilla_features["VCG-CLAUSE-coeff-variation"],
+          satzilla_features["VCG-CLAUSE-min"], satzilla_features["VCG-CLAUSE-max"])
 
     print("pos neg clauses features")
     print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"],
