@@ -71,7 +71,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # variable node degrees divided by number of active clauses
     vg_node_degrees_norm = [x / c for x in vg_node_degrees]
 
-    write_stats(vg_node_degrees, "vg", features_dict)
+    write_stats(vg_node_degrees_norm, "vg", features_dict)
 
     pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance,\
         num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count = \
