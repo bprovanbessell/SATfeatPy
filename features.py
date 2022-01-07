@@ -23,8 +23,9 @@ def write_stats(l, name, features_dict):
     features_dict[name + "_max"] = l_max
 
 
-def write_entropy(l, name, features_dict):
-    pass
+def write_entropy(l, name, features_dict, c, v):
+    entropy = array_stats.entropy_int_array(l, c, v+1)
+    features_dict[name + "_entropy"] = entropy
 
 
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
@@ -61,6 +62,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
     # entropy needed
+    write_entropy(vcg_c_node_degrees, "vcg_clause", features_dict, c, v)
 
     # 9-13
     write_stats(vcg_c_node_degrees_norm, "vcg_clause", features_dict)
@@ -140,9 +142,9 @@ if __name__ == "__main__":
     print(satzilla_features["vars-clauses-ratio"])
 
     print("vcg clause stats")
-    print(features_dict["vcg_clause_mean"], features_dict["vcg_clause_coeff"], features_dict["vcg_clause_min"], features_dict["vcg_clause_max"])
+    print(features_dict["vcg_clause_mean"], features_dict["vcg_clause_coeff"], features_dict["vcg_clause_min"], features_dict["vcg_clause_max"], features_dict["vcg_clause_entropy"])
     print(satzilla_features["VCG-CLAUSE-mean"], satzilla_features["VCG-CLAUSE-coeff-variation"],
-          satzilla_features["VCG-CLAUSE-min"], satzilla_features["VCG-CLAUSE-max"])
+          satzilla_features["VCG-CLAUSE-min"], satzilla_features["VCG-CLAUSE-max"], satzilla_features["VCG-CLAUSE-entropy"])
 
     print("vcg variable stats")
     print(features_dict["vcg_var_mean"], features_dict["vcg_var_coeff"], features_dict["vcg_var_min"],

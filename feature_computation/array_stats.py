@@ -65,11 +65,12 @@ def entropy_float_array(l, num, vals, maxval):
     # make the distribution
     for t in range(num):
         # if l[t] == reserved_value ?:
-    #       res ++
-    #         continue
+        #   res ++
+        #     continue
+
         index = math.floor(l[t] / (maxval/vals))
 
-        if index > vals :
+        if index > vals:
             index = vals
         if index < 0:
             index = 0
@@ -89,7 +90,7 @@ def entropy_int_array(l, num, vals):
 
     :return:
 
-    array_entropy(clause_array,numClauses,numActiveVars+1))
+    vcg clause entropy = array_entropy(clause_array,numClauses,numActiveVars+1))
     """
 
     p = [0] * vals
