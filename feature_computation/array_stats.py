@@ -24,6 +24,20 @@ def get_stdev(l):
     return stats.stdev(l)
 
 
+def calc_coefficient_of_variation(mean, std):
+    """
+    The coefficient of variation is a statistical measure of the relative dispersion of data points in a data series
+    around the mean. https://en.wikipedia.org/wiki/Coefficient_of_variation
+    :param mean:
+    :param std:
+    :return: Coefficient of variation
+    """
+    if std == 0:
+        return 0
+    else:
+        return std / mean
+
+
 def entropy_float_array(l, num, vals, maxval):
     # afaik num could be len(l)...
     """
@@ -92,12 +106,3 @@ def entropy_int_array(l, num, vals):
 
     return -1 * entropy
 
-
-def calc_coefficient_of_variation(mean, std):
-    """
-    The coefficient of variation is a statistical measure of the relative dispersion of data points in a data series around the mean.
-    """
-    if std == 0:
-        return 0
-    else:
-        return mean / std
