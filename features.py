@@ -79,20 +79,8 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 
     write_stats(pos_neg_clause_balance, "pnc_ratio", features_dict)
 
-    # pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
-    #
-    # features_dict["pnc_ratio_mean"] = pnc_ratios_mean
-    # features_dict["pnc_ratio_coeff"] = pnc_ratios_coeff
-    # features_dict["pnc_ratio_min"] = pnc_ratios_min
-    # features_dict["pnc_ratio_max"] = pnc_ratios_max
-
     write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
-    # pnv_ratios_mean, pnv_ratios_coeff, pnv_ratios_min, pnv_ratios_max = array_stats.get_stats(pos_neg_variable_balance)
-    #
-    # features_dict["pnv_ratio_mean"] = pnv_ratios_mean
-    # features_dict["pnv_ratio_coeff"] = pnv_ratios_coeff
-    # features_dict["pnv_ratio_min"] = pnv_ratios_min
-    # features_dict["pnv_ratio_max"] = pnv_ratios_max
+
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
     features_dict["binary_ratio"] = num_binary_clauses / c
@@ -155,6 +143,18 @@ if __name__ == "__main__":
     print(features_dict["vcg_clause_mean"], features_dict["vcg_clause_coeff"], features_dict["vcg_clause_min"], features_dict["vcg_clause_max"])
     print(satzilla_features["VCG-CLAUSE-mean"], satzilla_features["VCG-CLAUSE-coeff-variation"],
           satzilla_features["VCG-CLAUSE-min"], satzilla_features["VCG-CLAUSE-max"])
+
+    print("vcg variable stats")
+    print(features_dict["vcg_var_mean"], features_dict["vcg_var_coeff"], features_dict["vcg_var_min"],
+          features_dict["vcg_var_max"])
+    print(satzilla_features["VCG-VAR-mean"], satzilla_features["VCG-VAR-coeff-variation"],
+          satzilla_features["VCG-VAR-min"], satzilla_features["VCG-VAR-max"])
+
+    print("vg stats")
+    print(features_dict["vg_mean"], features_dict["vg_coeff"], features_dict["vg_min"],
+          features_dict["vg_max"])
+    print(satzilla_features["VG-mean"], satzilla_features["VG-coeff-variation"],
+          satzilla_features["VG-min"], satzilla_features["VG-max"])
 
     print("pos neg clauses features")
     print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"],
