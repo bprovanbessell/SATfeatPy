@@ -151,8 +151,8 @@ if __name__ == "__main__":
     print(features_dict["vars_clauses_ratio"])
     print(satzilla_features["vars-clauses-ratio"])
 
-    print("vcg variable stats")
-    print(features_dict["vcg_var_mean"], features_dict["vcg_var_coeff"], features_dict["vcg_var_min"], features_dict["vcg_var_max"])
+    print("vcg clause stats")
+    print(features_dict["vcg_clause_mean"], features_dict["vcg_clause_coeff"], features_dict["vcg_clause_min"], features_dict["vcg_clause_max"])
     print(satzilla_features["VCG-CLAUSE-mean"], satzilla_features["VCG-CLAUSE-coeff-variation"],
           satzilla_features["VCG-CLAUSE-min"], satzilla_features["VCG-CLAUSE-max"])
 
