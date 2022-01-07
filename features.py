@@ -14,6 +14,19 @@ def satelite_preprocess(cnf_path="cnf_examples/basic.cnf"):
     os.system(satelite_command)
 
 
+def write_stats(l, name, features_dict):
+    l_mean, l_coeff, l_min, l_max = array_stats.get_stats(l)
+
+    features_dict[name + "_mean"] = l_mean
+    features_dict[name + "_coeff"] = l_coeff
+    features_dict[name + "_min"] = l_min
+    features_dict[name + "_max"] = l_max
+
+
+def write_entropy(l, name, features_dict):
+    pass
+
+
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # parse cnf, and get problem size features
 
@@ -40,35 +53,47 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # 4-8
     vcg_v_node_degrees, vcg_c_node_degrees = graph_features.create_vcg(clauses, c, v)
 
-    vcg_v_mean, vcg_v_coeff, vcg_v_min, vcg_v_max = array_stats.get_stats(vcg_v_node_degrees)
+    # variable node degrees divided by number of active clauses
+    vcg_v_node_degrees_norm = [x/c for x in vcg_v_node_degrees]
 
-    # print("Variable-Clause Graph features")
-    # print("Variable nodes degree statistics")
-    # print("mean: ", vcg_v_mean)
-    # print("coefficient of variation: ", vcg_v_coeff)
-    # print("min: ", vcg_v_min)
-    # print("max: ", vcg_v_max)
+    # clause node degrees divided by number of active variables
+    vcg_c_node_degrees_norm = [x / v for x in vcg_c_node_degrees]
 
+    write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
+    # entropy needed
+
+    # 9-13
+    write_stats(vcg_c_node_degrees_norm, "vcg_clause", features_dict)
+    # entropy here aswell
+
+    # 14-17
     vg_node_degrees = graph_features.create_vg(clauses)
+    # variable node degrees divided by number of active clauses
+    vg_node_degrees_norm = [x / c for x in vg_node_degrees]
+
+    write_stats(vg_node_degrees, "vg", features_dict)
 
     pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance,\
         num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count = \
         balance_features.compute_balance_features(clauses, c, v)
 
-    pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
+    write_stats(pos_neg_clause_balance, "pnc_ratio", features_dict)
 
-    features_dict["pnc_ratio_mean"] = pnc_ratios_mean
-    features_dict["pnc_ratio_coeff"] = pnc_ratios_coeff
-    features_dict["pnc_ratio_min"] = pnc_ratios_min
-    features_dict["pnc_ratio_max"] = pnc_ratios_max
+    # pnc_ratios_mean, pnc_ratios_coeff, pnc_ratios_min, pnc_ratios_max = array_stats.get_stats(pos_neg_clause_balance)
+    #
+    # features_dict["pnc_ratio_mean"] = pnc_ratios_mean
+    # features_dict["pnc_ratio_coeff"] = pnc_ratios_coeff
+    # features_dict["pnc_ratio_min"] = pnc_ratios_min
+    # features_dict["pnc_ratio_max"] = pnc_ratios_max
 
-    pnv_ratios_mean, pnv_ratios_coeff, pnv_ratios_min, pnv_ratios_max = array_stats.get_stats(pos_neg_variable_balance)
-
-    features_dict["pnv_ratio_mean"] = pnv_ratios_mean
-    features_dict["pnv_ratio_coeff"] = pnv_ratios_coeff
-    features_dict["pnv_ratio_min"] = pnv_ratios_min
-    features_dict["pnv_ratio_max"] = pnv_ratios_max
-    features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
+    write_stats_to_dict(pos_neg_variable_balance, "pnv_ratio", features_dict)
+    # pnv_ratios_mean, pnv_ratios_coeff, pnv_ratios_min, pnv_ratios_max = array_stats.get_stats(pos_neg_variable_balance)
+    #
+    # features_dict["pnv_ratio_mean"] = pnv_ratios_mean
+    # features_dict["pnv_ratio_coeff"] = pnv_ratios_coeff
+    # features_dict["pnv_ratio_min"] = pnv_ratios_min
+    # features_dict["pnv_ratio_max"] = pnv_ratios_max
+    # features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
     features_dict["binary_ratio"] = num_binary_clauses / c
     features_dict["ternary_ratio"] = num_ternary_clauses / c

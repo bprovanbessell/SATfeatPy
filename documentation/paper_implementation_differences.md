@@ -31,3 +31,5 @@ In the paper this is done by just counting the literals per clause, but this is 
 the clauses have been pre-processed.
 
 vcg variable degrees -> number of clauses that contain the variable (similar as with clause degrees)
+
+vg node degrees divided by number of active
