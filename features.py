@@ -61,7 +61,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     vcg_c_node_degrees_norm = [x / v for x in vcg_c_node_degrees]
 
     write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
-    # write_entropy(vcg_v_node_degrees, "vcg_var", features_dict, c, v)
+    write_entropy(vcg_v_node_degrees, "vcg_var", features_dict, v, c)
 
     # entropy needed
     # 9-13
