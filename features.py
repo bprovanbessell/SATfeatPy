@@ -61,17 +61,22 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     vcg_c_node_degrees_norm = [x / v for x in vcg_c_node_degrees]
 
     write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
-    # entropy needed
-    write_entropy(vcg_c_node_degrees, "vcg_clause", features_dict, c, v)
+    write_entropy(vcg_v_node_degrees, "vcg_var", features_dict, c, v)
 
+    # entropy needed
     # 9-13
     write_stats(vcg_c_node_degrees_norm, "vcg_clause", features_dict)
+    write_entropy(vcg_c_node_degrees, "vcg_clause", features_dict, c, v)
+
     # entropy here aswell
 
     # 14-17
     vg_node_degrees = graph_features.create_vg(clauses)
+
+    print("Variable graph degrees", vg_node_degrees)
     # variable node degrees divided by number of active clauses
     vg_node_degrees_norm = [x / c for x in vg_node_degrees]
+    print("norm", vg_node_degrees_norm)
 
     write_stats(vg_node_degrees_norm, "vg", features_dict)
 
@@ -148,9 +153,9 @@ if __name__ == "__main__":
 
     print("vcg variable stats")
     print(features_dict["vcg_var_mean"], features_dict["vcg_var_coeff"], features_dict["vcg_var_min"],
-          features_dict["vcg_var_max"])
+          features_dict["vcg_var_max"], features_dict["vcg_var_entropy"])
     print(satzilla_features["VCG-VAR-mean"], satzilla_features["VCG-VAR-coeff-variation"],
-          satzilla_features["VCG-VAR-min"], satzilla_features["VCG-VAR-max"])
+          satzilla_features["VCG-VAR-min"], satzilla_features["VCG-VAR-max"], satzilla_features["VCG-VAR-entropy"])
 
     print("vg stats")
     print(features_dict["vg_mean"], features_dict["vg_coeff"], features_dict["vg_min"],
