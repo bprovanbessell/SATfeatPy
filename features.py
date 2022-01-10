@@ -27,6 +27,10 @@ def write_entropy(l, name, features_dict, c, v):
     entropy = array_stats.entropy_int_array(l, c, v+1)
     features_dict[name + "_entropy"] = entropy
 
+def write_entropy_float(l, name, features_dict, num, buckets=100, maxval=1):
+    entropy = array_stats.entropy_float_array(l, num, buckets, maxval)
+    features_dict[name + "_entropy"] = entropy
+
 
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # parse cnf, and get problem size features
@@ -87,6 +91,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     write_stats(pos_neg_clause_balance, "pnc_ratio", features_dict)
 
     write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
+    write_entropy_float(pos_neg_clause_balance, "pnc_ratio", features_dict, c)
 
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
@@ -166,9 +171,9 @@ if __name__ == "__main__":
 
     print("pos neg clauses features")
     print(features_dict["pnc_ratio_mean"], features_dict["pnc_ratio_coeff"], features_dict["pnc_ratio_min"],
-          features_dict["pnc_ratio_max"])
+          features_dict["pnc_ratio_max"], features_dict["pnc_ratio_entropy"])
     print(satzilla_features["POSNEG-RATIO-CLAUSE-mean"], satzilla_features["POSNEG-RATIO-CLAUSE-coeff-variation"],
-          satzilla_features["POSNEG-RATIO-CLAUSE-min"], satzilla_features["POSNEG-RATIO-CLAUSE-max"])
+          satzilla_features["POSNEG-RATIO-CLAUSE-min"], satzilla_features["POSNEG-RATIO-CLAUSE-max"], satzilla_features["POSNEG-RATIO-CLAUSE-entropy"])
 
     print("pos neg variable features")
     print(features_dict["pnv_ratio_mean"], features_dict["pnv_ratio_stdev"], features_dict["pnv_ratio_min"],

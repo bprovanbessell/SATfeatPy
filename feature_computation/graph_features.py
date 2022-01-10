@@ -1,19 +1,22 @@
 import networkx as nx
 
-# Create VCG
-# Variable-Clause Graph features
-# A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause,
-# and an edge between them whenever a variable occurs in a clause
-
 
 def create_vcg(clauses, c, v):
+    """
+    Create VCG
+    Variable-Clause Graph features
+    A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause,
+    and an edge between them whenever a variable occurs in a clause
+
+    :param clauses:
+    :param c:
+    :param v:
+    :return:
+    """
     vcg = nx.Graph()
 
     # Node for each variable
     # node for each clause
-
-    # How to encode the variables and clauses, variables have numbers in cnf, clauses have distinct indexes.
-    # Simple and easy way to do it, v in front of variable number, c in front of clause index
 
     for i, clause in enumerate(clauses):
         c_node = "c_" + str(i)
@@ -56,15 +59,6 @@ def create_vg(clauses):
                 vg.add_edge(v_node_i, v_node_j)
 
 
-
-
-        # if len(clause) >= 2:
-        #     print(j)
-        #     for i in range(0, len(clause)-1):
-        #         v_node_i = "v_" + str(abs(clause[i]))
-        #         v_node_i_1 = "v_" + str(abs(clause[i+1]))
-        #
-        #         vg.add_edge(v_node_i, v_node_i_1)
 
     node_degrees = []
 

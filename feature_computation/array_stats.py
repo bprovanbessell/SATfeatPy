@@ -39,9 +39,9 @@ def calc_coefficient_of_variation(mean, std):
 
 
 def entropy_float_array(l, num, vals, maxval):
-    # afaik num could be len(l)...
     """
-    Find theoretical basis for entropy, reference here
+    :param l: list of values (float, should be between 0 and 1)
+    :param vals: size of the bins used (normally 100)
     For now, this will be based on the implementation from SATzilla
 
     (posneg-ratio-clause-entropy)
@@ -57,18 +57,23 @@ def entropy_float_array(l, num, vals, maxval):
     https://en.wikipedia.org/wiki/Entropy_(information_theory)
     """
 
-    p = [0] * vals
+    # seems to be off by 1 error in the sat implementation... you shouldn't need 101 buckets...
+    p = [0] * (vals + 1)
 
     res = 0
     entropy = 0
 
-    # make the distribution
+    # based on the assumption that all values in l are floats between 0 and 1
+
+    # set up the probability distribution distribution
     for t in range(num):
         # if l[t] == reserved_value ?:
         #   res ++
         #     continue
 
-        index = math.floor(l[t] / (maxval/vals))
+        # find the bucket it should go in
+        # index = math.floor(l[t] / (maxval/vals))
+        index = math.floor(l[t] * (vals/maxval))
 
         if index > vals:
             index = vals
@@ -77,32 +82,41 @@ def entropy_float_array(l, num, vals, maxval):
 
         p[index] += 1
 
-    for t in range(vals):
+    for t in range(vals+1):
         if p[t] != 0:
-            pval = p[t]/(num-res)
+            # pval = p[t]/(num-res)
+            pval = p[t]/num
             entropy += pval * math.log(pval)
 
     return -1 * entropy
 
 
-def entropy_int_array(l, num, vals):
+def entropy_int_array(l, num, number_of_outcomes):
     """
-
+    :param l: List of statistics (vcg variable/clause node degrees, )
+    :param number_of_outcomes: upper bound on the maximum number of outcomes (e.g. for vcg clause node degree, it could have a maximum
+    of the number of variables (the clauses contains all variables)).
     :return:
 
     vcg clause entropy = array_entropy(clause_array,numClauses,numActiveVars+1))
+
+    Entropy of x  is H(X) = - sum (P(xi) * log(P(xi)))
     """
 
-    p = [0] * vals
-    res = 0
+    # create the distribution buckets
+    p = [0] * number_of_outcomes
+    # res = 0
     entropy = 0
 
+    # set up the probability distribution
+    # Could also be in range of the list
     for t in range(num):
         p[l[t]] += 1
 
-    for t in range(vals):
+    for t in range(number_of_outcomes):
         if p[t] != 0:
-            pval = p[t]/(num - res)
+            pval = p[t]/num
+            # pval = p[t]/(num - res)
             entropy += pval * math.log(pval)
 
     return -1 * entropy
