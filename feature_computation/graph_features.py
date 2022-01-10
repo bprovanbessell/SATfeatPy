@@ -41,15 +41,30 @@ def create_vg(clauses):
     # A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at
     # least one clause
 
+    # for each literal in a clause, for all the other literals in that clause
+
+    print("len", len(clauses))
+
     vg = nx.Graph()
 
-    for clause in clauses:
-        if len(clause) >= 2:
-            for i in range(0, len(clause)-1):
-                v_node_i = "v_" + str(abs(clause[i]))
-                v_node_i_1 = "v_" + str(abs(clause[i+1]))
+    for k, clause in enumerate(clauses):
 
-                vg.add_edge(v_node_i, v_node_i_1)
+        for i in range(len(clause)):
+            for j in range(i+1, len(clause)):
+                v_node_i = "v_" + str(abs(clause[i]))
+                v_node_j = "v_" + str(abs(clause[j]))
+                vg.add_edge(v_node_i, v_node_j)
+
+
+
+
+        # if len(clause) >= 2:
+        #     print(j)
+        #     for i in range(0, len(clause)-1):
+        #         v_node_i = "v_" + str(abs(clause[i]))
+        #         v_node_i_1 = "v_" + str(abs(clause[i+1]))
+        #
+        #         vg.add_edge(v_node_i, v_node_i_1)
 
     node_degrees = []
 

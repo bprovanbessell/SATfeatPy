@@ -111,7 +111,8 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 if __name__ == "__main__":
     cnf_path = "cnf_examples/basic.cnf"
     preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
-    satelite_preprocess(cnf_path)
+    # satelite_preprocess(cnf_path)
+    preprocessed_path = "cnf_examples/out.cnf"
     features_dict = compute_features_from_file(preprocessed_path)
 
     test_labels = ["nvarsOrig", "nclausesOrig", "nvars", "nclauses", "reducedVars", "reducedClauses", "Pre-featuretime",
