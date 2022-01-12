@@ -36,10 +36,18 @@ fraction of clauses with 3 literals, over total number of clauses.
 29-33. Number of occurrences in a Horn clause for each variable: mean, co-efficient of variation, minimum, maximum, entropy.
 The number of times a variable appears in all horn clauses.
 
+### DPLL Probing Features
+#### DPLL (Davis-Putnam-Logemann-Loveland) algorithm is a backtracking algorithm for solving CNF SAT problems.
+
+34-38. Number of unit propagations: computed at depths 1, 4, 16, 64 and 256.
+39-40. Search space size estimate: mean depth to contradiction, estimate of the log of number of nodes.
+
 ###Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 
 The coefficient of variation represents the ratio of the standard deviation to the mean
-- Entropy: ?
+- Entropy: Shannon entropy (https://en.wikipedia.org/wiki/Entropy_(information_theory)). A distribution of the array is
+made, from which the entropy is calculated
+
 
 ## Basic notes on SAT problems
 Positive/negative literal is a respective instance of a variable.
