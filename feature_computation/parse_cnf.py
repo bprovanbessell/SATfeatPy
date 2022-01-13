@@ -1,6 +1,11 @@
 
 
 def parse_cnf(cnf_path):
+    """
+    Parse number of variables, number of clauses and the clauses from a standard .cnf file
+    :param cnf_path:
+    :return: 
+    """
 
     with open(cnf_path) as f:
 

@@ -46,12 +46,7 @@ def entropy_float_array(l, num, vals, maxval):
 
     (posneg-ratio-clause-entropy)
     What is int num -> number of clauses/variables -> length of input array
-    What is int vals?
-
-    100, 1
-
-    array_entropy(horny_var+1,numActiveVars,numActiveClauses+1)
-
+    What is int vals -> total possible outcomes (in this case they make buckets to form a probabilty distribution function)
 
     writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
     https://en.wikipedia.org/wiki/Entropy_(information_theory)

@@ -11,7 +11,7 @@ def create_vcg(clauses, c, v):
     :param clauses:
     :param c:
     :param v:
-    :return:
+    :return: Variable node degrees and clause node degrees
     """
     vcg = nx.Graph()
 
@@ -41,8 +41,12 @@ def create_vcg(clauses, c, v):
 
 
 def create_vg(clauses):
-    # A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at
-    # least one clause
+    """
+    A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause
+
+    :param clauses:
+    :return: The degree of each node in the variable graph
+    """
 
     # for each literal in a clause, for all the other literals in that clause
 
@@ -58,8 +62,6 @@ def create_vg(clauses):
                 v_node_j = "v_" + str(abs(clause[j]))
                 vg.add_edge(v_node_i, v_node_j)
 
-
-
     node_degrees = []
 
     for n in vg.nodes:
@@ -67,4 +69,3 @@ def create_vg(clauses):
         node_degrees.append(degree)
 
     return node_degrees
-

@@ -2,7 +2,13 @@ import statistics as stats
 
 
 def compute_balance_features(clauses, c, v):
-    # parse first the problem size features, and then do all of the clauses
+    """
+    Computes the balance features
+    :param clauses: List of clauses of the cnf
+    :param c: number of clauses
+    :param v: number of variables
+    :return:
+    """
 
     variables_pos_count = [0] * v
     variables_neg_count = [0] * v
@@ -43,7 +49,7 @@ def compute_balance_features(clauses, c, v):
         if neg == 0:
             ratio = 1
         else:
-            ratio = pos/neg
+            ratio = pos / neg
         pos_neg_clause_ratios.append(ratio)
 
         pos_neg_clause_balance.append(2.0 * abs(0.5 - (pos / (pos + neg))))
@@ -63,14 +69,11 @@ def compute_balance_features(clauses, c, v):
         if neg_instances == 0:
             vi_ratio = 1
         else:
-            vi_ratio = pos_instances/neg_instances
+            vi_ratio = pos_instances / neg_instances
 
         pos_neg_variable_ratios.append(vi_ratio)
         pos_neg_variable_balance.append(2.0 * abs(0.5 - (pos_instances / (pos_instances + neg_instances))))
 
-    # print("Number of Horn clauses: ", num_horn_clauses)
-    # print("Positive/negative literals per clause ratios: ", pos_neg_clause_ratios)
-    # print("Positive/negative literals per clause ratios2: ", pos_neg_clause_balance)
-
-    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count
-
+    # dictionary could be a cleaner way to format and return the results
+    return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, \
+        num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count
