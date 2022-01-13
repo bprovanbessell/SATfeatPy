@@ -92,9 +92,10 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
         balance_features.compute_balance_features(clauses, c, v)
 
     write_stats(pos_neg_clause_balance, "pnc_ratio", features_dict)
+    write_entropy_float(pos_neg_clause_balance, "pnc_ratio", features_dict, c)
 
     write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
-    write_entropy_float(pos_neg_clause_balance, "pnc_ratio", features_dict, c)
+    write_entropy_float(pos_neg_clause_balance, "pnv_ratio", features_dict, v)
 
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
@@ -102,11 +103,12 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     features_dict["ternary_ratio"] = num_ternary_clauses / c
     features_dict["ternary+"] = (num_binary_clauses + num_ternary_clauses) / c
 
-    features_dict["horn_clauses_fraction"] = num_horn_clauses / c
+    features_dict["hc_fraction"] = num_horn_clauses / c
 
     horn_clause_variable_count_norm = [x/c for x in horn_clause_variable_count]
 
     hc_var_mean, hc_var_coeff, hc_var_min, hc_var_max = array_stats.get_stats(horn_clause_variable_count_norm)
+    write_entropy(horn_clause_variable_count, "hc_var", v, c)
 
     features_dict["hc_var_mean"] = hc_var_mean
     features_dict["hc_var_coeff"] = hc_var_coeff
@@ -189,7 +191,7 @@ if __name__ == "__main__":
           satzilla_features["POSNEG-RATIO-VAR-min"], satzilla_features["POSNEG-RATIO-VAR-max"])
 
     print("binary, ternary, horn_clauses")
-    print(features_dict["binary_ratio"], features_dict["ternary+"], features_dict["horn_clauses_fraction"])
+    print(features_dict["binary_ratio"], features_dict["ternary+"], features_dict["hc_fraction"])
     print(satzilla_features["BINARY+"], satzilla_features["TRINARY+"], satzilla_features["horn-clauses-fraction"])
 
     print("horn clause variables count")
