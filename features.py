@@ -27,14 +27,17 @@ def write_entropy(l, name, features_dict, c, v):
     entropy = array_stats.entropy_int_array(l, c, v+1)
     features_dict[name + "_entropy"] = entropy
 
+
 def write_entropy_float(l, name, features_dict, num, buckets=100, maxval=1):
+    # scipy has an implementation for shannon entropy (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html),
+    # could be something to look into changing to
     entropy = array_stats.entropy_float_array(l, num, buckets, maxval)
     features_dict[name + "_entropy"] = entropy
 
 
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
-    # parse cnf, and get problem size features
-
+    # parse cnf, and get the features
+    # store them in a dictionary
     features_dict = {}
 
     clauses, c, v = parse_cnf.parse_cnf(cnf_path)
@@ -116,9 +119,13 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
 if __name__ == "__main__":
     cnf_path = "cnf_examples/basic.cnf"
     preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
+
+    # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
     # satelite_preprocess(cnf_path)
     preprocessed_path = "cnf_examples/out.cnf"
     features_dict = compute_features_from_file(preprocessed_path)
+
+    # static test values for local testing
 
     test_labels = ["nvarsOrig", "nclausesOrig", "nvars", "nclauses", "reducedVars", "reducedClauses", "Pre-featuretime",
                    "vars-clauses-ratio", "POSNEG-RATIO-CLAUSE-mean",
