@@ -1,4 +1,5 @@
 import os
+import statistics
 import sys
 from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features, preprocessing
 
@@ -61,6 +62,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     vcg_c_node_degrees_norm = [x / v for x in vcg_c_node_degrees]
 
     write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
+
     write_entropy(vcg_v_node_degrees, "vcg_var", features_dict, v, c)
 
     # entropy needed
@@ -68,7 +70,12 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     write_stats(vcg_c_node_degrees_norm, "vcg_clause", features_dict)
     write_entropy(vcg_c_node_degrees, "vcg_clause", features_dict, c, v)
 
-    # entropy here aswell
+    zstd = array_stats.get_stdev_satzilla(vcg_c_node_degrees_norm, c, features_dict["vcg_clause_mean"])
+    std = statistics.pstdev(vcg_c_node_degrees_norm)
+    print("stats stdev", std, std/features_dict["vcg_clause_mean"])
+    print("zilla stdev", zstd, zstd/features_dict["vcg_clause_mean"])
+
+    features_dict["vcg_stdev"] = array_stats.get_stdev(vcg_c_node_degrees_norm)
 
     # 14-17
     vg_node_degrees = graph_features.create_vg(clauses)

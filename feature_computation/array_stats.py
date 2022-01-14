@@ -14,14 +14,22 @@ def get_stats(l):
     mean = stats.mean(l)
     min_val = min(l)
     max_val = max(l)
-    std = stats.stdev(l)
+    std = stats.pstdev(l)
     coefficient_of_variation = calc_coefficient_of_variation(mean, std)
 
     return mean, coefficient_of_variation, min_val, max_val
 
 
 def get_stdev(l):
-    return stats.stdev(l)
+    return stats.pstdev(l)
+
+def get_stdev_satzilla(l, num, mean):
+    dtotal = 0.0
+    reserved_hits = 0
+    for t in range(num):
+        dtotal += (l[t] - mean) * (l[t] - mean)
+
+    return math.sqrt(dtotal/num)
 
 
 def calc_coefficient_of_variation(mean, std):
