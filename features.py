@@ -86,7 +86,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     write_entropy_float(pos_neg_clause_balance, "pnc_ratio", features_dict, c)
 
     write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
-    write_entropy_float(pos_neg_clause_balance, "pnv_ratio", features_dict, v)
+    write_entropy_float(pos_neg_variable_balance, "pnv_ratio", features_dict, v)
 
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
 
