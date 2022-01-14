@@ -120,6 +120,7 @@ class SatzillaComparisonTest(unittest.TestCase):
         for test_file in test_files:
 
             satzilla_features_dict, features_dict = gen_satzilla_and_features_results(test_file)
+            print("now testing: " + test_file)
 
             for sat_feat_name, feat_name in satzilla_names_map.items():
                 print(sat_feat_name, feat_name)
