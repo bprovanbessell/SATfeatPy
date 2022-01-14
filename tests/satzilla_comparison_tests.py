@@ -57,7 +57,6 @@ def gen_satzilla_and_features_results(test_file):
 
     # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
     preprocessing.satelite_preprocess(cnf_path)
-    preprocessed_path = "cnf_examples/" + preprocessed_path
     features_dict = main_features.compute_features_from_file(preprocessed_path)
 
     return satzilla_features_dict, features_dict
