@@ -1,6 +1,7 @@
 import os
 import unittest
-import features
+import feature_computation.preprocessing as preprocessing
+import features as main_features
 
 
 class SatzillaComparisonTest(unittest.TestCase):
@@ -74,9 +75,9 @@ class SatzillaComparisonTest(unittest.TestCase):
             features_dict = dict(zip(feature_names, feature_vals))
             satzilla_features = features_dict
 
-            print("feature names: ", features_names)
-            print("features: ", features)
-            print(features_dict)
+            # print("feature names: ", features_names)
+            # print("features: ", features)
+            # print(features_dict)
 
         f.close()
 
@@ -87,9 +88,9 @@ class SatzillaComparisonTest(unittest.TestCase):
         preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
 
         # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
-        features.satelite_preprocess(cnf_path)
+        preprocessing.satelite_preprocess(cnf_path)
         preprocessed_path = "cnf_examples/out.cnf"
-        features_dict = features.compute_features_from_file(preprocessed_path)
+        features_dict = main_features.compute_features_from_file(preprocessed_path)
 
         for sat_feat_name, feat_name in self.satzilla_names_map.items():
             self.assertAlmostEqual(satzilla_features[sat_feat_name], features_dict[feat_name])

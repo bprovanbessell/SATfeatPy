@@ -6,14 +6,6 @@ Main file to control extraction of features
 
 '''
 
-
-def satelite_preprocess(cnf_path="cnf_examples/basic.cnf"):
-    # pre process using SatELite binary files
-    preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
-    satelite_command = "./SatELite/SatELite_v1.0_linux " + cnf_path + " " + preprocessed_path
-    os.system(satelite_command)
-
-
 def write_stats(l, name, features_dict):
     l_mean, l_coeff, l_min, l_max = array_stats.get_stats(l)
 
