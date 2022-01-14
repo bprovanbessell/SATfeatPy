@@ -9,6 +9,60 @@ from feature_computation import parse_cnf, balance_features, graph_features, arr
 import features as main_features
 
 
+def gen_satzilla_and_features_results(test_file):
+    """
+    Generate satzilla features, and then generate features with this python script from the test file
+    :param test_file:
+    :return:
+    """
+    cnf_example_dir = "cnf_examples/"
+    satzilla_dir = "../SAT-features-competition2012/"
+
+    if not os.path.isfile(satzilla_dir + test_file):
+        copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
+
+    # gen satzilla features
+    os.chdir(satzilla_dir)
+
+    satzilla_results_file = "results/" + test_file[0:-4] + "satzill_res"
+    # run satzilla feature generation
+    os.system("./features -base " + test_file + " " + satzilla_results_file)
+
+    satzilla_features_dict = {}
+    # read output file
+    with open(satzilla_results_file) as f:
+        feature_names = []
+        feature_vals = []
+        for i, line in enumerate(f):
+            if (i == 0):
+                # first line contains the feature names
+                feature_names = [str(x) for x in line.split(",")]
+            if i == 1:
+                # second line contains all of the features
+                feature_vals = map(float, line.split(","))
+
+        satzilla_features_dict = dict(zip(feature_names, feature_vals))
+
+        # print("feature names: ", features_names)
+        # print("features: ", features)
+        # print(features_dict)
+
+    f.close()
+
+    os.chdir("../SAT-features")
+    # compute the features with our code
+    # preprocess the file with satelite
+    cnf_path = "cnf_examples/" + test_file
+    preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
+
+    # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
+    preprocessing.satelite_preprocess(cnf_path)
+    preprocessed_path = "cnf_examples/out.cnf"
+    features_dict = main_features.compute_features_from_file(preprocessed_path)
+
+    return satzilla_features_dict, features_dict
+
+
 class SatzillaComparisonTest(unittest.TestCase):
     """
     Satzilla and satelite only run on linux unfortunately
@@ -64,64 +118,11 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         for test_file in test_files:
 
-            satzilla_features_dict, features_dict = self.gen_satzilla_and_features_results(test_file)
+            satzilla_features_dict, features_dict = gen_satzilla_and_features_results(test_file)
 
             for sat_feat_name, feat_name in self.satzilla_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
-
-    def gen_satzilla_and_features_results(self, test_file):
-        """
-        Generate satzilla features, and then generate features with this python script from the test file
-        :param test_file:
-        :return:
-        """
-        cnf_example_dir = "cnf_examples/"
-        satzilla_dir = "../SAT-features-competition2012/"
-
-        if not os.path.isfile(satzilla_dir + test_file):
-            copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
-
-        # gen satzilla features
-        os.chdir(satzilla_dir)
-
-        satzilla_results_file = "results/" + test_file[0:-4] + "satzill_res"
-        # run satzilla feature generation
-        os.system("./features -base " + test_file + " " + satzilla_results_file)
-
-        satzilla_features_dict = {}
-        # read output file
-        with open(satzilla_results_file) as f:
-            feature_names = []
-            feature_vals = []
-            for i, line in enumerate(f):
-                if (i == 0):
-                    # first line contains the feature names
-                    feature_names = [str(x) for x in line.split(",")]
-                if i == 1:
-                    # second line contains all of the features
-                    feature_vals = map(float, line.split(","))
-
-            satzilla_features_dict = dict(zip(feature_names, feature_vals))
-
-            # print("feature names: ", features_names)
-            # print("features: ", features)
-            # print(features_dict)
-
-        f.close()
-
-        os.chdir("../SAT-features")
-        # compute the features with our code
-        # preprocess the file with satelite
-        cnf_path = "cnf_examples/" + test_file
-        preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
-
-        # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
-        preprocessing.satelite_preprocess(cnf_path)
-        preprocessed_path = "cnf_examples/out.cnf"
-        features_dict = main_features.compute_features_from_file(preprocessed_path)
-
-        return satzilla_features_dict, features_dict
 
 
 if __name__ == '__main__':
