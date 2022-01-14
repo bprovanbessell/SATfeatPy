@@ -1,5 +1,6 @@
 import os
-from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features
+import sys
+from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features, preprocessing
 
 '''
 Main file to control extraction of features
@@ -100,7 +101,7 @@ def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     horn_clause_variable_count_norm = [x/c for x in horn_clause_variable_count]
 
     hc_var_mean, hc_var_coeff, hc_var_min, hc_var_max = array_stats.get_stats(horn_clause_variable_count_norm)
-    write_entropy(horn_clause_variable_count, "hc_var", v, c)
+    write_entropy(horn_clause_variable_count, "hc_var", features_dict, v, c)
 
     features_dict["hc_var_mean"] = hc_var_mean
     features_dict["hc_var_coeff"] = hc_var_coeff

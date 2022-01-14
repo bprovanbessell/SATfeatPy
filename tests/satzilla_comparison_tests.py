@@ -1,6 +1,9 @@
 import os
+import sys
+sys.path.append("/Users/bprovan/Insight/SAT-features")
+# print(sys.path)
 import unittest
-from . import feature_computation.preprocessing as preprocessing
+from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features, preprocessing
 import features as main_features
 
 
@@ -9,10 +12,8 @@ class SatzillaComparisonTest(unittest.TestCase):
     Satzilla and satelite only run on linux unfortunately
     """
 
-    def __init__(self):
-
-        # mapping of the satzilla names for features
-        self.satzilla_names_map = {
+    def test_base_features(self):
+        satzilla_names_map = {
             "nvars": "v",
             "nclauses": "c",
             "vars-clauses-ratio": "vars_clauses_ratio",
@@ -51,8 +52,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-max": "vg_max"
         }
 
-    def test_base_features(self):
-        os.chdir("../SAT-features-competition2012/")
+        os.chdir("../../SAT-features-competition2012/")
         satzilla_results_file = "output_base_feat"
         input_cnf_file = "basic.cnf"
 
@@ -81,7 +81,7 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         f.close()
 
-        os.chdir("../SAT-features")
+        os.chdir("..")
         # compute the features with our code
         # preprocess the file with satelite
         cnf_path = "cnf_examples/" + input_cnf_file
@@ -89,13 +89,16 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
         preprocessing.satelite_preprocess(cnf_path)
-        preprocessed_path = "cnf_examples/out.cnf"
+        preprocessed_path = "../cnf_examples/out.cnf"
         features_dict = main_features.compute_features_from_file(preprocessed_path)
 
         for sat_feat_name, feat_name in self.satzilla_names_map.items():
             self.assertAlmostEqual(satzilla_features[sat_feat_name], features_dict[feat_name])
 
 
+if __name__ == '__main__':
+    os.chdir("..")
+    unittest.main()
 #
 #
 # os.chdir("../SAT-features-competition2012/")
