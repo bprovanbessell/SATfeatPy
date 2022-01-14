@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.append("/Users/bprovan/Insight/SAT-features")
+sys.path.append("/home/bprovan/Insight/SAT-features")
 # print(sys.path)
 import unittest
 from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features, preprocessing
