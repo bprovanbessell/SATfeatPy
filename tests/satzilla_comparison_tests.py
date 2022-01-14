@@ -1,6 +1,6 @@
 import os
 import unittest
-import feature_computation.preprocessing as preprocessing
+from . import feature_computation.preprocessing as preprocessing
 import features as main_features
 
 
