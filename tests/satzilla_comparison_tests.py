@@ -115,7 +115,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-max": "vg_max"
         }
 
-        test_files = ["basic.cnf", "php10_7.cnf", "count_10_4", "parity_5", "parity_6", "subsetcard_5", "tseitin_10_4"]
+        test_files = ["basic.cnf", "php10_7.cnf", "count_10_4.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
 
         for test_file in test_files:
 
