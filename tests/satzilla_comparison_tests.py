@@ -82,7 +82,7 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         f.close()
 
-        os.chdir("..")
+        os.chdir("")
         # compute the features with our code
         # preprocess the file with satelite
         cnf_path = "cnf_examples/" + input_cnf_file
