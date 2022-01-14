@@ -67,12 +67,17 @@ class SatzillaComparisonTest(unittest.TestCase):
     """
     Satzilla and satelite only run on linux unfortunately
     """
+    #
+    # def __init__(self):
+    #
+    #     super().__init__()
+    #
+    #     self.
 
-    def __init__(self):
+    def test_base_features(self):
+        # run from root directory of project(SAT-features)
 
-        super().__init__()
-
-        self.satzilla_names_map = {
+        satzilla_names_map = {
             "nvars": "v",
             "nclauses": "c",
             "vars-clauses-ratio": "vars_clauses_ratio",
@@ -111,16 +116,13 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-max": "vg_max"
         }
 
-    def test_base_features(self):
-        # run from root directory of project(SAT-features)
-
         test_files = ["php10_7.cnf", "basic.cnf"]
 
         for test_file in test_files:
 
             satzilla_features_dict, features_dict = gen_satzilla_and_features_results(test_file)
 
-            for sat_feat_name, feat_name in self.satzilla_names_map.items():
+            for sat_feat_name, feat_name in satzilla_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
