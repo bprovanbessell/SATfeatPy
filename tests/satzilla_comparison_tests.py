@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append("/Users/bprovan/Insight/SAT-features")
 sys.path.append("/home/bprovan/SAT-features")
-print(sys.path)
+# print(sys.path)
 import unittest
 from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features, preprocessing
 import features as main_features
@@ -45,7 +45,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "HORNY-VAR-coeff-variation": "hc_var_coeff",
             "HORNY-VAR-min": "hc_var_min",
             "HORNY-VAR-max": "hc_var_max",
-            "HORNY-VAR-entropy": "hc-var_entropy",
+            "HORNY-VAR-entropy": "hc_var_entropy",
             "horn-clauses-fraction": "hc_fraction",
             "VG-mean": "vg_mean",
             "VG-coeff-variation": "vg_coeff",
@@ -53,7 +53,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-max": "vg_max"
         }
 
-        os.chdir("../../SAT-features-competition2012/")
+        os.chdir("../SAT-features-competition2012/")
         satzilla_results_file = "output_base_feat"
         input_cnf_file = "basic.cnf"
 
@@ -82,7 +82,7 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         f.close()
 
-        os.chdir("")
+        os.chdir("../SAT-features")
         # compute the features with our code
         # preprocess the file with satelite
         cnf_path = "cnf_examples/" + input_cnf_file
@@ -90,10 +90,11 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
         preprocessing.satelite_preprocess(cnf_path)
-        preprocessed_path = "../cnf_examples/out.cnf"
+        preprocessed_path = "cnf_examples/out.cnf"
         features_dict = main_features.compute_features_from_file(preprocessed_path)
 
-        for sat_feat_name, feat_name in self.satzilla_names_map.items():
+        for sat_feat_name, feat_name in satzilla_names_map.items():
+            print(sat_feat_name, feat_name)
             self.assertAlmostEqual(satzilla_features[sat_feat_name], features_dict[feat_name])
 
 
