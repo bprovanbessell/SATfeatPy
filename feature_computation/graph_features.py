@@ -49,9 +49,6 @@ def create_vg(clauses):
     """
 
     # for each literal in a clause, for all the other literals in that clause
-
-    print("len", len(clauses))
-
     vg = nx.Graph()
 
     for k, clause in enumerate(clauses):
