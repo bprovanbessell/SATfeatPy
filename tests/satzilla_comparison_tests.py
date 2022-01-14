@@ -45,7 +45,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "HORNY-VAR-coeff-variation": "hc_var_coeff",
             "HORNY-VAR-min": "hc_var_min",
             "HORNY-VAR-max": "hc_var_max",
-            "HORNY-VAR-entropy": "hc-var_entropy",
+            "HORNY-VAR-entropy": "hc_var_entropy",
             "horn-clauses-fraction": "hc_fraction",
             "VG-mean": "vg_mean",
             "VG-coeff-variation": "vg_coeff",
