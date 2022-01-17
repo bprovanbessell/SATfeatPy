@@ -174,10 +174,11 @@ def reduce_clauses(literal, num_clauses_reduced, num_vars_reduced, clauses_with_
             reduced_clauses.push(clause_num)
             num_clauses_reduced += 1
 
+            # could be quite important
             # clause_lengths[clause_num] -=1
 
             if len(clauses[clause_num] == 2):
-                # seems a bit funky, and useless
+                # seems a bit funky, depends on how the clauses are stored still, maybe the literals are set to 0 if they are "removed"??
                 # for (int i=0; clauses[clause][i] != 0; i++)
 
                 for i in range(2):
@@ -186,13 +187,43 @@ def reduce_clauses(literal, num_clauses_reduced, num_vars_reduced, clauses_with_
                 # for (int i=0; clauses[clause][i] != 0; i++)
                 # still not sure how they store the clauses exactly
                 for i in range(1):
-                    num_bin_clauses_with_var[abs(clauses(clause_num)[i])] += 1
+                    num_bin_clauses_with_var[abs(clauses(clause_num)[i])] -= 1
 
             elif len(clauses[clause_num] == 0):
                 # inconsistent, the last literal in the clause has been removed, and it has to be satisfied, as opposed to being removed
                 return False
 
+    # satisfy the consistent clauses
+    for i in range(len(clauses_with_literal[literal])):
+        clause_num = clauses_with_literal[i]
+        if clause_states[clause_num] == ClauseState.ACTIVE:
 
+            clause_states[clause_num] = ClauseState.PASSIVE
+            reduced_clauses.append(clause_num)
+            num_active_clauses -=1
+
+            j=0
+            other_var_in_clause = abs(clauses[clause_num][j])
+            while other_var_in_clause != 0:
+                num_active_clauses_with_var[other_var_in_clause] -= 1
+
+                # if clause_lengths[clause_num] == 2:
+                if(len(clauses[clause_num]) == 2):
+                    num_bin_clauses_with_var[other_var_in_clause] -= 1
+
+                # is the variable now irrelevant (active, but existing in no clauses
+                if num_active_clauses_with_var[other_var_in_clause] == 0 and var_states[other_var_in_clause] == VarState.UNASSIGNED:
+                    var_states[other_var_in_clause] = VarState.IRRELEVANT
+                    reduced_vars.append(other_var_in_clause)
+                    num_active_vars -=1
+                    num_vars_reduced -=1
+
+                j+=1
+                other_var_in_clause = abs(clauses[clause_num][j])
+
+            num_clauses_reduced +=1
+    
+    return True
 
     pass
 
