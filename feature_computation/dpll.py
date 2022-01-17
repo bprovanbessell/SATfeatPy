@@ -2,16 +2,6 @@ import random
 
 import parse_cnf
 
-def get_counter(formula):
-    counter = {}
-    for clause in formula:
-        for literal in clause:
-            if literal in counter:
-                counter[literal] += 1
-            else:
-                counter[literal] = 1
-    return counter
-
 
 def bcp(formula, unit):
     """
@@ -36,20 +26,15 @@ def bcp(formula, unit):
     return modified
 
 
-def unit_propagation(formula):
-    assignment = []
-    unit_clauses = [c for c in formula if len(c) == 1]
-    while len(unit_clauses) > 0:
-        unit = unit_clauses[0]
-        formula = bcp(formula, unit[0])
-        assignment += [unit[0]]
-        if formula == -1:
-            return -1, []
-        if not formula:
-            return formula, assignment
-        unit_clauses = [c for c in formula if len(c) == 1]
-    return formula, assignment
-
+def get_counter(formula):
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            if literal in counter:
+                counter[literal] += 1
+            else:
+                counter[literal] = 1
+    return counter
 
 
 def pure_literal(formula):
@@ -65,9 +50,24 @@ def pure_literal(formula):
     return formula, assignment
 
 
-def variable_selection(formula, assignment):
+def unit_propagation(formula):
+    assignment = []
+    unit_clauses = [c for c in formula if len(c) == 1]
+    while len(unit_clauses) > 0:
+        unit = unit_clauses[0]
+        formula = bcp(formula, unit[0])
+        assignment += [unit[0]]
+        if formula == -1:
+            return -1, []
+        if not formula:
+            return formula, assignment
+        unit_clauses = [c for c in formula if len(c) == 1]
+    return formula, assignment
+
+
+def variable_selection(formula):
     counter = get_counter(formula)
-    return random.choice(counter.keys())
+    return random.choice([x for x in counter.keys()])
 
 
 def backtracking(formula, assignment):
@@ -87,10 +87,19 @@ def backtracking(formula, assignment):
         solution = backtracking(bcp(formula, -variable), assignment + [-variable])
     return solution
 
+
 if __name__ == "__main__":
     # test out the algo here
     cnf_path = "../cnf_examples/basic.cnf"
 
-    clauses, c, v = parse_cnf.parse_cnf()
+    clauses, c, v = parse_cnf.parse_cnf(cnf_path)
+    solution = backtracking(clauses, [])
+    if solution:
+        solution += [x for x in range(1, v + 1) if x not in solution and -x not in solution]
+        solution.sort(key=lambda x: abs(x))
+        print('SATISFIABLE')
+        print('v ' + ' '.join([str(x) for x in solution]) + ' 0')
+    else:
+        print('UNSATISFIABLE')
 
     solution = backtracking(clauses, [])
