@@ -1,3 +1,4 @@
+from enums import VarState, clauseState
 """
 First we need to compute the active variables and clauses
 After pre-processing, active variable and clause computation is done
@@ -10,6 +11,7 @@ def get_active_features(clauses, c, v):
     # int *lits = new int[numVars+1];
     clause_states = [False] * c
     num_active_clauses_with_var = [0] * (v + 1)
+    num_bin_clauses_with_var = [0] * (v + 1)
 
     num_active_clauses = c
 
@@ -57,6 +59,8 @@ def get_active_features(clauses, c, v):
             if num_literals == 2:
                 # for (int i=0; i < numLits; i++)
                 #     numBinClausesWithVar[ABS(lits[i])] + +;
+                for i in range(num_literals):
+                    num_bin_clauses_with_var[abs(clause[i])] += 1
                 num_binary_clauses += 1
             if num_literals == 3:
                 num_ternary_clauses += 1
@@ -71,14 +75,16 @@ def get_active_features(clauses, c, v):
 
     # Now remove the redundant variables
     num_active_vars = v
-    var_states = [False] * (v+1)
+    var_states = [VarState.UNASSIGNED] * (v+1)
 
     for i in range(1, v+1):
-        if num_active_clauses_with_var[i] > 0:
-            var_states[i] = True
-        else:
+        if num_active_clauses_with_var[i] == 0:
+            var_states[i] = VarState.IRRELEVANT
             num_active_vars -= 1
+        else:
+            # redundant
+            var_states[i] = VarState.UNASSIGNED
 
-    return num_active_vars, num_active_clauses, clause_states, clauses
+    return num_active_vars, num_active_clauses, clause_states, clauses, num_bin_clauses_with_var, var_states
 
 

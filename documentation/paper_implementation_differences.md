@@ -33,3 +33,15 @@ the clauses have been pre-processed.
 vcg variable degrees -> number of clauses that contain the variable (similar as with clause degrees)
 
 vg node degrees divided by number of active
+
+
+# Notes on implementation:
+different options
+- base is features 1-33 (+ a few other options)
+- SP is survey propagation -> lots of percentiles, could be 41-44?
+- dia is diameter?
+- cl (quartiles, min, max etc) (executing zchaff07)
+- lp ??? lpslack
+- unit: features 34-38 number of unit propagations
+- ls: executes ubcsat2006 (currently crashes)
+- lobjois: features 39-40 search space size estimate

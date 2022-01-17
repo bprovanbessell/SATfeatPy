@@ -1,7 +1,79 @@
 import random
-
 import parse_cnf
 
+verbose = True
+
+# unit propagation
+
+#define
+num_vars_to_try = 10
+num_probes = 5
+
+# num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
+# this should change as the propogation happens?
+
+
+def unit_prop_probe(haltOnAssignment, doComp, v, num_bin_clauses_with_var):
+    if verbose:
+        print("unit prop probe")
+
+    if not doComp:
+        next_probe_depth = 1
+        for j in range(num_probes):
+            next_probe_depth = next_probe_depth * 4
+            print("vars-reduced-depth-" + next_probe_depth)
+            # they also write the actual feature here? or just reserve the memory for it
+            print("feature")
+
+        print("time to calculate unit probing...")
+
+#     Note: depth is number of vars: manually set- not including unitprop
+    current_depth = 0
+    orig_num_active_vars = v
+    reached_bottom = False
+
+    for probe_num in range(num_probes):
+        # sets depth to 1, 4, 16, 64, 256
+
+        # alternatively next_probe_depth = 4 ** probe_num
+        next_probe_depth = 1
+        for j in range(probe_num):
+            next_probe_depth = next_probe_depth * 4
+
+
+        # the actual searching
+        while current_depth < next_probe_depth and not reached_bottom:
+            # define the int arrays, values not yet initialised though... Contents undefined
+            # int varsInMostBinClauses[NUM_VARS_TO_TRY];
+            # int numBin[NUM_VARS_TO_TRY];
+
+            vars_in_most_bin_clauses = [0] * num_vars_to_try
+            num_bin = [0] * num_vars_to_try
+
+
+            array_size = 0
+            for var in range(1, v+1):
+                if var_states[var]
+
+                if array_size < num_vars_to_try: array_size += 1
+
+                j=0
+                while j < array_size-1 and num_bin_clauses_with_var[var] < num_bin[j]:
+                    j+=1
+
+
+
+
+
+def get_counter(formula):
+    counter = {}
+    for clause in formula:
+        for literal in clause:
+            if literal in counter:
+                counter[literal] += 1
+            else:
+                counter[literal] = 1
+    return counter
 
 def bcp(formula, unit):
     """
