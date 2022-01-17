@@ -13,5 +13,8 @@ python features.py path/to/cnf_file.cnf
 
 N.b. current implementation reliant on SatELite binaries, which only work on linux systems.
 
+**Dependencies**
+- NetworkX:  ```pip install networkx```
+
 **Important references**
 - Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT." Journal of Artificial Intelligence Research (2008): 565-606.

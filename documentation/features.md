@@ -57,3 +57,6 @@ CNF (Conjunctive Normal Form): Conjunction (and) of disjunction (or) of literals
 ##Useful libraries/notes
 - NetworkX - for graph creation and statistics
 - cnfgen - for creating part of the testbed
+
+#Possible bugs in Satzilla feature code
+- float entropy - off by one error, 101 buckets are created as opposed to 100 (what everything is rounded to...)
