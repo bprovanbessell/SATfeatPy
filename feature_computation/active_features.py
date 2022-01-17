@@ -1,4 +1,4 @@
-from enums import VarState, clauseState
+from enums import VarState, ClauseState
 """
 First we need to compute the active variables and clauses
 After pre-processing, active variable and clause computation is done

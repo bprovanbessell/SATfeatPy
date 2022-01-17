@@ -8,6 +8,6 @@ class VarState(Enum):
     IRRELEVANT = 4
 
 
-class clauseState(Enum):
+class ClauseState(Enum):
     ACTIVE = 1
     PASSIVE = 2
