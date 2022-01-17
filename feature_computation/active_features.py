@@ -85,6 +85,9 @@ def get_active_features(clauses, c, v):
             # redundant
             var_states[i] = VarState.UNASSIGNED
 
+    # here, a round of unit propagation is done to remove the unit clauses
+    # TODO: add unit propagation code, and call it here
+
     return num_active_vars, num_active_clauses, clause_states, clauses, num_bin_clauses_with_var, var_states
 
 

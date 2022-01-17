@@ -1,5 +1,6 @@
 import random
 import parse_cnf
+from enums import VarState
 
 verbose = True
 
@@ -13,7 +14,7 @@ num_probes = 5
 # this should change as the propogation happens?
 
 
-def unit_prop_probe(haltOnAssignment, doComp, v, num_bin_clauses_with_var):
+def unit_prop_probe(haltOnAssignment, doComp, v, num_bin_clauses_with_var, var_states):
     if verbose:
         print("unit prop probe")
 
@@ -53,13 +54,21 @@ def unit_prop_probe(haltOnAssignment, doComp, v, num_bin_clauses_with_var):
 
             array_size = 0
             for var in range(1, v+1):
-                if var_states[var]
+                if var_states[var] != VarState.UNASSIGNED: continue
 
                 if array_size < num_vars_to_try: array_size += 1
 
-                j=0
+                j = 0
                 while j < array_size-1 and num_bin_clauses_with_var[var] < num_bin[j]:
                     j+=1
+
+                # what is this actually doing...
+                for k in range(array_size-1, j, -1):
+                    vars_in_most_bin_clauses[k] = vars_in_most_bin_clauses[k-1]
+                    num_bin[k] = num_bin[k-1]
+
+                vars_in_most_bin_clauses[j] = var
+                num_bin[j] = num_bin_clauses_with_var[var]
 
 
 
