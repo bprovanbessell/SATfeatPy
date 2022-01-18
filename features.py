@@ -39,9 +39,7 @@ class Features:
 
 
         # used for dpll operations, perhaps better to keep them in a dpll class...
-        # stack of variables that have been reduced
-        self.reduced_vars = []
-        self.reduced_clauses = []
+
 
     def clauses_with_literal(self, literal):
         if literal > 0:

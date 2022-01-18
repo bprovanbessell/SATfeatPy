@@ -35,6 +35,14 @@ class DPLLProbing:
         self.num_vars_to_try = 10
         self.num_probes = 5
 
+        # two stacks
+        self.num_reduced_clauses = []
+        self.num_reduced_vars = []
+
+        # stack of variables that have been reduced
+        self.reduced_vars = []
+        self.reduced_clauses = []
+
 
 # unit propagation
 
@@ -167,39 +175,40 @@ class DPLLProbing:
 
         # writefeature
 
-    def set_var_and_prop(self, var, val, var_states, reduced_vars):
+    def set_var_and_prop(self, var, value):
         """
 
         :param var: integer, the variable
-        :param val: boolean, value that the variable should get set to
+        :param value: boolean, value that the variable should get set to
         :return:
         """
 
         num_clauses_reduced = 0
         num_vars_reduced = 1
 
-        assert var_states[var] == VarState.UNASSIGNED
+        # can only set an unassigned variable to a value
+        assert self.feats.var_states[var] == VarState.UNASSIGNED
 
         # set the value of the variable
-        if val:
-            var_states[var] = VarState.TRUE_VAL
+        if value:
+            self.feats.var_states[var] = VarState.TRUE_VAL
             literal = var
         else:
-            var_states[var] = VarState.FALSE_VAL
+            self.feats.var_states[var] = VarState.FALSE_VAL
             literal = -var
 
         # really these variables should be global
-        # reduced_vars.append(var)
-        # num_active_vars -= 1
+        self.reduced_vars.append(var)
+        self.feats.num_active_vars -= 1
 
-        consistent = reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
+        consistent = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
 
         if consistent:
-            consistent = unit_prop(num_clauses_reduced, num_vars_reduced)
+            consistent = self.unit_prop(num_clauses_reduced, num_vars_reduced)
 
         # stack to hold the number that have been reduced?...
-        # num_reduced_clauses.append(num_clauses_reduced)
-        # num_reduced_var.appned(num_vars_reduced)
+        self.num_reduced_clauses.append(num_clauses_reduced)
+        self.num_reduced_vars.append(num_vars_reduced)
 
         return consistent
         pass
@@ -216,7 +225,7 @@ class DPLLProbing:
             clause_num = clauses_with_literal(-literal)[i]
             # if it is active
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
-                self.feats.reduced_clauses.push(clause_num)
+                self.reduced_clauses.push(clause_num)
                 num_clauses_reduced += 1
 
                 # could be quite important
@@ -247,7 +256,7 @@ class DPLLProbing:
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
 
                 self.feats.clause_states[clause_num] = ClauseState.PASSIVE
-                self.feats.reduced_clauses.append(clause_num)
+                self.reduced_clauses.append(clause_num)
                 self.feats.num_active_clauses -=1
 
                 # Seems to be iterating through the clause again
@@ -264,7 +273,7 @@ class DPLLProbing:
                     # is the variable now irrelevant (active, but existing in no clauses)
                     if self.feats.num_active_clauses_with_var[curr_var] == 0 and self.feats.var_states[curr_var] == VarState.UNASSIGNED:
                         self.feats.var_states[curr_var] = VarState.IRRELEVANT
-                        self.feats.reduced_vars.append(curr_var)
+                        self.reduced_vars.append(curr_var)
                         self.feats.num_active_vars -=1
                         num_vars_reduced -=1
 
@@ -312,7 +321,7 @@ class DPLLProbing:
             else:
                 self.feats.var_states[abs(literal)] = VarState.FALSE_VAL
 
-            self.feats.reduced_vars.append(abs(literal))
+            self.reduced_vars.append(abs(literal))
             self.feats.num_active_vars -=1
             num_vars_reduced +=1
 
@@ -325,6 +334,10 @@ class DPLLProbing:
         pass
 
     def backtrack(self):
+        """
+        Should undo one call of setVar or unitprop
+        :return:
+        """
         pass
 
 """ Python implementation of dpll, could be useful in shrinking the satzilla code"""
