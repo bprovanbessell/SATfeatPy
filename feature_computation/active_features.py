@@ -1,4 +1,5 @@
 from enums import VarState, ClauseState
+from features import Features
 """
 First we need to compute the active variables and clauses
 After pre-processing, active variable and clause computation is done
@@ -7,17 +8,19 @@ Tautologies are removed,
 """
 
 
-def get_active_features(clauses, c, v):
+def get_active_features(feats: Features, clauses, c, v):
     # int *lits = new int[numVars+1];
-    clause_states = [False] * c
+    clause_states = [ClauseState.PASSIVE] * c
     num_active_clauses_with_var = [0] * (v + 1)
     num_bin_clauses_with_var = [0] * (v + 1)
+    clause_lengths = [0] * c
+
+    unit_clauses = []
 
     num_active_clauses = c
 
     # These are used at some point...
-    unit_clauses = []
-
+    num_unit_clauses = 0
     num_binary_clauses = 0
     num_ternary_clauses = 0
 
@@ -50,12 +53,14 @@ def get_active_features(clauses, c, v):
         # Clause is sorted in terms of literals, and duplicates have been removed
 
         if not tautology:
-            clause_states[clause_i] = True
-
             num_literals = len(clause)
+            # set length of clause and
+            clause_lengths[clause_i] = num_literals
+            clause_states[clause_i] = ClauseState.ACTIVE
 
             if num_literals == 1:
-                unit_clauses.append(clause)
+                unit_clauses.append(clause_i)
+                num_unit_clauses += 1
             if num_literals == 2:
                 # for (int i=0; i < numLits; i++)
                 #     numBinClausesWithVar[ABS(lits[i])] + +;
@@ -84,6 +89,19 @@ def get_active_features(clauses, c, v):
         else:
             # redundant
             var_states[i] = VarState.UNASSIGNED
+
+    feats.num_active_vars = num_active_vars
+    feats.num_active_clauses = num_active_clauses
+
+    feats.clauses = clauses
+    feats.clause_states = clause_states
+    feats.clause_lengths = clause_lengths
+    feats.num_active_clauses_with_var = num_active_clauses_with_var
+
+    feats.num_bin_clauses_with_var = num_bin_clauses_with_var
+    feats.unit_clauses = unit_clauses
+
+    feats.var_states = var_states
 
     # here, a round of unit propagation is done to remove the unit clauses
     # TODO: add unit propagation code, and call it here
