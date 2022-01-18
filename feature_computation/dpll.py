@@ -41,7 +41,18 @@ class DPLLProbing:
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
 # this should change as the propogation happens?
 
-    def unit_prop_probe(self, haltOnAssignment, doComp, active_vars, num_bin_clauses_with_var, var_states, v):
+    def unit_prop_probe(self, haltOnAssignment, doComp):
+        """
+        Method to calculate the dpll probing features
+
+        :param haltOnAssignment:
+        :param doComp:
+        :param active_vars:
+        :param num_bin_clauses_with_var:
+        :param var_states:
+        :param v:
+        :return:
+        """
         if self.verbose:
             print("unit prop probe")
 
@@ -55,12 +66,12 @@ class DPLLProbing:
 
             print("time to calculate unit probing...")
 
-        #     Note: depth is number of vars: manually set- not including unitprop
+        # the depths are manually set, multiples of 4 each time
         current_depth = 0
-        orig_num_active_vars = active_vars
+        orig_num_active_vars = self.feats.num_active_vars
         reached_bottom = False
 
-        for probe_num in range(num_probes):
+        for probe_num in range(self.num_probes):
             # sets depth to 1, 4, 16, 64, 256
 
             # alternatively next_probe_depth = 4 ** probe_num
@@ -74,26 +85,27 @@ class DPLLProbing:
                 # int varsInMostBinClauses[NUM_VARS_TO_TRY];
                 # int numBin[NUM_VARS_TO_TRY];
 
-                vars_in_most_bin_clauses = [0] * num_vars_to_try
-                num_bin = [0] * num_vars_to_try
+                vars_in_most_bin_clauses = [0] * self.num_vars_to_try
+                num_bin = [0] * self.num_vars_to_try
 
                 array_size = 0
-                for var in range(1, v + 1):
-                    if var_states[var] != VarState.UNASSIGNED: continue
+                for var in range(1, self.feats.v + 1):
+                    # if the variable is not unassigned, skip it (it already has a value (true, false) or it is irrelevant
+                    if self.feats.var_states[var] != VarState.UNASSIGNED: continue
 
-                    if array_size < num_vars_to_try: array_size += 1
+                    if array_size < self.num_vars_to_try: array_size += 1
 
                     j = 0
-                    while j < array_size - 1 and num_bin_clauses_with_var[var] < num_bin[j]:
+                    while j < array_size - 1 and self.feats.num_bin_clauses_with_var[var] < num_bin[j]:
                         j += 1
 
-                    # what is this actually doing...
+                    # what is this actually doing... somehow sorting and keeping track of the top 10 vars that occur in the most binary clauses??
                     for k in range(array_size - 1, j, -1):
                         vars_in_most_bin_clauses[k] = vars_in_most_bin_clauses[k - 1]
                         num_bin[k] = num_bin[k - 1]
 
                     vars_in_most_bin_clauses[j] = var
-                    num_bin[j] = num_bin_clauses_with_var[var]
+                    num_bin[j] = self.feats.num_bin_clauses_with_var[var]
 
                 max_props_var = 0
                 max_props_val = False
@@ -101,7 +113,7 @@ class DPLLProbing:
                 # if there are no binary clauses, just take the first unassigned var
                 if array_size == 0:
                     max_props_var = 1
-                    while var_states[max_props_var] != VarState.UNASSIGNED and max_props_var < v:
+                    while self.feats.var_states[max_props_var] != VarState.UNASSIGNED and max_props_var < self.feats.v:
                         max_props_var += 1
 
                     max_props_val = True
@@ -115,14 +127,14 @@ class DPLLProbing:
                         while True:
                             # do block
                             # for val = true and val = false??
-                            if set_var_and_prop(vars_in_most_bin_clauses[var_num], val) and num_active_vars <= 0:
+                            if set_var_and_prop(vars_in_most_bin_clauses[var_num], value) and self.feats.num_active_vars <= 0:
 
                                 if haltOnAssignment:
                                     output_assignment()
                                     # DONE is just some number... still to be seen what this does in the satzilla code
                                     return DONE
 
-                            num_props = orig_num_active_vars - num_active_vars - current_depth
+                            num_props = orig_num_active_vars - self.feats.num_active_vars - current_depth
 
                             if(num_props > max_props):
                                 max_props_var = vars_in_most_bin_clauses[var_num]
@@ -149,6 +161,11 @@ class DPLLProbing:
 
 
                 current_depth += 1
+
+        while(self.feats.num_active_vars != orig_num_active_vars):
+            backtrack()
+
+        # writefeature
 
     def set_var_and_prop(self, var, val, var_states, reduced_vars):
         """
