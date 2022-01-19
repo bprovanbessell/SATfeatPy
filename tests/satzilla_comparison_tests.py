@@ -5,8 +5,7 @@ sys.path.append("/Users/bprovan/Insight/SAT-features")
 sys.path.append("/home/bprovan/SAT-features")
 # print(sys.path)
 import unittest
-from feature_computation import parse_cnf, balance_features, graph_features, array_stats, active_features, preprocessing
-import features as main_features
+from feature_computation import preprocessing, features as main_features
 
 
 def gen_satzilla_and_features_results(test_file):

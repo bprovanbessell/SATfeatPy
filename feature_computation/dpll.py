@@ -1,10 +1,8 @@
 import random
-import parse_cnf
-from enums import VarState, ClauseState
-from features import Features
+from feature_computation.enums import VarState, ClauseState
+# from feature_computation.features import Features
 
 class DPLLProbing:
-
     """
     So the values(states) of the variables are stored in varStates
     The clauses themselves are not changed (I assume for storage reasons)
@@ -29,7 +27,7 @@ class DPLLProbing:
 
     """
 
-    def __init__(self, feats: Features, verbose = True):
+    def __init__(self, feats, verbose = True):
         self.feats = feats
         self.verbose = verbose
         self.num_vars_to_try = 10
@@ -135,12 +133,14 @@ class DPLLProbing:
                         while True:
                             # do block
                             # for val = true and val = false??
-                            if set_var_and_prop(vars_in_most_bin_clauses[var_num], value) and self.feats.num_active_vars <= 0:
+                            if self.set_var_and_prop(vars_in_most_bin_clauses[var_num], value) and self.feats.num_active_vars <= 0:
 
                                 if haltOnAssignment:
-                                    output_assignment()
+                                    print(self.feats.num_active_clauses)
+                                    print(self.feats.num_active_vars)
+                                    # output_assignment()
                                     # DONE is just some number... still to be seen what this does in the satzilla code
-                                    return DONE
+                                    return
 
                             num_props = orig_num_active_vars - self.feats.num_active_vars - current_depth
 
@@ -148,30 +148,35 @@ class DPLLProbing:
                                 max_props_var = vars_in_most_bin_clauses[var_num]
                                 max_props_val = value
 
-                            backtrack()
+                            self.backtrack()
 
                             value = not value
 
                             if value == True:
                                 break
 
-                assert (maxPropsVar != 0);
+                assert (max_props_var != 0);
 
-                if (not setVarAndProp(maxPropsVar, maxPropsVal)):
+                if (not self.set_var_and_prop(max_props_var, max_props_val)):
                     reached_bottom = True
 
-                else if (numActiveClauses == 0):
+                elif (self.feats.num_active_clauses == 0):
                     if (haltOnAssignment) :
-                        outputAssignment()
-                        # return DONE
+                        print("assignment solved")
+                        print(self.feats.num_active_clauses)
+                        print(self.feats.num_active_vars)
+                        # outputAssignment()
+                        return
 
-                reachedBottom = True
-
+                reached_bottom = True
 
                 current_depth += 1
 
+            print("vars reduced depth " + next_probe_depth)
+            print((orig_num_active_vars - self.feats.num_active_vars - current_depth)/self.feats.v)
+
         while(self.feats.num_active_vars != orig_num_active_vars):
-            backtrack()
+            self.backtrack()
 
         # writefeature
 
@@ -219,13 +224,13 @@ class DPLLProbing:
         # "remove" vars from inconsistent clauses
 
         # check which clauses contain the negative of this literal, and remove that negative literal from them
-        clauses_with_literal = self.feats.clauses_with_literal(literal)
-        for i in range(len(clauses_with_literal[-literal])):
+        # clauses_with_literal = self.feats.clauses_with_literal(-literal)
+        for i in range(len(self.feats.clauses_with_literal(-literal))):
             # iterate through all of the clauses that contain this literal
-            clause_num = clauses_with_literal(-literal)[i]
+            clause_num = self.feats.clauses_with_literal(-literal)[i]
             # if it is active
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
-                self.reduced_clauses.push(clause_num)
+                self.reduced_clauses.append(clause_num)
                 num_clauses_reduced += 1
 
                 # could be quite important
@@ -237,22 +242,26 @@ class DPLLProbing:
                     # for (int i=0; clauses[clause][i] != 0; i++)
 
                     # iterate through the clause
-                    for j in range(len(self.feats.clauses[clause_num])):
+                    # for j in range(len(self.feats.clauses[clause_num])):
+                    for literal in self.feats.clauses[clause_num]:
                         # still a bit strange, does this not mark duplicates??
-                        self.feats.num_bin_clauses_with_var[abs(self.feats.clauses(clause_num)[j])] += 1
+                        # self.feats.num_bin_clauses_with_var[abs(self.feats.clauses[clause_num][j])] += 1
+                        self.feats.num_bin_clauses_with_var[abs(literal)] += 1
+
                 elif self.feats.clause_lengths[clause_num] == 1:
                     # for (int i=0; clauses[clause][i] != 0; i++)
                     # clauses themselves are never actually edited, just the values in varstates, clausestates, clauselengths etc.
-                    for j in range(len(self.feats.clauses[clause_num])):
-                        self.feats.num_bin_clauses_with_var[abs(self.feats.clauses(clause_num)[j])] -= 1
+                    # for j in range(len(self.feats.clauses[clause_num])):
+                    for literal in self.feats.clauses[clause_num]:
+                        self.feats.num_bin_clauses_with_var[abs(literal)] -= 1
 
                 elif self.feats.clause_lengths[clause_num] == 0:
                     # inconsistent, the last literal in the clause has been removed, and it has to be satisfied, as opposed to being removed
                     return False
 
         # satisfy the consistent clauses
-        for i in range(len(clauses_with_literal[literal])):
-            clause_num = clauses_with_literal[i]
+        for i in range(len(self.feats.clauses_with_literal(literal))):
+            clause_num = self.feats.clauses_with_literal[i]
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
 
                 self.feats.clause_states[clause_num] = ClauseState.PASSIVE
@@ -338,6 +347,52 @@ class DPLLProbing:
         Should undo one call of setVar or unitprop
         :return:
         """
+
+        num_vars_reduced = self.num_reduced_vars.pop()
+
+        # for all the vars that were reduced, unassign them
+        for i in range(num_vars_reduced):
+            var = self.reduced_vars.pop()
+            self.feats.var_states[var] = VarState.UNASSIGNED
+            self.feats.num_active_vars += 1
+
+        # for all of the clauses that were reduced
+        num_clauses_reduced = self.num_reduced_clauses.pop()
+        for i in range(num_clauses_reduced):
+            clause_num = self.reduced_clauses.pop()
+
+            # re activate the clause
+            if (self.feats.clause_states[clause_num] != ClauseState.ACTIVE):
+                self.feats.num_active_clauses += 1
+                self.feats.clause_states[clause_num] = ClauseState.ACTIVE
+
+                if self.feats.clause_lengths[clause_num] == 2:
+                    for j in range(len(self.feats.clauses[clause_num])):
+                        literal = self.feats.clauses[clause_num][j]
+                        self.feats.num_active_clauses_with_var[abs(literal)] += 1
+                        self.feats.num_bin_clauses_with_var[abs(literal)] += 1
+                else:
+                    for j in range(len(self.feats.clauses[clause_num])):
+                        literal = self.feats.clauses[clause_num][j]
+                        self.feats.num_active_clauses_with_var[abs(literal)] += 1
+
+            else:
+                self.feats.clause_lengths[clause_num] += 1
+
+                if self.feats.clause_lengths[clause_num] == 2:
+                    for j in range(len(self.feats.clauses[clause_num])):
+                        literal = self.feats.clauses[clause_num][j]
+                        self.feats.num_bin_clauses_with_var[abs(literal)] += 1
+
+                elif self.feats.clause_lengths[clause_num] == 3:
+                    for j in range(len(self.feats.clauses[clause_num])):
+                        literal = self.feats.clauses[clause_num][j]
+                        self.feats.num_bin_clauses_with_var[abs(literal)] -= 1
+
+        # while (!unitClauses.empty())
+        # unitClauses.pop();
+        # empty out unit clauses
+        self.feats.unit_clauses = []
         pass
 
 """ Python implementation of dpll, could be useful in shrinking the satzilla code"""
