@@ -89,6 +89,7 @@ class DPLLProbing:
                 print("searching depth: ", next_probe_depth)
             # the actual searching
             while current_depth < next_probe_depth and not reached_bottom:
+                print("c depth", current_depth)
                 # define the int arrays, values not yet initialised though... Contents undefined
                 # int varsInMostBinClauses[NUM_VARS_TO_TRY];
                 # int numBin[NUM_VARS_TO_TRY];
@@ -137,16 +138,16 @@ class DPLLProbing:
                         while True:
                             # do block
                             # for value = True and value = False
-                            print("vars in bin clauses", vars_in_most_bin_clauses)
+                            # print("vars in bin clauses", vars_in_most_bin_clauses)
 
                             con = self.set_var_and_prop(vars_in_most_bin_clauses[var_num], value)
-                            print("con", con)
-                            print("active vars", self.feats.num_active_vars)
+                            # print("con", con)
+                            # print("active vars", self.feats.num_active_vars)
                             if con and self.feats.num_active_vars <= 0:
 
                                 if haltOnAssignment:
-                                    print(self.feats.num_active_clauses)
-                                    print(self.feats.num_active_vars)
+                                    # print(self.feats.num_active_clauses)
+                                    # print(self.feats.num_active_vars)
                                     # output_assignment()
                                     # DONE is just some number... still to be seen what this does in the satzilla code
                                     return
@@ -177,10 +178,11 @@ class DPLLProbing:
                         # outputAssignment()
                         return
 
-                reached_bottom = True
+                    reached_bottom = True
 
                 current_depth += 1
 
+            print("current depth", current_depth)
             print("vars reduced depth ", next_probe_depth)
             print((orig_num_active_vars - self.feats.num_active_vars - current_depth)/self.feats.v)
 
@@ -202,7 +204,7 @@ class DPLLProbing:
         num_clauses_reduced = 0
         num_vars_reduced = 1
 
-        print("Variable to set:", var, self.feats.var_states[var])
+        # print("Variable to set:", var, self.feats.var_states[var])
 
         # can only set an unassigned variable to a value
         assert self.feats.var_states[var] == VarState.UNASSIGNED
