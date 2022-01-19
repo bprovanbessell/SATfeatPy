@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # test dpll probing
     print("probing")
 
-    dpll_prober.unit_prop_probe(haltOnAssignment=False, doComp=True)
+    dpll_prober.unit_prop_probe(haltOnAssignment=True, doComp=True)
 
 
     # static test values for local testing

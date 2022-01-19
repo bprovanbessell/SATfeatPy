@@ -66,7 +66,7 @@ class DPLLProbing:
             next_probe_depth = 1
             for j in range(self.num_probes):
                 next_probe_depth = next_probe_depth * 4
-                print("vars-reduced-depth-" + next_probe_depth)
+                print("vars-reduced-depth-", next_probe_depth)
                 # they also write the actual feature here? or just reserve the memory for it
                 print("feature")
 
@@ -85,6 +85,8 @@ class DPLLProbing:
             for j in range(probe_num):
                 next_probe_depth = next_probe_depth * 4
 
+            if self.verbose:
+                print("searching depth: ", next_probe_depth)
             # the actual searching
             while current_depth < next_probe_depth and not reached_bottom:
                 # define the int arrays, values not yet initialised though... Contents undefined
@@ -128,12 +130,19 @@ class DPLLProbing:
                     max_props = -1
 
                     for var_num in range(array_size):
+
+                        # should be simplified, basically you try to set the variable to true, and to false
                         value = True
                         # do while
                         while True:
                             # do block
-                            # for val = true and val = false??
-                            if self.set_var_and_prop(vars_in_most_bin_clauses[var_num], value) and self.feats.num_active_vars <= 0:
+                            # for value = True and value = False
+                            print("vars in bin clauses", vars_in_most_bin_clauses)
+
+                            con = self.set_var_and_prop(vars_in_most_bin_clauses[var_num], value)
+                            print("con", con)
+                            print("active vars", self.feats.num_active_vars)
+                            if con and self.feats.num_active_vars <= 0:
 
                                 if haltOnAssignment:
                                     print(self.feats.num_active_clauses)
@@ -144,7 +153,7 @@ class DPLLProbing:
 
                             num_props = orig_num_active_vars - self.feats.num_active_vars - current_depth
 
-                            if(num_props > max_props):
+                            if num_props > max_props:
                                 max_props_var = vars_in_most_bin_clauses[var_num]
                                 max_props_val = value
 
@@ -152,16 +161,16 @@ class DPLLProbing:
 
                             value = not value
 
-                            if value == True:
+                            if value:
                                 break
 
-                assert (max_props_var != 0);
+                assert (max_props_var != 0)
 
                 if (not self.set_var_and_prop(max_props_var, max_props_val)):
                     reached_bottom = True
 
                 elif (self.feats.num_active_clauses == 0):
-                    if (haltOnAssignment) :
+                    if (haltOnAssignment):
                         print("assignment solved")
                         print(self.feats.num_active_clauses)
                         print(self.feats.num_active_vars)
@@ -172,7 +181,7 @@ class DPLLProbing:
 
                 current_depth += 1
 
-            print("vars reduced depth " + next_probe_depth)
+            print("vars reduced depth ", next_probe_depth)
             print((orig_num_active_vars - self.feats.num_active_vars - current_depth)/self.feats.v)
 
         while(self.feats.num_active_vars != orig_num_active_vars):
@@ -188,8 +197,12 @@ class DPLLProbing:
         :return:
         """
 
+
+        # these need to be passed by reference, instead of passed by assignment
         num_clauses_reduced = 0
         num_vars_reduced = 1
+
+        print("Variable to set:", var, self.feats.var_states[var])
 
         # can only set an unassigned variable to a value
         assert self.feats.var_states[var] == VarState.UNASSIGNED
@@ -202,21 +215,21 @@ class DPLLProbing:
             self.feats.var_states[var] = VarState.FALSE_VAL
             literal = -var
 
-        # really these variables should be global
         self.reduced_vars.append(var)
         self.feats.num_active_vars -= 1
 
-        consistent = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
+        consistent, num_clauses_reduced, num_vars_reduced = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
 
         if consistent:
-            consistent = self.unit_prop(num_clauses_reduced, num_vars_reduced)
+            consistent, num_clauses_reduced, num_vars_reduced = self.unit_prop(num_clauses_reduced, num_vars_reduced)
+        # print("num clauses reduced", num_clauses_reduced)
+        # print("num clauses reduced", num_clauses_reduced)
 
         # stack to hold the number that have been reduced?...
         self.num_reduced_clauses.append(num_clauses_reduced)
         self.num_reduced_vars.append(num_vars_reduced)
 
         return consistent
-        pass
 
     def reduce_clauses(self, literal, num_clauses_reduced, num_vars_reduced):
         # we are trying to assign this literal value to true (in all clauses that contain it)
@@ -257,11 +270,11 @@ class DPLLProbing:
 
                 elif self.feats.clause_lengths[clause_num] == 0:
                     # inconsistent, the last literal in the clause has been removed, and it has to be satisfied, as opposed to being removed
-                    return False
+                    return False, num_clauses_reduced, num_vars_reduced
 
         # satisfy the consistent clauses
         for i in range(len(self.feats.clauses_with_literal(literal))):
-            clause_num = self.feats.clauses_with_literal[i]
+            clause_num = self.feats.clauses_with_literal(literal)[i]
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
 
                 self.feats.clause_states[clause_num] = ClauseState.PASSIVE
@@ -276,7 +289,7 @@ class DPLLProbing:
                     curr_var = abs(self.feats.clauses[clause_num][j])
                     self.feats.num_active_clauses_with_var[curr_var] -= 1
 
-                    if len(self.feats.clause_lengths[clause_num]) == 2:
+                    if self.feats.clause_lengths[clause_num] == 2:
                         self.feats.num_bin_clauses_with_var[curr_var] -= 1
 
                     # is the variable now irrelevant (active, but existing in no clauses)
@@ -291,7 +304,7 @@ class DPLLProbing:
 
                 num_clauses_reduced +=1
 
-        return True
+        return True, num_clauses_reduced, num_vars_reduced
 
     def unit_prop(self, num_clauses_reduced, num_vars_reduced):
         """
@@ -337,7 +350,7 @@ class DPLLProbing:
             # now reduce the clauses with that literal value
             consistent = consistent and self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
 
-        return consistent
+        return consistent, num_clauses_reduced, num_vars_reduced
 
     def output_assignment(self):
         pass
@@ -393,7 +406,6 @@ class DPLLProbing:
         # unitClauses.pop();
         # empty out unit clauses
         self.feats.unit_clauses = []
-        pass
 
 """ Python implementation of dpll, could be useful in shrinking the satzilla code"""
 def get_counter(formula):
