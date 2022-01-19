@@ -198,8 +198,6 @@ class DPLLProbing:
         :param value: boolean, value that the variable should get set to
         :return:
         """
-
-
         # these need to be passed by reference, instead of passed by assignment
         num_clauses_reduced = 0
         num_vars_reduced = 1
