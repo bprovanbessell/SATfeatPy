@@ -341,7 +341,7 @@ bool SATinstance::setVarAndProp(int var, bool val) {
 int numClausesReduced = 0;
 int numVarsReduced = 1;
 
-printf("variable to reduce %d\n", var);
+printf("variable to set %d\n", var);
 printf("active vars %d\n", numActiveVars);
 
 assert(varStates[var] == UNASSIGNED);
@@ -354,6 +354,9 @@ bool consistent = reduceClauses(lit, numClausesReduced, numVarsReduced);
 
 if (consistent)
 consistent = unitprop(numClausesReduced, numVarsReduced);
+
+printf("consistent %d\n", consistent);
+printf("clauses reduced, vars reduced %d %d\n", numClausesReduced, numVarsReduced);
 
 numReducedClauses.push(numClausesReduced);
 numReducedVars.push(numVarsReduced);
