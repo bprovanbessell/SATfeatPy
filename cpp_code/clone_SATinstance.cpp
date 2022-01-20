@@ -238,7 +238,7 @@ bool SATinstance::unitprop(int &numClausesReduced, int &numVarsReduced) {
 
 bool consistent = true;
 
-printf("unit clauses empty: %d \n", unitClauses.empty());
+// printf("unit clauses empty: %d \n", unitClauses.empty());
 
 while (!unitClauses.empty() && consistent) {
 int clauseNum = unitClauses.top();
@@ -324,7 +324,7 @@ numClausesReduced++;
 }
 }
 
-printf ("c Number of variables reduced is: %d, Number of clauses reduced is : %d \n", numVarsReduced, numClausesReduced);
+// printf ("c Number of variables reduced is: %d, Number of clauses reduced is : %d \n", numVarsReduced, numClausesReduced);
 return true;
 }
 
@@ -340,6 +340,9 @@ return negClausesWithVar[-lit];
 bool SATinstance::setVarAndProp(int var, bool val) {
 int numClausesReduced = 0;
 int numVarsReduced = 1;
+
+printf("variable to reduce %d\n", var);
+printf("active vars %d\n", numActiveVars);
 
 assert(varStates[var] == UNASSIGNED);
 varStates[var] = val ? TRUE_VAL : FALSE_VAL;
@@ -360,7 +363,7 @@ return consistent;
 
 
 void SATinstance::backtrack() {
-    std::cout << "backtrack";
+    printf("backtrack\n");
 int numVarsReduced = numReducedVars.top();
 numReducedVars.pop();
 for (int i=0; i<numVarsReduced; i++) {
@@ -413,7 +416,7 @@ int SATinstance::unitPropProbe(bool haltOnAssignment, bool doComp) {
 
 
 //testBackTrack();
-std::cout << ("c Unit prop probe...");
+printf("unit prop probe \n");
 if(!doComp)
 {
 
@@ -422,7 +425,7 @@ for (int j=0; j<NUM_PROBES; j++){
 nextProbeDepth *= 4;
 char featNameStr[100];
 sprintf(featNameStr, "vars-reduced-depth-%d", nextProbeDepth/4);
-std::cout << featNameStr;
+printf(featNameStr);
 }
 // writeFeature("unit-featuretime", RESERVED_VALUE);
 return 0;
@@ -441,6 +444,7 @@ nextProbeDepth *= 4;
 }
 
 while (currentDepth < nextProbeDepth && !reachedBottom) {
+    printf("cdepth %d\n", currentDepth);
 int varsInMostBinClauses[NUM_VARS_TO_TRY];
 int numBin[NUM_VARS_TO_TRY];
 
@@ -479,7 +483,7 @@ else {
 	if (setVarAndProp(varsInMostBinClauses[varNum], val) &&
 		numActiveVars <= 0) {
 	if (haltOnAssignment) {
-		std::cout << "we done here";
+		printf("we done here");
 		return 12;
 	}
 	}
@@ -507,7 +511,7 @@ if (!setVarAndProp(maxPropsVar, maxPropsVal))
 
 else if (numActiveClauses == 0) {
 	if (haltOnAssignment) {
-	std::cout << "done here aswell";
+	printf("done here aswell");
 	return 12;
 	}
 	reachedBottom = true;
@@ -521,7 +525,7 @@ currentDepth++;
 char featNameStr[100];
 sprintf(featNameStr, "vars-reduced-depth-%d", nextProbeDepth);
 
-std::cout << featNameStr;
+printf(featNameStr);
 double res = (double)(origNumActiveVars - numActiveVars - currentDepth)/numVars;
 std::cout << res;
 // writeFeature(featNameStr, (double)(origNumActiveVars - numActiveVars - currentDepth)/numVars);
