@@ -140,14 +140,16 @@ class DPLLProbing:
                             # for value = True and value = False
                             # print("vars in bin clauses", vars_in_most_bin_clauses)
 
+                            print("before")
                             con = self.set_var_and_prop(vars_in_most_bin_clauses[var_num], value)
-                            # print("con", con)
-                            # print("active vars", self.feats.num_active_vars)
+                            print("con", con)
+                            print("active vars", self.feats.num_active_vars)
                             if con and self.feats.num_active_vars <= 0:
 
                                 if haltOnAssignment:
-                                    # print(self.feats.num_active_clauses)
-                                    # print(self.feats.num_active_vars)
+                                    print("solved")
+                                    print(self.feats.num_active_clauses)
+                                    print(self.feats.num_active_vars)
                                     # output_assignment()
                                     # DONE is just some number... still to be seen what this does in the satzilla code
                                     return
@@ -171,6 +173,7 @@ class DPLLProbing:
                     reached_bottom = True
 
                 elif (self.feats.num_active_clauses == 0):
+                    print("no more active variables, solved")
                     if (haltOnAssignment):
                         print("assignment solved")
                         print(self.feats.num_active_clauses)
@@ -202,8 +205,8 @@ class DPLLProbing:
         num_clauses_reduced = 0
         num_vars_reduced = 1
 
-        # print("Variable to set:", var, self.feats.var_states[var])
-
+        print("Variable to set:", var, self.feats.var_states[var])
+        print("active vars", self.feats.num_active_vars)
         # can only set an unassigned variable to a value
         assert self.feats.var_states[var] == VarState.UNASSIGNED
 
@@ -225,6 +228,8 @@ class DPLLProbing:
         # print("num clauses reduced", num_clauses_reduced)
         # print("num clauses reduced", num_clauses_reduced)
 
+        print("consistent: ", consistent)
+        print("clauses reduced, vars_reduced", num_clauses_reduced, num_vars_reduced)
         # stack to hold the number that have been reduced?...
         self.num_reduced_clauses.append(num_clauses_reduced)
         self.num_reduced_vars.append(num_vars_reduced)
@@ -297,7 +302,7 @@ class DPLLProbing:
                         self.feats.var_states[curr_var] = VarState.IRRELEVANT
                         self.reduced_vars.append(curr_var)
                         self.feats.num_active_vars -=1
-                        num_vars_reduced -=1
+                        num_vars_reduced +=1
 
                     # j+=1
                     # other_var_in_clause = abs(self.feats.clauses[clause_num][j])
@@ -360,6 +365,7 @@ class DPLLProbing:
         Should undo one call of setVar or unitprop
         :return:
         """
+        print("backtrack")
 
         num_vars_reduced = self.num_reduced_vars.pop()
 

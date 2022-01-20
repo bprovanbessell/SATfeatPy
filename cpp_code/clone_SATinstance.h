@@ -44,6 +44,13 @@ class SATinstance{
     bool reduceClauses(int lit, int &numClausesReduced, int &numVarsReduced);
     inline vector<int> & clausesWithLit(int lit);
 
+    int unitPropProbe(bool haltOnAssignment, bool doComp);
+
+    bool setVarAndProp(int var, bool val);
+    // backtrack undoes one call of setVar *or* unitprop
+    void backtrack();
+
+
 
 
 
