@@ -351,6 +351,8 @@ numActiveVars--;
 
 int lit = val ? var : -var;
 bool consistent = reduceClauses(lit, numClausesReduced, numVarsReduced);
+printf("reduce c, v, con %d %d %d\n", numClausesReduced, numVarsReduced, consistent);
+
 
 if (consistent)
 consistent = unitprop(numClausesReduced, numVarsReduced);
@@ -509,8 +511,14 @@ else {
 
 assert (maxPropsVar != 0);
 
-if (!setVarAndProp(maxPropsVar, maxPropsVal))
-	reachedBottom = true;
+if (!setVarAndProp(maxPropsVar, maxPropsVal)){
+    	reachedBottom = true;
+        printf("make that shit true\n");
+        char str[100];
+        sprintf(str, "vars-reduced%d", currentDepth);
+        printf(str);
+        // printf("depth %d\n", currentDepth);
+}
 
 else if (numActiveClauses == 0) {
 	if (haltOnAssignment) {

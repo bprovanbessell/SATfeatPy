@@ -170,7 +170,9 @@ class DPLLProbing:
                 assert (max_props_var != 0)
 
                 if (not self.set_var_and_prop(max_props_var, max_props_val)):
+                    print("make that shit true")
                     reached_bottom = True
+                    print("depth", current_depth)
 
                 elif (self.feats.num_active_clauses == 0):
                     print("no more active variables, solved")
@@ -222,6 +224,7 @@ class DPLLProbing:
         self.feats.num_active_vars -= 1
 
         consistent, num_clauses_reduced, num_vars_reduced = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
+        print("reduce c, v, con", num_clauses_reduced, num_vars_reduced, consistent)
 
         if consistent:
             consistent, num_clauses_reduced, num_vars_reduced = self.unit_prop(num_clauses_reduced, num_vars_reduced)
@@ -229,6 +232,7 @@ class DPLLProbing:
         # print("num clauses reduced", num_clauses_reduced)
 
         print("consistent: ", consistent)
+        # differing here...
         print("clauses reduced, vars_reduced", num_clauses_reduced, num_vars_reduced)
         # stack to hold the number that have been reduced?...
         self.num_reduced_clauses.append(num_clauses_reduced)
