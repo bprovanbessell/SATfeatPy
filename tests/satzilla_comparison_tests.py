@@ -18,6 +18,8 @@ def gen_base_satzilla_and_features_results(test_file):
     cnf_example_dir = "cnf_examples/"
     satzilla_dir = "../SAT-features-competition2012/"
 
+    print(os.getcwd())
+
     if not os.path.isfile(satzilla_dir + test_file):
         copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
 
