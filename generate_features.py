@@ -12,11 +12,10 @@ if __name__ == "__main__":
     cnf_path = "cnf_examples/out.cnf"
     satinstance = SATInstance(cnf_path, preprocess=False)
 
-    satinstance.parse_active_features()
-
+    # this is a necessary step
     satinstance.gen_basic_features()
 
-    print(satinstance.features_dict)
+    # print(satinstance.features_dict)
 
     # test dpll probing
     print("probing")

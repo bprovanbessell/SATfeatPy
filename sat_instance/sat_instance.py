@@ -40,6 +40,9 @@ class SATInstance:
 
         self.features_dict = {}
 
+        # necessary for unit propagation setup
+        self.parse_active_features()
+
         self.dpll_prober = DPLLProbing(self)
 
         # Do first round of unit prop to remove all unit clauses
