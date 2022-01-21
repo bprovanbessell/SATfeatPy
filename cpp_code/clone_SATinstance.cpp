@@ -238,7 +238,7 @@ bool SATinstance::unitprop(int &numClausesReduced, int &numVarsReduced) {
 
 bool consistent = true;
 
-printf("units length: %d \n", unitClauses.size());
+// printf("units length: %d \n", unitClauses.size());
 
 while (!unitClauses.empty() && consistent) {
 int clauseNum = unitClauses.top();
@@ -270,10 +270,10 @@ return consistent;
 
 bool SATinstance::reduceClauses(int lit, int &numClausesReduced, int &numVarsReduced) {
 
-for (int i=0; i<(int)clausesWithLit(-lit).size(); i++) {
-    int clause = clausesWithLit(-lit)[i];
-    printf("%d, ", clause);
-}
+// for (int i=0; i<(int)clausesWithLit(-lit).size(); i++) {
+//     int clause = clausesWithLit(-lit)[i];
+//     printf("%d, ", clause);
+// }
 // "remove" vars from inconsistent clauses
 for (int i=0; i<(int)clausesWithLit(-lit).size(); i++) {
 int clause = clausesWithLit(-lit)[i];
@@ -290,7 +290,7 @@ if (clauseLengths[clause] == 2){
 	else if (clauseLengths[clause] == 1) {
 		for (int i=0; clauses[clause][i] != 0; i++)
 		numBinClausesWithVar[ABS(clauses[clause][i])]--;
-        printf("%d is unit clause", clause);
+        // printf("%d is unit clause", clause);
 		unitClauses.push(clause);
 
 } else if (clauseLengths[clause] == 0)
@@ -298,11 +298,11 @@ if (clauseLengths[clause] == 2){
 }
 }
 
-printf("consisten clause");
-for (int i=0; i<(int)clausesWithLit(lit).size(); i++) {
-int clause = clausesWithLit(lit)[i];
-    printf("%d", clause);
-}
+// printf("consisten clause");
+// for (int i=0; i<(int)clausesWithLit(lit).size(); i++) {
+// int clause = clausesWithLit(lit)[i];
+//     printf("%d", clause);
+// }
 // satisfy consistent clauses
 for (int i=0; i<(int)clausesWithLit(lit).size(); i++) {
 int clause = clausesWithLit(lit)[i];
@@ -353,8 +353,8 @@ bool SATinstance::setVarAndProp(int var, bool val) {
 int numClausesReduced = 0;
 int numVarsReduced = 1;
 
-printf("variable to set %d\n", var);
-printf("active vars %d\n", numActiveVars);
+// printf("variable to set %d\n", var);
+// printf("active vars %d\n", numActiveVars);
 
 assert(varStates[var] == UNASSIGNED);
 varStates[var] = val ? TRUE_VAL : FALSE_VAL;
@@ -363,14 +363,14 @@ numActiveVars--;
 
 int lit = val ? var : -var;
 bool consistent = reduceClauses(lit, numClausesReduced, numVarsReduced);
-printf("reduce c, v, con %d %d %d\n", numClausesReduced, numVarsReduced, consistent);
+// printf("reduce c, v, con %d %d %d\n", numClausesReduced, numVarsReduced, consistent);
 
 
 if (consistent)
 consistent = unitprop(numClausesReduced, numVarsReduced);
 
-printf("consistent %d\n", consistent);
-printf("clauses reduced, vars reduced %d %d\n", numClausesReduced, numVarsReduced);
+// printf("consistent %d\n", consistent);
+// printf("clauses reduced, vars reduced %d %d\n", numClausesReduced, numVarsReduced);
 
 numReducedClauses.push(numClausesReduced);
 numReducedVars.push(numVarsReduced);

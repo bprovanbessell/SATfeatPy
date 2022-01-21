@@ -45,7 +45,7 @@ class DPLLProbing:
 # unit propagation
 
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
-# this should change as the propogation happens?
+# this should change as the propogation happens
 
     def unit_prop_probe(self, haltOnAssignment, doComp):
         """
@@ -169,10 +169,8 @@ class DPLLProbing:
 
                 assert (max_props_var != 0)
 
-                if (not self.set_var_and_prop(max_props_var, max_props_val)):
-                    print("make that shit true")
+                if not self.set_var_and_prop(max_props_var, max_props_val):
                     reached_bottom = True
-                    print("depth", current_depth)
 
                 elif (self.feats.num_active_clauses == 0):
                     print("no more active variables, solved")
@@ -187,7 +185,6 @@ class DPLLProbing:
 
                 current_depth += 1
 
-            print("current depth", current_depth)
             print("vars reduced depth ", next_probe_depth)
             print((orig_num_active_vars - self.feats.num_active_vars - current_depth)/self.feats.v)
 
@@ -207,8 +204,8 @@ class DPLLProbing:
         num_clauses_reduced = 0
         num_vars_reduced = 1
 
-        print("Variable to set:", var, self.feats.var_states[var])
-        print("active vars", self.feats.num_active_vars)
+        # print("Variable to set:", var, self.feats.var_states[var])
+        # print("active vars", self.feats.num_active_vars)
         # can only set an unassigned variable to a value
         assert self.feats.var_states[var] == VarState.UNASSIGNED
 
@@ -224,17 +221,17 @@ class DPLLProbing:
         self.feats.num_active_vars -= 1
 
         consistent, num_clauses_reduced, num_vars_reduced = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
-        print("reduce c, v, con", num_clauses_reduced, num_vars_reduced, consistent)
+        # print("reduce c, v, con", num_clauses_reduced, num_vars_reduced, consistent)
 
         if consistent:
             consistent, num_clauses_reduced, num_vars_reduced = self.unit_prop(num_clauses_reduced, num_vars_reduced)
         # print("num clauses reduced", num_clauses_reduced)
         # print("num clauses reduced", num_clauses_reduced)
 
-        print("consistent 1: ", consistent)
+        # print("consistent 1: ", consistent)
         # differing here... check unit prop
-        print("clauses reduced, vars_reduced", num_clauses_reduced, num_vars_reduced)
-        # stack to hold the number that have been reduced?...
+        # print("clauses reduced, vars_reduced", num_clauses_reduced, num_vars_reduced)
+        # stack to hold the number that have been reduced, used in backtracking
         self.num_reduced_clauses.append(num_clauses_reduced)
         self.num_reduced_vars.append(num_vars_reduced)
 
@@ -247,7 +244,7 @@ class DPLLProbing:
 
         # check which clauses contain the negative of this literal, and remove that negative literal from them
         # clauses_with_literal = self.feats.clauses_with_literal(-literal)
-        print(self.feats.clauses_with_literal(-orig_literal))
+        # print(self.feats.clauses_with_literal(-orig_literal))
         for clause_num in self.feats.clauses_with_literal(-orig_literal):
             # iterate through all of the clauses that contain this literal
             # clause_num = self.feats.clauses_with_literal(-literal)[i]
@@ -279,7 +276,7 @@ class DPLLProbing:
                         self.feats.num_bin_clauses_with_var[abs(literal)] -= 1
 
                     # now a unit clause
-                    print(clause_num, "is unit clause")
+                    # print(clause_num, "is unit clause")
                     self.feats.unit_clauses.append(clause_num)
 
                 elif self.feats.clause_lengths[clause_num] == 0:
@@ -287,7 +284,7 @@ class DPLLProbing:
                     return False, num_clauses_reduced, num_vars_reduced
 
         # satisfy the consistent clauses
-        print("consisten clause", self.feats.clauses_with_literal(orig_literal))
+        # print("consisten clause", self.feats.clauses_with_literal(orig_literal))
         for i in range(len(self.feats.clauses_with_literal(orig_literal))):
             clause_num = self.feats.clauses_with_literal(orig_literal)[i]
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
@@ -295,7 +292,7 @@ class DPLLProbing:
 
                 self.feats.clause_states[clause_num] = ClauseState.PASSIVE
                 self.reduced_clauses.append(clause_num)
-                self.feats.num_active_clauses -=1
+                self.feats.num_active_clauses -= 1
 
                 # Seems to be iterating through the clause again
                 # j=0
@@ -315,10 +312,7 @@ class DPLLProbing:
                         self.feats.num_active_vars -=1
                         num_vars_reduced +=1
 
-                    # j+=1
-                    # other_var_in_clause = abs(self.feats.clauses[clause_num][j])
-
-                num_clauses_reduced +=1
+                num_clauses_reduced += 1
 
         return True, num_clauses_reduced, num_vars_reduced
 
@@ -333,17 +327,14 @@ class DPLLProbing:
         consistent = True
 
         # for each unit clause (if there are unit clauses)
-        # problem with the unit clauses, there should be 4 at the start
-        print("units length", len(self.feats.unit_clauses))
-
         while (len(self.feats.unit_clauses) > 0) and consistent:
             # get the next unit clause
             clause_number = self.feats.unit_clauses.pop()
 
             # skip inactive clauses
-            print("cstate", self.feats.clause_states[clause_number])
+            # print("cstate", self.feats.clause_states[clause_number])
             if self.feats.clause_states[clause_number] != ClauseState.ACTIVE: continue
-            print("unit clause number", clause_number)
+            # print("unit clause number", clause_number)
 
             lit_num = 0
 
@@ -363,8 +354,8 @@ class DPLLProbing:
                 self.feats.var_states[abs(literal)] = VarState.FALSE_VAL
 
             self.reduced_vars.append(abs(literal))
-            self.feats.num_active_vars -=1
-            num_vars_reduced +=1
+            self.feats.num_active_vars -= 1
+            num_vars_reduced += 1
 
             # now reduce the clauses with that literal value
             r_consistent, num_clauses_reduced, num_vars_reduced = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
@@ -381,7 +372,7 @@ class DPLLProbing:
         Should undo one call of setVar or unitprop
         :return:
         """
-        print("backtrack")
+        # print("backtrack")
 
         num_vars_reduced = self.num_reduced_vars.pop()
 
@@ -397,7 +388,7 @@ class DPLLProbing:
             clause_num = self.reduced_clauses.pop()
 
             # re activate the clause
-            if (self.feats.clause_states[clause_num] != ClauseState.ACTIVE):
+            if self.feats.clause_states[clause_num] != ClauseState.ACTIVE:
                 self.feats.num_active_clauses += 1
                 self.feats.clause_states[clause_num] = ClauseState.ACTIVE
 
@@ -424,8 +415,6 @@ class DPLLProbing:
                         literal = self.feats.clauses[clause_num][j]
                         self.feats.num_bin_clauses_with_var[abs(literal)] -= 1
 
-        # while (!unitClauses.empty())
-        # unitClauses.pop();
         # empty out unit clauses
         self.feats.unit_clauses = []
 
