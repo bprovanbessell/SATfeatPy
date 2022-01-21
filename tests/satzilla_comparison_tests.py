@@ -120,7 +120,7 @@ class SatzillaComparisonTest(unittest.TestCase):
     """
 
     def test_base_features(self):
-        # run from root directory of project(SAT-features)
+        # run from test root directory of project(SAT-features/tests)
 
         satzilla_names_map = {
             "nvars": "v",
@@ -166,6 +166,28 @@ class SatzillaComparisonTest(unittest.TestCase):
         for test_file in test_files:
 
             satzilla_features_dict, features_dict = gen_base_satzilla_and_features_results(test_file)
+            print("now testing: " + test_file)
+
+            for sat_feat_name, feat_name in satzilla_names_map.items():
+                print(sat_feat_name, feat_name)
+                self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
+
+    def test_unit_propagation_features(self):
+        # run from test root directory of project(SAT-features/tests)
+
+        satzilla_names_map = {
+            "vars-reduced-depth-1": "unit_props_at_depth_1",
+            "vars-reduced-depth-4": "unit_props_at_depth_4",
+            "vars-reduced-depth-16": "unit_props_at_depth_16",
+            "vars-reduced-depth-64": "unit_props_at_depth_64",
+            "vars-reduced-depth-256": "unit_props_at_depth_256",
+        }
+
+        test_files = ["basic.cnf", "php10_7.cnf", "count_10_4.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+
+        for test_file in test_files:
+
+            satzilla_features_dict, features_dict = gen_dpll_satzilla_and_features_results(test_file)
             print("now testing: " + test_file)
 
             for sat_feat_name, feat_name in satzilla_names_map.items():
