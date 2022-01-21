@@ -238,7 +238,7 @@ bool SATinstance::unitprop(int &numClausesReduced, int &numVarsReduced) {
 
 bool consistent = true;
 
-// printf("unit clauses empty: %d \n", unitClauses.empty());
+printf("units length: %d \n", unitClauses.size());
 
 while (!unitClauses.empty() && consistent) {
 int clauseNum = unitClauses.top();
@@ -270,6 +270,10 @@ return consistent;
 
 bool SATinstance::reduceClauses(int lit, int &numClausesReduced, int &numVarsReduced) {
 
+for (int i=0; i<(int)clausesWithLit(-lit).size(); i++) {
+    int clause = clausesWithLit(-lit)[i];
+    printf("%d, ", clause);
+}
 // "remove" vars from inconsistent clauses
 for (int i=0; i<(int)clausesWithLit(-lit).size(); i++) {
 int clause = clausesWithLit(-lit)[i];
@@ -278,12 +282,15 @@ reducedClauses.push(clause);
 numClausesReduced++;
 
 clauseLengths[clause]--;
-if (clauseLengths[clause] == 2)
-	for (int i=0; clauses[clause][i] != 0; i++)
+if (clauseLengths[clause] == 2){
+    for (int i=0; clauses[clause][i] != 0; i++)
 	numBinClausesWithVar[ABS(clauses[clause][i])]++;
+}
+	
 	else if (clauseLengths[clause] == 1) {
 		for (int i=0; clauses[clause][i] != 0; i++)
 		numBinClausesWithVar[ABS(clauses[clause][i])]--;
+        printf("%d is unit clause", clause);
 		unitClauses.push(clause);
 
 } else if (clauseLengths[clause] == 0)
@@ -291,6 +298,11 @@ if (clauseLengths[clause] == 2)
 }
 }
 
+printf("consisten clause");
+for (int i=0; i<(int)clausesWithLit(lit).size(); i++) {
+int clause = clausesWithLit(lit)[i];
+    printf("%d", clause);
+}
 // satisfy consistent clauses
 for (int i=0; i<(int)clausesWithLit(lit).size(); i++) {
 int clause = clausesWithLit(lit)[i];

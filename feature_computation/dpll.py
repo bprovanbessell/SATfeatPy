@@ -140,10 +140,10 @@ class DPLLProbing:
                             # for value = True and value = False
                             # print("vars in bin clauses", vars_in_most_bin_clauses)
 
-                            print("before")
+                            # print("before")
                             con = self.set_var_and_prop(vars_in_most_bin_clauses[var_num], value)
-                            print("con", con)
-                            print("active vars", self.feats.num_active_vars)
+                            # print("con", con)
+                            # print("active vars", self.feats.num_active_vars)
                             if con and self.feats.num_active_vars <= 0:
 
                                 if haltOnAssignment:
@@ -231,8 +231,8 @@ class DPLLProbing:
         # print("num clauses reduced", num_clauses_reduced)
         # print("num clauses reduced", num_clauses_reduced)
 
-        print("consistent: ", consistent)
-        # differing here...
+        print("consistent 1: ", consistent)
+        # differing here... check unit prop
         print("clauses reduced, vars_reduced", num_clauses_reduced, num_vars_reduced)
         # stack to hold the number that have been reduced?...
         self.num_reduced_clauses.append(num_clauses_reduced)
@@ -240,16 +240,17 @@ class DPLLProbing:
 
         return consistent
 
-    def reduce_clauses(self, literal, num_clauses_reduced, num_vars_reduced):
+    def reduce_clauses(self, orig_literal, num_clauses_reduced, num_vars_reduced):
         # we are trying to assign this literal value to true (in all clauses that contain it)
 
         # "remove" vars from inconsistent clauses
 
         # check which clauses contain the negative of this literal, and remove that negative literal from them
         # clauses_with_literal = self.feats.clauses_with_literal(-literal)
-        for i in range(len(self.feats.clauses_with_literal(-literal))):
+        print(self.feats.clauses_with_literal(-orig_literal))
+        for clause_num in self.feats.clauses_with_literal(-orig_literal):
             # iterate through all of the clauses that contain this literal
-            clause_num = self.feats.clauses_with_literal(-literal)[i]
+            # clause_num = self.feats.clauses_with_literal(-literal)[i]
             # if it is active
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
                 self.reduced_clauses.append(clause_num)
@@ -257,7 +258,7 @@ class DPLLProbing:
 
                 # could be quite important
                 # decrease the size (this length actually represents the number of yet to be assigned variables within that clause)
-                self.feats.clause_lengths[clause_num] -=1
+                self.feats.clause_lengths[clause_num] -= 1
 
                 if self.feats.clause_lengths[clause_num] == 2:
                     # 0 marked as the end of the clause
@@ -277,14 +278,20 @@ class DPLLProbing:
                     for literal in self.feats.clauses[clause_num]:
                         self.feats.num_bin_clauses_with_var[abs(literal)] -= 1
 
+                    # now a unit clause
+                    print(clause_num, "is unit clause")
+                    self.feats.unit_clauses.append(clause_num)
+
                 elif self.feats.clause_lengths[clause_num] == 0:
                     # inconsistent, the last literal in the clause has been removed, and it has to be satisfied, as opposed to being removed
                     return False, num_clauses_reduced, num_vars_reduced
 
         # satisfy the consistent clauses
-        for i in range(len(self.feats.clauses_with_literal(literal))):
-            clause_num = self.feats.clauses_with_literal(literal)[i]
+        print("consisten clause", self.feats.clauses_with_literal(orig_literal))
+        for i in range(len(self.feats.clauses_with_literal(orig_literal))):
+            clause_num = self.feats.clauses_with_literal(orig_literal)[i]
             if self.feats.clause_states[clause_num] == ClauseState.ACTIVE:
+                # print("pacify ", clause_num)
 
                 self.feats.clause_states[clause_num] = ClauseState.PASSIVE
                 self.reduced_clauses.append(clause_num)
@@ -326,23 +333,26 @@ class DPLLProbing:
         consistent = True
 
         # for each unit clause (if there are unit clauses)
-        while (len(self.feats.unit_clauses) != 0) and consistent:
+        # problem with the unit clauses, there should be 4 at the start
+        print("units length", len(self.feats.unit_clauses))
+
+        while (len(self.feats.unit_clauses) > 0) and consistent:
             # get the next unit clause
             clause_number = self.feats.unit_clauses.pop()
 
             # skip inactive clauses
+            print("cstate", self.feats.clause_states[clause_number])
             if self.feats.clause_states[clause_number] != ClauseState.ACTIVE: continue
+            print("unit clause number", clause_number)
 
             lit_num = 0
-            # seems a bit weird to check this, as this clause should only have 1 literal in it (Unit clause??)
 
             # while the current literal is not unassigned
             # get the next possible unassigned literal
             while (self.feats.var_states[abs(self.feats.clauses[clause_number][lit_num])] != VarState.UNASSIGNED):
                 lit_num += 1
 
-            # this is literally being checked here
-            assert len(self.feats.clause_lengths[clause_number]) ==1
+            assert self.feats.clause_lengths[clause_number] == 1
 
             # get the literal literal (excuse the pun)
             literal = self.feats.clauses[clause_number][lit_num]
@@ -357,7 +367,9 @@ class DPLLProbing:
             num_vars_reduced +=1
 
             # now reduce the clauses with that literal value
-            consistent = consistent and self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
+            r_consistent, num_clauses_reduced, num_vars_reduced = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
+            # consistent = consistent and self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
+            consistent = consistent and r_consistent
 
         return consistent, num_clauses_reduced, num_vars_reduced
 
