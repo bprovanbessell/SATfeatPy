@@ -27,7 +27,7 @@ class DPLLProbing:
 
     """
 
-    def __init__(self, sat_instance, verbose = True):
+    def __init__(self, sat_instance, verbose=True):
         self.sat_instance = sat_instance
         self.verbose = verbose
         self.num_vars_to_try = 10
@@ -47,7 +47,7 @@ class DPLLProbing:
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
 # this should change as the propogation happens
 
-    def unit_prop_probe(self, haltOnAssignment=False, doComp=True):
+    def unit_propagation_probe(self, haltOnAssignment=False, doComp=True):
         """
         Method to calculate the dpll probing features
 
@@ -82,10 +82,7 @@ class DPLLProbing:
                 print("searching depth: ", next_probe_depth)
             # the actual searching
             while current_depth < next_probe_depth and not reached_bottom:
-                print("c depth", current_depth)
-                # define the int arrays, values not yet initialised though... Contents undefined
-                # int varsInMostBinClauses[NUM_VARS_TO_TRY];
-                # int numBin[NUM_VARS_TO_TRY];
+                # print("c depth", current_depth)
 
                 vars_in_most_bin_clauses = [0] * self.num_vars_to_try
                 num_bin = [0] * self.num_vars_to_try
@@ -166,9 +163,9 @@ class DPLLProbing:
                     reached_bottom = True
 
                 elif (self.sat_instance.num_active_clauses == 0):
-                    print("no more active variables, solved")
+                    # print("no more active variables, solved")
                     if (haltOnAssignment):
-                        print("assignment solved")
+                        # print("assignment solved")
                         print(self.sat_instance.num_active_clauses)
                         print(self.sat_instance.num_active_vars)
                         # outputAssignment()
