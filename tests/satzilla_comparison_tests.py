@@ -61,6 +61,7 @@ def gen_base_satzilla_and_features_results(test_file):
     # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
     # preprocessing.satelite_preprocess(cnf_path)
     # features_dict = main_features.compute_features_from_file(preprocessed_path)
+    sat_inst.parse_active_features()
     sat_inst.gen_basic_features()
 
     return satzilla_features_dict, sat_inst.features_dict
@@ -109,6 +110,7 @@ def gen_dpll_satzilla_and_features_results(test_file):
     # preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
 
     sat_inst = SATInstance(cnf_path, preprocess=True)
+    sat_inst.parse_active_features()
     sat_inst.gen_dpll_probing_features()
 
     return satzilla_features_dict, sat_inst.features_dict
