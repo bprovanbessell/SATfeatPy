@@ -9,6 +9,8 @@ class SATInstance:
         self.path_to_cnf = input_cnf
 
         # satelite preprocessing
+        # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
+
         if preprocess:
             preprocessed_path = preprocessing.satelite_preprocess(self.path_to_cnf)
             self.path_to_cnf = preprocessed_path
