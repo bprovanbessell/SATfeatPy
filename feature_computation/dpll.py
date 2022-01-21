@@ -1,6 +1,7 @@
+import math
 import random
 from feature_computation.enums import VarState, ClauseState
-# from feature_computation.features import Features
+import statistics
 
 class DPLLProbing:
     """
@@ -33,6 +34,11 @@ class DPLLProbing:
         self.num_vars_to_try = 10
         self.num_probes = 5
 
+        # still not sure what lob is
+        self.num_lob_probe = 30000
+        # not sure what 2 is in this case(perhaps 2 seconds?)
+        self.lobjois_time_limit = 2
+
         # two stacks
         self.num_reduced_clauses = []
         self.num_reduced_vars = []
@@ -47,13 +53,79 @@ class DPLLProbing:
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
 # this should change as the propogation happens
 
+
+    def search_space_probe(self, halt_on_assignment=False, doComp=True):
+        if self.verbose:
+            print("search space estimate probe")
+
+        depths = [0] * self.num_lob_probe
+
+        orig_num_active_vars = self.sat_instance.num_active_vars
+
+        probe_num = 0
+
+        # add time limit - Look into cpu timers
+        # while probe_num < self.num_lob_probe and stopwatch.lap() < self.lobjois_tim_limit:
+        while probe_num < self.num_lob_probe:
+
+            var = 0
+            val = False
+
+        #     another do while block
+            while True:
+
+                if self.sat_instance.num_active_vars == 0:
+                    if self.sat_instance.num_active_clauses == 0 and halt_on_assignment:
+                        print("finished")
+                        return
+                    else:
+                        break
+
+                randnum = random.randint(0, self.sat_instance.num_active_vars)
+                for stepsleft in range(randnum, 0, -1):
+                    var += 1
+                    while self.sat_instance.var_states[var] != VarState.UNASSIGNED:
+                        var += 1
+                        if var == self.sat_instance.v:
+                            var = 0
+
+                # not entirely sure what this is doing..., maybe randomly choosing it?
+                # val = rand() > randmax / 2
+                if not self.set_var_and_prop(var, val):
+                    break
+
+            depths[probe_num] = orig_num_active_vars - self.sat_instance.num_active_vars
+            while self.sat_instance.num_active_vars != orig_num_active_vars:
+                self.backtrack()
+
+            probe_num += 1
+
+        print("mean depth over variables: ", statistics.mean(depths)/self.sat_instance.v)
+
+        max_depth = max(depths)
+
+        sum = 0
+        for i in range(probe_num):
+            sum += (depths[i] - max_depth) ** 2
+
+        lobjois = max_depth + math.log(sum/probe_num) / math.log(2.0)
+        if probe_num == 0:
+            lobjois = 0
+
+        print("lobjois log num nodes over vars", lobjois/self.sat_instance.v)
+
+        # also should be timed
+        pass
+
+
+
     def unit_propagation_probe(self, haltOnAssignment=False, doComp=True):
         """
         Method to calculate the dpll probing features
 
         """
         if self.verbose:
-            print("unit prop probe")
+            print("unit propagation probe")
 
         if not doComp:
             next_probe_depth = 1

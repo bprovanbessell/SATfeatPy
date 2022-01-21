@@ -21,8 +21,6 @@ if __name__ == "__main__":
     # this is a necessary step
     satinstance.gen_basic_features()
 
-    # print(satinstance.features_dict)
-
     # test dpll probing
     print("probing")
     # dpll_prober.unit_prop_probe(haltOnAssignment=False, doComp=True)
