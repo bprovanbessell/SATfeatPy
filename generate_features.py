@@ -1,5 +1,6 @@
 import sys
-from feature_computation.features import Features
+from feature_computation.base_features import Features
+from sat_instance.sat_instance import SATInstance
 from feature_computation.dpll import DPLLProbing
 
 if __name__ == "__main__":
@@ -20,21 +21,26 @@ if __name__ == "__main__":
     print(sys.path)
 
     cnf_path = "cnf_examples/out.cnf"
-    feats = Features(cnf_path, preprocess=False)
+    satinstance = SATInstance(cnf_path, preprocess=False)
 
-    feats.parse_active_features()
+    satinstance.parse_active_features()
 
-    dpll_prober = DPLLProbing(feats)
+    # dpll_prober = DPLLProbing(satinstance)
 
     # shouldnt do anything at this point
-    print("unit prop")
-    dpll_prober.unit_prop(0, 0)
+    # print("unit prop")
+    # dpll_prober.unit_prop(0, 0)
+
+    satinstance.gen_basic_features()
+
+    print(satinstance.features_dict)
 
     # test dpll probing
     print("probing")
+    # dpll_prober.unit_prop_probe(haltOnAssignment=False, doComp=True)
+    satinstance.gen_dpll_probing_features()
 
-    dpll_prober.unit_prop_probe(haltOnAssignment=False, doComp=True)
-
+    print(satinstance.features_dict)
 
     # static test values for local testing
     # test_labels = ["nvarsOrig", "nclausesOrig", "nvars", "nclauses", "reducedVars", "reducedClauses", "Pre-featuretime",

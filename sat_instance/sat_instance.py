@@ -1,4 +1,8 @@
-from feature_computation import preprocessing, parse_cnf
+from feature_computation import preprocessing, parse_cnf, active_features, base_features
+from feature_computation.dpll import DPLLProbing
+
+
+
 class SATInstance:
 
     def __init__(self, input_cnf, preprocess=True):
@@ -32,6 +36,13 @@ class SATInstance:
 
         self.var_states = []
 
+        self.features_dict = {}
+
+        self.dpll_prober = DPLLProbing(self)
+
+        # Do first round of unit prop to remove all unit clauses
+        self.dpll_prober.unit_prop(0, 0)
+
     def clauses_with_literal(self, literal):
         if literal > 0:
             return self.clauses_with_positive_var[literal]
@@ -40,4 +51,19 @@ class SATInstance:
 
     def parse_active_features(self):
         # self.num_active_vars, self.num_active_clauses, self.clause_states, self.clauses, self.num_bin_clauses_with_var, self.var_states =\
-            active_features.get_active_features(self, self.clauses, self.c, self.v)
+        active_features.get_active_features(self, self.clauses, self.c, self.v)
+
+    def gen_basic_features(self):
+
+        # this should always be done after a round of unit prop
+
+        base_features_dict = base_features.compute_base_features(self.clauses, self.c, self.v, self.num_active_vars,
+                                                                 self.num_active_clauses)
+        self.features_dict.update(base_features_dict)
+
+    def gen_dpll_probing_features(self):
+
+        unit_props_at_depth_dict = self.dpll_prober.unit_prop_probe(False, True)
+
+        self.features_dict.update(unit_props_at_depth_dict)
+

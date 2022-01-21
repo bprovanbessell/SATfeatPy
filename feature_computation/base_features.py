@@ -75,6 +75,62 @@ def write_entropy_float(l, name, features_dict, num, buckets=100, maxval=1):
     features_dict[name + "_entropy"] = entropy
 
 
+def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
+    features_dict = {}
+
+    features_dict["c"] = c
+    features_dict["v"] = v
+    features_dict["clauses_vars_ratio"] = c / v
+    features_dict["vars_clauses_ratio"] = v / c
+
+    # Variable Clause Graph features
+    vcg_v_node_degrees, vcg_c_node_degrees = graph_features.create_vcg(clauses, c, v)
+    # variable node degrees divided by number of active clauses
+    vcg_v_node_degrees_norm = [x / c for x in vcg_v_node_degrees]
+    # 4-8
+    write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
+    write_entropy(vcg_v_node_degrees, "vcg_var", features_dict, v, c)
+
+    # clause node degrees divided by number of active variables
+    vcg_c_node_degrees_norm = [x / v for x in vcg_c_node_degrees]
+    # 9-13
+    write_stats(vcg_c_node_degrees_norm, "vcg_clause", features_dict)
+    write_entropy(vcg_c_node_degrees, "vcg_clause", features_dict, c, v)
+
+    # Variable graph features
+    vg_node_degrees = graph_features.create_vg(clauses)
+    # 14-17
+    # variable node degrees divided by number of active clauses
+    vg_node_degrees_norm = [x / c for x in vg_node_degrees]
+
+    write_stats(vg_node_degrees_norm, "vg", features_dict)
+
+    # Balance features
+    pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, \
+        num_binary_clauses, num_ternary_clauses, num_horn_clauses, horn_clause_variable_count = \
+        balance_features.compute_balance_features(clauses, c, v)
+    # 18-20
+    write_stats(pos_neg_clause_balance, "pnc_ratio", features_dict)
+    write_entropy_float(pos_neg_clause_balance, "pnc_ratio", features_dict, c)
+    # 21-25
+    write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
+    write_entropy_float(pos_neg_variable_balance, "pnv_ratio", features_dict, v)
+
+    features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
+    # 26-27
+    features_dict["binary_ratio"] = num_binary_clauses / c
+    features_dict["ternary_ratio"] = num_ternary_clauses / c
+    features_dict["ternary+"] = (num_binary_clauses + num_ternary_clauses) / c
+    # 28
+    features_dict["hc_fraction"] = num_horn_clauses / c
+    # 29-33
+    horn_clause_variable_count_norm = [x / c for x in horn_clause_variable_count]
+    write_stats(horn_clause_variable_count_norm, "hc_var", features_dict)
+    write_entropy(horn_clause_variable_count, "hc_var", features_dict, v, c)
+
+    return features_dict
+
+
 def compute_features_from_file(cnf_path="cnf_examples/basic.cnf"):
     # parse cnf, and get the features
     # store them in a dictionary
