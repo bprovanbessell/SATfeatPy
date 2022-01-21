@@ -119,10 +119,11 @@ def gen_dpll_satzilla_and_features_results(test_file):
 class SatzillaComparisonTest(unittest.TestCase):
     """
     Satzilla and satelite only run on linux unfortunately
+    Run from test root directory of project(SAT-features/tests)
+    Based on the assumption that Satzilla feature extraction code is in the same directory that contains SAT-features
     """
 
     def test_base_features(self):
-        # run from test root directory of project(SAT-features/tests)
 
         satzilla_names_map = {
             "nvars": "v",
@@ -163,7 +164,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-max": "vg_max"
         }
 
-        test_files = ["basic.cnf", "php10_7.cnf", "count_10_4.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+        test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
 
         for test_file in test_files:
 
@@ -174,8 +175,7 @@ class SatzillaComparisonTest(unittest.TestCase):
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
-    def toest_unit_propagation_features(self):
-        # run from test root directory of project(SAT-features/tests)
+    def test_unit_propagation_features(self):
 
         satzilla_names_map = {
             "vars-reduced-depth-1": "unit_props_at_depth_1",
@@ -185,7 +185,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "vars-reduced-depth-256": "unit_props_at_depth_256",
         }
 
-        test_files = ["basic.cnf", "php10_7.cnf", "count_10_4.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+        test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
 
         for test_file in test_files:
 
@@ -200,19 +200,3 @@ class SatzillaComparisonTest(unittest.TestCase):
 if __name__ == '__main__':
     os.chdir("..")
     unittest.main()
-#
-#
-# os.chdir("../SAT-features-competition2012/")
-# stream = os.popen('./features --base basic.cnf')
-# output = stream.read()
-#
-# output = output.split("\n")
-#
-# features_names = output[-3].split(',')
-# features = map(float, output[-2].split(','))
-#
-# features_dict = dict(zip(features_names, features))
-#
-# print("feature names: ", features_names)
-# print("features: ", features)
-# print(features_dict)
