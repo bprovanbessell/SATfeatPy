@@ -174,7 +174,7 @@ class SatzillaComparisonTest(unittest.TestCase):
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
-    def test_unit_propagation_features(self):
+    def toest_unit_propagation_features(self):
         # run from test root directory of project(SAT-features/tests)
 
         satzilla_names_map = {

@@ -94,7 +94,7 @@ def entropy_float_array(l, num, vals, maxval):
     return -1 * entropy
 
 
-def entropy_int_array(l, num, number_of_outcomes):
+def entropy_int_array(l,number_of_outcomes):
     """
     :param l: List of statistics (vcg variable/clause node degrees, )
     :param number_of_outcomes: upper bound on the maximum number of outcomes (e.g. for vcg clause node degree, it could have a maximum
@@ -113,12 +113,12 @@ def entropy_int_array(l, num, number_of_outcomes):
 
     # set up the probability distribution
     # Could also be in range of the list
-    for t in range(num):
-        p[l[t]] += 1
+    for elem in l:
+        p[elem] += 1
 
     for t in range(number_of_outcomes):
         if p[t] != 0:
-            pval = p[t]/num
+            pval = p[t]/len(l)
             # pval = p[t]/(num - res)
             entropy += pval * math.log(pval)
 

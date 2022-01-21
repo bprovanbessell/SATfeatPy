@@ -9,51 +9,6 @@ Main file to control extraction of features
 
 '''
 
-
-class Features:
-
-    def __init__(self, input_cnf, preprocess=True):
-        self.path_to_cnf = input_cnf
-
-        # satelite preprocessing
-        if preprocess:
-            preprocessed_path = preprocessing.satelite_preprocess(self.path_to_cnf)
-            self.path_to_cnf = preprocessed_path
-
-        # parse the cnf file
-        self.clauses, self.c, self.v = parse_cnf.parse_cnf(self.path_to_cnf)
-
-        # computed with active features
-        # These change as they are processed with dpll probing algorithms
-        self.num_active_vars = 0
-        self.num_active_clauses = 0
-        # states and lengths of the clauses
-        self.clause_states = []
-        self.clause_lengths = []
-        # array of the length of the number of variables, containing the number of active clauses, and binary clauses that each variable contains
-        self.num_active_clauses_with_var = []
-        self.num_bin_clauses_with_var = []
-        # stack of indexes of the clauses that have 1 literal
-        self.unit_clauses = []
-
-        # all of the clauses that contain a positive version of this variable
-        self.clauses_with_positive_var = []
-        self.clauses_with_negative_var = []
-        # used for dpll operations, perhaps better to keep them in a dpll class...
-
-        self.var_states = []
-
-    def clauses_with_literal(self, literal):
-        if literal > 0:
-            return self.clauses_with_positive_var[literal]
-        else:
-            return self.clauses_with_negative_var[abs(literal)]
-
-    def parse_active_features(self):
-        # self.num_active_vars, self.num_active_clauses, self.clause_states, self.clauses, self.num_bin_clauses_with_var, self.var_states =\
-            active_features.get_active_features(self, self.clauses, self.c, self.v)
-
-
 def write_stats(l, name, features_dict):
     l_mean, l_coeff, l_min, l_max = array_stats.get_stats(l)
 
@@ -63,8 +18,8 @@ def write_stats(l, name, features_dict):
     features_dict[name + "_max"] = l_max
 
 
-def write_entropy(l, name, features_dict, c, v):
-    entropy = array_stats.entropy_int_array(l, c, v+1)
+def write_entropy(l, name, features_dict, c, number_of_outcomes):
+    entropy = array_stats.entropy_int_array(l, number_of_outcomes+1)
     features_dict[name + "_entropy"] = entropy
 
 
@@ -78,10 +33,11 @@ def write_entropy_float(l, name, features_dict, num, buckets=100, maxval=1):
 def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     features_dict = {}
 
-    features_dict["c"] = c
-    features_dict["v"] = v
-    features_dict["clauses_vars_ratio"] = c / v
-    features_dict["vars_clauses_ratio"] = v / c
+    # 1-3
+    features_dict["c"] = num_active_clauses
+    features_dict["v"] = num_active_vars
+    features_dict["clauses_vars_ratio"] = num_active_clauses / num_active_vars
+    features_dict["vars_clauses_ratio"] = num_active_vars / num_active_clauses
 
     # Variable Clause Graph features
     vcg_v_node_degrees, vcg_c_node_degrees = graph_features.create_vcg(clauses, c, v)
