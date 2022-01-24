@@ -142,6 +142,7 @@ class SatzillaComparisonTest(unittest.TestCase):
     """
 
     def __init__(self):
+        super().__init__()
         self.unit_probing_names_map = {
             "vars-reduced-depth-1": "unit_props_at_depth_1",
             "vars-reduced-depth-4": "unit_props_at_depth_4",
