@@ -9,6 +9,26 @@ from feature_computation import preprocessing, base_features as main_features
 from sat_instance.sat_instance import SATInstance
 
 
+def satzilla_results_to_dict(satzilla_results_file):
+
+    satzilla_features_dict = {}
+    with open(satzilla_results_file) as f:
+        feature_names = []
+        feature_vals = []
+        for i, line in enumerate(f):
+            if (i == 0):
+                # first line contains the feature names
+                feature_names = [str(x) for x in line.split(",")]
+            if i == 1:
+                # second line contains all of the features
+                feature_vals = map(float, line.split(","))
+
+        satzilla_features_dict = dict(zip(feature_names, feature_vals))
+
+    f.close()
+    return satzilla_features_dict
+
+
 def gen_base_satzilla_and_features_results(test_file):
     """
     Generate satzilla features, and then generate features with this python script from the test file
@@ -27,35 +47,16 @@ def gen_base_satzilla_and_features_results(test_file):
     os.chdir(satzilla_dir)
 
     satzilla_results_file = "results/" + test_file[0:-4] + "satzill_res"
-    # run satzilla feature generation
-    os.system("./features -base " + test_file + " " + satzilla_results_file)
+    # see if it has been generated already (based on previous test runs)
+    if not os.path.isfile(satzilla_results_file):
+        # run satzilla feature generation
+        os.system("./features -base " + test_file + " " + satzilla_results_file)
 
-    satzilla_features_dict = {}
-    # read output file
-    with open(satzilla_results_file) as f:
-        feature_names = []
-        feature_vals = []
-        for i, line in enumerate(f):
-            if (i == 0):
-                # first line contains the feature names
-                feature_names = [str(x) for x in line.split(",")]
-            if i == 1:
-                # second line contains all of the features
-                feature_vals = map(float, line.split(","))
-
-        satzilla_features_dict = dict(zip(feature_names, feature_vals))
-
-        # print("feature names: ", features_names)
-        # print("features: ", features)
-        # print(features_dict)
-
-    f.close()
+    satzilla_dict = satzilla_results_to_dict(satzilla_results_file)
 
     os.chdir("../SAT-features")
     # compute the features with our code
-    # preprocess the file with satelite
     cnf_path = "cnf_examples/" + test_file
-    preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
 
     sat_inst = SATInstance(cnf_path, preprocess=True)
     # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
@@ -64,10 +65,10 @@ def gen_base_satzilla_and_features_results(test_file):
     sat_inst.parse_active_features()
     sat_inst.gen_basic_features()
 
-    return satzilla_features_dict, sat_inst.features_dict
+    return satzilla_dict, sat_inst.features_dict
 
 
-def gen_dpll_satzilla_and_features_results(test_file):
+def gen_unit_props_satzilla_and_features_results(test_file):
     """
     Generate satzilla features, and then generate features with this python script from the test file
     :param test_file:
@@ -82,32 +83,51 @@ def gen_dpll_satzilla_and_features_results(test_file):
     # gen satzilla features
     os.chdir(satzilla_dir)
 
-    satzilla_results_file = "results/" + test_file[0:-4] + "satzill_dpll_res"
-    # run satzilla feature generation
-    os.system("./features -unit " + test_file + " " + satzilla_results_file)
+    satzilla_results_file = "results/" + test_file[0:-4] + "unit_props_res"
+    # see if it has been generated already (based on previous test runs)
+    if not os.path.isfile(satzilla_results_file):
+        # run satzilla feature generation
+        os.system("./features -unit " + test_file + " " + satzilla_results_file)
 
-    satzilla_features_dict = {}
-    # read output file
-    with open(satzilla_results_file) as f:
-        feature_names = []
-        feature_vals = []
-        for i, line in enumerate(f):
-            if (i == 0):
-                # first line contains the feature names
-                feature_names = [str(x) for x in line.split(",")]
-            if i == 1:
-                # second line contains all of the features
-                feature_vals = map(float, line.split(","))
-
-        satzilla_features_dict = dict(zip(feature_names, feature_vals))
-
-    f.close()
+    satzilla_features_dict = satzilla_results_to_dict(satzilla_results_file)
 
     os.chdir("../SAT-features")
     # compute the features with our code
-    # preprocess the file with satelite
     cnf_path = "cnf_examples/" + test_file
-    # preprocessed_path = cnf_path[0:-4] + "_preprocessed.cnf"
+
+    sat_inst = SATInstance(cnf_path, preprocess=True)
+    sat_inst.parse_active_features()
+    sat_inst.gen_dpll_probing_features()
+
+    return satzilla_features_dict, sat_inst.features_dict
+
+
+def gen_search_space_est_satzilla_and_features_results(test_file):
+    """
+    Generate satzilla features, and then generate features with this python script from the test file
+    :param test_file:
+    :return:
+    """
+    cnf_example_dir = "cnf_examples/"
+    satzilla_dir = "../SAT-features-competition2012/"
+
+    if not os.path.isfile(satzilla_dir + test_file):
+        copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
+
+    # gen satzilla features
+    os.chdir(satzilla_dir)
+
+    satzilla_results_file = "results/" + test_file[0:-4] + "search_space_res"
+    # see if it has been generated already (based on previous test runs)
+    if not os.path.isfile(satzilla_results_file):
+        # run satzilla feature generation
+        os.system("./features -lobjois " + test_file + " " + satzilla_results_file)
+
+    satzilla_features_dict = satzilla_results_to_dict(satzilla_results_file)
+
+    os.chdir("../SAT-features")
+    # compute the features with our code
+    cnf_path = "cnf_examples/" + test_file
 
     sat_inst = SATInstance(cnf_path, preprocess=True)
     sat_inst.parse_active_features()
@@ -182,7 +202,10 @@ class SatzillaComparisonTest(unittest.TestCase):
             "vars-reduced-depth-4": "unit_props_at_depth_4",
             "vars-reduced-depth-16": "unit_props_at_depth_16",
             "vars-reduced-depth-64": "unit_props_at_depth_64",
-            "vars-reduced-depth-256": "unit_props_at_depth_256",
+            "vars-reduced-depth-256": "unit_props_at_depth_256"
+        }
+
+        search_space_names_map = {
             "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
             "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
         }
@@ -191,12 +214,38 @@ class SatzillaComparisonTest(unittest.TestCase):
 
         for test_file in test_files:
 
-            satzilla_features_dict, features_dict = gen_dpll_satzilla_and_features_results(test_file)
+            satzilla_features_dict, features_dict = gen_unit_props_satzilla_and_features_results(test_file)
             print("now testing: " + test_file)
 
             for sat_feat_name, feat_name in satzilla_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
+
+            # these features are stochastic in nature, and can vary
+            for sat_feat_name, feat_name in search_space_names_map.items():
+                print(sat_feat_name, feat_name)
+                self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name], places=2)
+
+    def test_search_space_features(self):
+
+        search_space_names_map = {
+            "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
+            "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
+        }
+
+        test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+
+        for test_file in test_files:
+
+            satzilla_features_dict, features_dict = gen_search_space_est_satzilla_and_features_results(test_file)
+            print("now testing: " + test_file)
+
+            # these features are stochastic in nature, and can vary, so we need a certain level of freedom with the testing
+            # Not entirely sure how much is needed. As there is also a significant speed difference between python and c++
+            # This further changes the results, as these features are based on approximations over a large number of runs
+            for sat_feat_name, feat_name in search_space_names_map.items():
+                print(sat_feat_name, feat_name)
+                self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name], places=2)
 
 
 if __name__ == '__main__':
