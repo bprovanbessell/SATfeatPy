@@ -176,7 +176,6 @@ class SatzillaComparisonTest(unittest.TestCase):
             "POSNEG-RATIO-VAR-stdev": "pnv_ratio_stdev",
             "POSNEG-RATIO-VAR-min": "pnv_ratio_min",
             "POSNEG-RATIO-VAR-max": "pnv_ratio_max",
-            "POSNEG-RATIO-VAR-entropy": "pnv_ratio_entropy",
             "HORNY-VAR-mean": "hc_var_mean",
             "HORNY-VAR-coeff-variation": "hc_var_coeff",
             "HORNY-VAR-min": "hc_var_min",
@@ -186,7 +185,8 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-mean": "vg_mean",
             "VG-coeff-variation": "vg_coeff",
             "VG-min": "vg_min",
-            "VG-max": "vg_max"
+            "VG-max": "vg_max",
+            "POSNEG-RATIO-VAR-entropy": "pnv_ratio_entropy",
         }
 
         self.search_space_names_map = {
@@ -248,6 +248,8 @@ class SatzillaComparisonTest(unittest.TestCase):
         file_directory = "cnf_examples/more_complex_cnfs/"
         test_files = glob.glob(file_directory + "*.cnf")
         test_file_names = [x.split("/")[-1] for x in test_files]
+        test_file_names = ["sat_4color_200_1126_10020.cnf", "sat_subsetcard_100_8400_64659.cnf",
+                           "sat_tseitin_24_312_777.cnf", "unsat_4color_200_1126_33694.cnf"]
 
         for test_file in test_file_names:
             satzilla_features_dict, features_dict = gen_base_features(test_file, file_directory)
