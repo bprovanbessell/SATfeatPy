@@ -259,7 +259,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             # print("now testing: " + test_file)
 
             for sat_feat_name, feat_name in self.base_names_map.items():
-                print(sat_feat_name, feat_name)
+                print(sat_feat_name, satzilla_features_dict[sat_feat_name], feat_name, features_dict[feat_name])
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
 
