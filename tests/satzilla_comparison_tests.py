@@ -56,7 +56,7 @@ def gen_base_features(test_file, file_directory):
 
     os.chdir("../SAT-features")
     # compute the features with our code
-    cnf_path = "cnf_examples/" + test_file
+    cnf_path = file_directory + test_file
 
     sat_inst = SATInstance(cnf_path, preprocess=True)
     # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
@@ -92,7 +92,7 @@ def gen_unit_props_features(test_file, file_directory):
 
     os.chdir("../SAT-features")
     # compute the features with our code
-    cnf_path = "cnf_examples/" + test_file
+    cnf_path = file_directory + test_file
 
     sat_inst = SATInstance(cnf_path, preprocess=True)
     sat_inst.parse_active_features()
@@ -125,7 +125,7 @@ def gen_search_space_est_features(test_file, file_directory):
 
     os.chdir("../SAT-features")
     # compute the features with our code
-    cnf_path = "cnf_examples/" + test_file
+    cnf_path = file_directory + test_file
 
     sat_inst = SATInstance(cnf_path, preprocess=True)
     sat_inst.parse_active_features()
@@ -188,7 +188,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-min": "vg_min",
             "VG-max": "vg_max"
         }
-    
+
         self.search_space_names_map = {
             "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
             "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
