@@ -68,10 +68,10 @@ class SATInstance:
 
     def gen_dpll_probing_features(self):
 
-        unit_props_at_depth_dict = self.dpll_prober.unit_propagation_probe(False, True)
-
-        self.features_dict.update(unit_props_at_depth_dict)
+        self.dpll_prober.unit_propagation_probe(False, True)
 
         self.dpll_prober.search_space_probe()
+
+        self.features_dict.update(self.dpll_prober.unit_props_log_nodes_dict)
 
 

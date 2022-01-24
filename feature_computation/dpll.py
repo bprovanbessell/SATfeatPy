@@ -48,7 +48,7 @@ class DPLLProbing:
         # stack of variables that have been reduced
         self.reduced_vars = []
         self.reduced_clauses = []
-        self.unit_props_at_depth_dict = {}
+        self.unit_props_log_nodes_dict = {}
 
     # unit propagation
 
@@ -66,12 +66,14 @@ class DPLLProbing:
         depths = []
 
         orig_num_active_vars = self.sat_instance.num_active_vars
-        print("search space original", orig_num_active_vars)
 
         probe_num = 0
 
         # while probe_num < self.num_lob_probe and stopwatch.lap() < self.lobjois_tim_limit:
         while probe_num < self.num_lob_probe and sw.lap() < self.time_limit:
+
+            # randomly choose an unassigned variable and a value propagate this, and continue until a contradiction is reached. This result is the depth to contradiction.
+            # Do this while within the time limit, and within the number of probes
 
             var = 1
             val = False
@@ -99,23 +101,25 @@ class DPLLProbing:
                         if var == self.sat_instance.v:
                             var = 1
 
-
                 # Choose a random value to propagate
                 val = random.random() < 0.5
 
-                print("var, val, state", var, val, self.sat_instance.var_states[var])
                 if not self.set_var_and_prop(var, val):
                     break
 
-            print("reached bottom")
+            # print("reached bottom")
             depths.append(orig_num_active_vars - self.sat_instance.num_active_vars)
 
+            # reset the problem
             while self.sat_instance.num_active_vars != orig_num_active_vars:
                 self.backtrack()
 
             probe_num += 1
 
-        print("mean depth over variables: ", statistics.mean(depths)/self.sat_instance.v)
+        mean_depth_to_con_over_vars = statistics.mean(depths)/self.sat_instance.v
+        # print("mean depth over variables: ", mean_depth_to_contradiction_over_vars)
+
+        self.unit_props_log_nodes_dict["mean_depth_to_contradiction_over_vars"] = mean_depth_to_con_over_vars
 
         max_depth = max(depths)
 
@@ -123,13 +127,14 @@ class DPLLProbing:
         for i in range(probe_num):
             res += math.pow(2, (depths[i] - max_depth))
 
-        print("max depth", max_depth)
-
         lobjois = max_depth + (math.log(res/probe_num) / math.log(2.0))
         if probe_num == 0:
-            lobjois = 0
+            res = 0
+        else:
+            res = lobjois/self.sat_instance.v
 
-        print("lobjois log num nodes over vars", lobjois/self.sat_instance.v)
+        self.unit_props_log_nodes_dict["estimate_log_number_nodes_over_vars"] = res
+        # print("lobjois log num nodes over vars", lobjois/self.sat_instance.v)
 
         # also should be timed
         print("total time:", sw.lap())
@@ -266,7 +271,7 @@ class DPLLProbing:
 
             unit_props_str = "unit_props_at_depth_" + str(next_probe_depth)
             unit_props_res = (orig_num_active_vars - self.sat_instance.num_active_vars - current_depth) / self.sat_instance.v
-            self.unit_props_at_depth_dict[unit_props_str] = unit_props_res
+            self.unit_props_log_nodes_dict[unit_props_str] = unit_props_res
             # print("vars reduced depth ", next_probe_depth)
             # print((orig_num_active_vars - self.sat_instance.num_active_vars - current_depth) / self.sat_instance.v)
 
@@ -274,7 +279,7 @@ class DPLLProbing:
             self.backtrack()
 
         # writefeature
-        return self.unit_props_at_depth_dict
+        # return self.unit_props_log_nodes_dict
 
     def set_var_and_prop(self, var, value):
         """
