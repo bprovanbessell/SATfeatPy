@@ -119,11 +119,13 @@ class DPLLProbing:
 
         max_depth = max(depths)
 
-        res = 0
+        res = 0.0
         for i in range(probe_num):
-            res += (depths[i] - max_depth) ** 2
+            res += math.pow(2, (depths[i] - max_depth))
 
-        lobjois = max_depth + math.log(res/probe_num) / math.log(2.0)
+        print("max depth", max_depth)
+
+        lobjois = max_depth + (math.log(res/probe_num) / math.log(2.0))
         if probe_num == 0:
             lobjois = 0
 
