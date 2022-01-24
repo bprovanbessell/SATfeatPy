@@ -141,8 +141,7 @@ class SatzillaComparisonTest(unittest.TestCase):
     Based on the assumption that Satzilla feature extraction code is in the same directory that contains SAT-features
     """
 
-    def __init__(self):
-        super().__init__()
+    def setUp(self) -> None:
         self.unit_probing_names_map = {
             "vars-reduced-depth-1": "unit_props_at_depth_1",
             "vars-reduced-depth-4": "unit_props_at_depth_4",
@@ -189,7 +188,7 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-min": "vg_min",
             "VG-max": "vg_max"
         }
-
+    
         self.search_space_names_map = {
             "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
             "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
