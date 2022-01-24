@@ -1,6 +1,7 @@
 import os
 import sys
 from shutil import copyfile
+import glob
 sys.path.append("/Users/bprovan/Insight/SAT-features")
 sys.path.append("/home/bprovan/SAT-features")
 # print(sys.path)
@@ -29,19 +30,18 @@ def satzilla_results_to_dict(satzilla_results_file):
     return satzilla_features_dict
 
 
-def gen_base_satzilla_and_features_results(test_file):
+def gen_base_features(test_file, file_directory):
     """
     Generate satzilla features, and then generate features with this python script from the test file
     :param test_file:
     :return:
     """
-    cnf_example_dir = "cnf_examples/"
     satzilla_dir = "../SAT-features-competition2012/"
 
     print(os.getcwd())
 
     if not os.path.isfile(satzilla_dir + test_file):
-        copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
+        copyfile(file_directory + test_file, satzilla_dir + test_file)
 
     # gen satzilla features
     os.chdir(satzilla_dir)
@@ -68,17 +68,16 @@ def gen_base_satzilla_and_features_results(test_file):
     return satzilla_dict, sat_inst.features_dict
 
 
-def gen_unit_props_satzilla_and_features_results(test_file):
+def gen_unit_props_features(test_file, file_directory):
     """
     Generate satzilla features, and then generate features with this python script from the test file
     :param test_file:
     :return:
     """
-    cnf_example_dir = "cnf_examples/"
     satzilla_dir = "../SAT-features-competition2012/"
 
     if not os.path.isfile(satzilla_dir + test_file):
-        copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
+        copyfile(file_directory + test_file, satzilla_dir + test_file)
 
     # gen satzilla features
     os.chdir(satzilla_dir)
@@ -102,17 +101,16 @@ def gen_unit_props_satzilla_and_features_results(test_file):
     return satzilla_features_dict, sat_inst.features_dict
 
 
-def gen_search_space_est_satzilla_and_features_results(test_file):
+def gen_search_space_est_features(test_file, file_directory):
     """
     Generate satzilla features, and then generate features with this python script from the test file
     :param test_file:
     :return:
     """
-    cnf_example_dir = "cnf_examples/"
     satzilla_dir = "../SAT-features-competition2012/"
 
     if not os.path.isfile(satzilla_dir + test_file):
-        copyfile(cnf_example_dir + test_file, satzilla_dir + test_file)
+        copyfile(file_directory + test_file, satzilla_dir + test_file)
 
     # gen satzilla features
     os.chdir(satzilla_dir)
@@ -143,9 +141,16 @@ class SatzillaComparisonTest(unittest.TestCase):
     Based on the assumption that Satzilla feature extraction code is in the same directory that contains SAT-features
     """
 
-    def test_base_features(self):
+    def __init__(self):
+        self.unit_probing_names_map = {
+            "vars-reduced-depth-1": "unit_props_at_depth_1",
+            "vars-reduced-depth-4": "unit_props_at_depth_4",
+            "vars-reduced-depth-16": "unit_props_at_depth_16",
+            "vars-reduced-depth-64": "unit_props_at_depth_64",
+            "vars-reduced-depth-256": "unit_props_at_depth_256"
+        }
 
-        satzilla_names_map = {
+        self.base_names_map = {
             "nvars": "v",
             "nclauses": "c",
             "vars-clauses-ratio": "vars_clauses_ratio",
@@ -184,58 +189,73 @@ class SatzillaComparisonTest(unittest.TestCase):
             "VG-max": "vg_max"
         }
 
+        self.search_space_names_map = {
+            "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
+            "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
+        }
+
+    def test_base_features(self):
+
         test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+        # directory relative to the project root
+        file_directory = "cnf_examples/"
 
         for test_file in test_files:
 
-            satzilla_features_dict, features_dict = gen_base_satzilla_and_features_results(test_file)
+            satzilla_features_dict, features_dict = gen_base_features(test_file, file_directory)
             print("now testing: " + test_file)
 
-            for sat_feat_name, feat_name in satzilla_names_map.items():
+            for sat_feat_name, feat_name in self.base_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
     def test_unit_propagation_features(self):
 
-        satzilla_names_map = {
-            "vars-reduced-depth-1": "unit_props_at_depth_1",
-            "vars-reduced-depth-4": "unit_props_at_depth_4",
-            "vars-reduced-depth-16": "unit_props_at_depth_16",
-            "vars-reduced-depth-64": "unit_props_at_depth_64",
-            "vars-reduced-depth-256": "unit_props_at_depth_256"
-        }
-
         test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+        file_directory = "cnf_examples/"
 
         for test_file in test_files:
 
-            satzilla_features_dict, features_dict = gen_unit_props_satzilla_and_features_results(test_file)
+            satzilla_features_dict, features_dict = gen_unit_props_features(test_file, file_directory)
             print("now testing: " + test_file)
 
-            for sat_feat_name, feat_name in satzilla_names_map.items():
+            for sat_feat_name, feat_name in self.unit_probing_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
     def test_search_space_features(self):
 
-        search_space_names_map = {
-            "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
-            "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
-        }
-
         test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
+        file_directory = "cnf_examples/"
 
         for test_file in test_files:
 
-            satzilla_features_dict, features_dict = gen_search_space_est_satzilla_and_features_results(test_file)
+            satzilla_features_dict, features_dict = gen_search_space_est_features(test_file, file_directory)
             print("now testing: " + test_file)
 
             # these features are stochastic in nature, and can vary, so we need a certain level of freedom with the testing
             # Not entirely sure how much is needed. As there is also a significant speed difference between python and c++
             # This further changes the results, as these features are based on approximations over a large number of runs
-            for sat_feat_name, feat_name in search_space_names_map.items():
+            for sat_feat_name, feat_name in self.search_space_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name], places=2)
+
+    def test_more_complex_cnfs(self):
+
+        file_directory = "cnf_examples/more_complex_cnfs/"
+        test_files = glob.glob(file_directory + "*.cnf")
+        test_file_names = [x.split("/")[-1] for x in test_files]
+
+        for test_file in test_file_names:
+            satzilla_features_dict, features_dict = gen_base_features(test_file,file_directory)
+            print("now testing: " + test_file)
+
+            # satzilla_features_dict, features_dict = gen_unit_props_features(test_file, file_directory)
+            # print("now testing: " + test_file)
+
+            for sat_feat_name, feat_name in self.unit_probing_names_map.items():
+                print(sat_feat_name, feat_name)
+                self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
 
 if __name__ == '__main__':
