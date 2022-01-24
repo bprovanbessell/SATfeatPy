@@ -183,6 +183,8 @@ class SatzillaComparisonTest(unittest.TestCase):
             "vars-reduced-depth-16": "unit_props_at_depth_16",
             "vars-reduced-depth-64": "unit_props_at_depth_64",
             "vars-reduced-depth-256": "unit_props_at_depth_256",
+            "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
+            "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
         }
 
         test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
