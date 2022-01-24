@@ -247,13 +247,13 @@ class SatzillaComparisonTest(unittest.TestCase):
         test_file_names = [x.split("/")[-1] for x in test_files]
 
         for test_file in test_file_names:
-            satzilla_features_dict, features_dict = gen_base_features(test_file,file_directory)
+            satzilla_features_dict, features_dict = gen_base_features(test_file, file_directory)
             print("now testing: " + test_file)
 
             # satzilla_features_dict, features_dict = gen_unit_props_features(test_file, file_directory)
             # print("now testing: " + test_file)
 
-            for sat_feat_name, feat_name in self.unit_probing_names_map.items():
+            for sat_feat_name, feat_name in self.base_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
 
