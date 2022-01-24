@@ -72,3 +72,6 @@ class SATInstance:
 
         self.features_dict.update(unit_props_at_depth_dict)
 
+        self.dpll_prober.search_space_probe()
+
+

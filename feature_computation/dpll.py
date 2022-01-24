@@ -1,7 +1,9 @@
 import math
 import random
 from feature_computation.enums import VarState, ClauseState
+from feature_computation.stopwatch import Stopwatch
 import statistics
+
 
 class DPLLProbing:
     """
@@ -37,7 +39,7 @@ class DPLLProbing:
         # still not sure what lob is
         self.num_lob_probe = 30000
         # not sure what 2 is in this case(perhaps 2 seconds?)
-        self.lobjois_time_limit = 2
+        self.time_limit = 2
 
         # two stacks
         self.num_reduced_clauses = []
@@ -53,25 +55,28 @@ class DPLLProbing:
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
 # this should change as the propogation happens
 
-
     def search_space_probe(self, halt_on_assignment=False, doComp=True):
+        # lobjois probe in satzilla
         if self.verbose:
             print("search space estimate probe")
 
-        depths = [0] * self.num_lob_probe
+        sw = Stopwatch()
+        sw.start()
+
+        depths = []
 
         orig_num_active_vars = self.sat_instance.num_active_vars
+        print("search space original", orig_num_active_vars)
 
         probe_num = 0
 
-        # add time limit - Look into cpu timers
         # while probe_num < self.num_lob_probe and stopwatch.lap() < self.lobjois_tim_limit:
-        while probe_num < self.num_lob_probe:
+        while probe_num < self.num_lob_probe and sw.lap() < self.time_limit:
 
-            var = 0
+            var = 1
             val = False
 
-        #     another do while block
+            # another do while block
             while True:
 
                 if self.sat_instance.num_active_vars == 0:
@@ -81,20 +86,30 @@ class DPLLProbing:
                     else:
                         break
 
-                randnum = random.randint(0, self.sat_instance.num_active_vars)
+                # chooses a random unassigned variable, should be between 1 and v
+                var = 0
+                randnum = random.randint(1, self.sat_instance.num_active_vars)
                 for stepsleft in range(randnum, 0, -1):
                     var += 1
+
                     while self.sat_instance.var_states[var] != VarState.UNASSIGNED:
                         var += 1
+                        # This upper limit should be v, as the actual array of variables does not change, but the just
+                        # states of the variables
                         if var == self.sat_instance.v:
-                            var = 0
+                            var = 1
 
-                # not entirely sure what this is doing..., maybe randomly choosing it?
-                # val = rand() > randmax / 2
+
+                # Choose a random value to propagate
+                val = random.random() < 0.5
+
+                print("var, val, state", var, val, self.sat_instance.var_states[var])
                 if not self.set_var_and_prop(var, val):
                     break
 
-            depths[probe_num] = orig_num_active_vars - self.sat_instance.num_active_vars
+            print("reached bottom")
+            depths.append(orig_num_active_vars - self.sat_instance.num_active_vars)
+
             while self.sat_instance.num_active_vars != orig_num_active_vars:
                 self.backtrack()
 
@@ -104,20 +119,18 @@ class DPLLProbing:
 
         max_depth = max(depths)
 
-        sum = 0
+        res = 0
         for i in range(probe_num):
-            sum += (depths[i] - max_depth) ** 2
+            res += (depths[i] - max_depth) ** 2
 
-        lobjois = max_depth + math.log(sum/probe_num) / math.log(2.0)
+        lobjois = max_depth + math.log(res/probe_num) / math.log(2.0)
         if probe_num == 0:
             lobjois = 0
 
         print("lobjois log num nodes over vars", lobjois/self.sat_instance.v)
 
         # also should be timed
-        pass
-
-
+        print("total time:", sw.lap())
 
     def unit_propagation_probe(self, haltOnAssignment=False, doComp=True):
         """
@@ -141,6 +154,8 @@ class DPLLProbing:
         current_depth = 0
         orig_num_active_vars = self.sat_instance.num_active_vars
         reached_bottom = False
+
+        print("unit prob original", orig_num_active_vars)
 
         for probe_num in range(self.num_probes):
             # sets depth to 1, 4, 16, 64, 256

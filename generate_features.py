@@ -10,7 +10,14 @@ if __name__ == "__main__":
     except IndexError as E:
         print("no cnf path specified, using basic example")
         cnf_path = "cnf_examples/basic.cnf"
-    satinstance = SATInstance(cnf_path, preprocess=True)
+
+    if sys.platform == "darwin":
+        # osx
+        cnf_path = "cnf_examples/out.cnf"
+        satinstance = SATInstance(cnf_path, preprocess=False)
+
+    else:
+        satinstance = SATInstance(cnf_path, preprocess=True)
 
     # basic setup with already preprocessed files
     # print(sys.path)

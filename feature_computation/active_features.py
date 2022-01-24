@@ -101,6 +101,8 @@ def get_active_features(feats, clauses, c, v):
     num_active_vars = v
     var_states = [VarState.UNASSIGNED] * (v+1)
 
+    var_states[0] = VarState.IRRELEVANT
+
     for i in range(1, v+1):
         if num_active_clauses_with_var[i] == 0:
             var_states[i] = VarState.IRRELEVANT

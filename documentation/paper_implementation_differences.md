@@ -44,7 +44,8 @@ different options
 - lp ??? lpslack
 - unit: features 34-38 number of unit propagations (eg, variables reduced at certain depth)
 - ls: executes ubcsat2006 (currently crashes)
-- lobjois: features 39-40 search space size estimate
+- lobjois: features 39-40 search space size estimate (stochastic in nature, will have to use a certain level of freedom 
+when checking results.) What happens if this times out?
 
 # Possible optimizations
-- forgoe networkx, use clauses with var, etc to calculate node degrees...
+- Don't create graphs with networkx, use clauses with var, etc to calculate node degrees...
