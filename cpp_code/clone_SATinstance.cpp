@@ -1,7 +1,7 @@
 #include "clone_SATinstance.h"
 
 // #include <stdio.h>
-// #include <math.h>
+#include <math.h>
 // #include <time.h>
 
 // #include <sys/times.h>
@@ -232,7 +232,64 @@ SATinstance::SATinstance(const char* filename) {
 
     printf("unit prop");
     unitPropProbe(false, true);
+
+    // ------------- pos neg entropy testing -----------------
+    double *pos_frac_per_var = new double [numVars+1];
+
+
+    for (t=1; t <= numVars; t++) {
+
+        if (varStates[t] != UNASSIGNED || var_array[t]==0){}
+            pos_frac_per_var[t] = -900000;
+            printf("shits messed up yo");
+            continue;
+        }
+
+        pos_frac_per_var[t] = 2.0 * fabs(0.5 - (double)pos_var[t] / ((double)pos_var[t] + (double)neg_var[t]));
+
+    }
+
+    double res = 0;
 }
+
+inline double SATinstance::array_entropy(double *array, int num, int vals, int maxval)
+{
+int *p = new int[vals+1];
+double entropy = 0.0,pval;
+int t,res=0;
+int idx;
+
+// initialize
+for (t=0;t<=vals;t++) p[t] = 0;
+
+// make the distribution
+for (t=0;t<num;t++) 
+{
+
+	// how would this value possibly be a reserved value??
+if (array[t] == (double)RESERVED_VALUE) {res++; continue;}
+idx = (int) floor(array[t] / ((double)maxval/(double)vals));
+//      if (idx > maxval) idx = maxval;
+if ( idx > vals ) idx = vals;
+if ( idx < 0 ) idx = 0;
+p[idx]++;
+}
+
+// find the entropy
+for (t=0; t<=vals; t++)
+{
+if (p[t]) 
+	{
+	pval = double(p[t])/double(num-res);
+	entropy += pval * log(pval);
+	}
+}
+	
+delete[] p;
+
+return -1.0 * entropy;
+}
+
 
 bool SATinstance::unitprop(int &numClausesReduced, int &numVarsReduced) {
 
