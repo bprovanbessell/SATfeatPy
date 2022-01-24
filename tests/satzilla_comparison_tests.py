@@ -205,11 +205,6 @@ class SatzillaComparisonTest(unittest.TestCase):
             "vars-reduced-depth-256": "unit_props_at_depth_256"
         }
 
-        search_space_names_map = {
-            "lobjois-mean-depth-over-vars": "mean_depth_to_contradiction_over_vars",
-            "lobjois-log-num-nodes-over-vars": "estimate_log_number_nodes_over_vars"
-        }
-
         test_files = ["basic.cnf", "php10_7.cnf", "parity_5.cnf", "parity_6.cnf", "subsetcard_5.cnf", "tseitin_10_4.cnf"]
 
         for test_file in test_files:
@@ -220,11 +215,6 @@ class SatzillaComparisonTest(unittest.TestCase):
             for sat_feat_name, feat_name in satzilla_names_map.items():
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name])
-
-            # these features are stochastic in nature, and can vary
-            for sat_feat_name, feat_name in search_space_names_map.items():
-                print(sat_feat_name, feat_name)
-                self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name], places=2)
 
     def test_search_space_features(self):
 
