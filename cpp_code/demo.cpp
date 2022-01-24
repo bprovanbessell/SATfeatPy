@@ -2,12 +2,15 @@
 
 int main(void) {
 	std::cout << "Hmmmm";
-	return 0;
 
-	int test[5];
+	std::cout << rand();
 
-	for (int i = 0; i<5; i++){
-		std::cout << test[i];
+	for(int i = 0; i<10; i++){
+		std::cout << rand();
 		std::cout << "\n";
 	}
+
+	return 0;
+
+	
 }
