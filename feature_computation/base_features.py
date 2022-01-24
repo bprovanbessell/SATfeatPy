@@ -70,7 +70,7 @@ def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     write_entropy_float(pos_neg_clause_balance, "pnc_ratio", features_dict, c)
     # 21-25
     write_stats(pos_neg_variable_balance, "pnv_ratio", features_dict)
-    write_entropy_float(pos_neg_variable_balance, "pnv_ratio", features_dict, v)
+    write_entropy_float(pos_neg_variable_balance, "pnv_ratio", features_dict, num_active_vars)
 
     features_dict["pnv_ratio_stdev"] = array_stats.get_stdev(pos_neg_variable_balance)
     # 26-27
