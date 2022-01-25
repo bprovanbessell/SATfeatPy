@@ -49,3 +49,17 @@ when checking results.) What happens if this times out?
 
 # Possible optimizations
 - Don't create graphs with networkx, use clauses with var, etc to calculate node degrees...
+
+Local search probing features
+BestSolution_Mean = 
+BestSolution_CoeffVariance = 
+FirstLocalMinStep_Mean = 41.
+FirstLocalMinStep_CoeffVariance = 0.0886780543814
+FirstLocalMinStep_Median = 42.
+FirstLocalMinStep_Q.10 = 43.
+FirstLocalMinStep_Q.90 = 44.
+BestAvgImprovement_Mean = 45.
+BestAvgImprovement_CoeffVariance = 0.19897743838
+FirstLocalMinRatio_Mean = 46
+FirstLocalMinRatio_CoeffVariance = 0.0465689902535
+EstACL_Mean = 6129.81555613

@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
     if sys.platform == "darwin":
         # osx
-        cnf_path = "cnf_examples/more_complex_cnfs/sat_4color_200_1126_10020_preprocessed.cnf"
+        cnf_path = "cnf_examples/sat_4color_200_1126_10020_preprocessed.cnf"
         satinstance = SATInstance(cnf_path, preprocess=False)
 
     else:
