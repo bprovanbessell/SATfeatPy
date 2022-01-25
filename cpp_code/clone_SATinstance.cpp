@@ -394,6 +394,7 @@ t++;
 
 // positive ratio in clauses
 // writeStats(pos_frac_in_clause,numClauses,"POSNEG-RATIO-CLAUSE");
+std::cout << array_entropy(pos_frac_in_clause,numClauses,100,1);
 // writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
 // // clause side in the bipartite graph
 // writeStats(clause_array_norm,numClauses,"VCG-CLAUSE");
