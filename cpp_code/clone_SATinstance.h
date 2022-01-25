@@ -51,6 +51,30 @@ class SATinstance{
     void backtrack();
 
 
+    double array_entropy(double *array, int num, int vals, int maxval);
+    int computeFeatures(bool doComp);
+
+
+    int currentClause;
+   inline int *firstClause();
+   int *nextClause();
+
+   // two lit iterators are provided so that two
+   // clauses can be iterated over simultaneously
+
+   int currentLit, currentLit2;
+   int *currentClauseForLitIter, *currentClauseForLitIter2;
+   inline int firstLitInClause(int *clause);
+   inline int nextLitInClause();
+   inline int firstLitInClause2(int *clause);
+   inline int nextLitInClause2();
+
+     int currentClauseWithVar;
+   int currentVarForClauseIter;
+   bool posClauses;
+   inline int *firstClauseWithVar(int var, bool positive);
+   int *nextClauseWithVar();
+
 
 
 
