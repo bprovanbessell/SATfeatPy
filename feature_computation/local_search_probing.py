@@ -4,7 +4,7 @@ import os
 def local_search_probe(cnf_file, saps=True, gsat=True):
     # should be run from project root directory
 
-    # Run from ubcsat_osx directory
+    # Run from ubcsat directory
     # run on pre-processed file
 
     # -inst cnf_name
@@ -55,10 +55,10 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         args_list.append("-alg")
         args_list.append("saps")
 
-        # command = "./ubcsat_osx " + file_inst + alg_inst + no_improve + stats + out_file + stats2 + runs
         command = " ".join(args_list)
         # print(command)
-        # os.system(command)
+        # run saps
+        os.system(command)
 
         saps_res_dict = read_ubcsat_results(True)
 
@@ -66,6 +66,8 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         args_list[-1] = "gsat"
         command = " ".join(args_list)
         # print(command)
+        # run gsat
+        os.system(command)
         gsat_res_dict = read_ubcsat_results(False)
 
 

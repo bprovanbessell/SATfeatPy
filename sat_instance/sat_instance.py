@@ -2,7 +2,6 @@ from feature_computation import preprocessing, parse_cnf, active_features, base_
 from feature_computation.dpll import DPLLProbing
 
 
-
 class SATInstance:
 
     def __init__(self, input_cnf, preprocess=True):
@@ -72,6 +71,7 @@ class SATInstance:
         self.features_dict.update(self.dpll_prober.unit_props_log_nodes_dict)
 
     def gen_local_search_probing_features(self):
+        # also doesnt seem to fully work on osx.
 
         saps_res_dict, gsat_res_dict = local_search_probing.local_search_probe(self.path_to_cnf)
 

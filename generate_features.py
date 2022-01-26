@@ -19,20 +19,12 @@ if __name__ == "__main__":
     else:
         satinstance = SATInstance(cnf_path, preprocess=True)
 
-    # basic setup with already preprocessed files
-    # print(sys.path)
-    #
-    # cnf_path = "cnf_examples/out.cnf"
-    # satinstance = SATInstance(cnf_path, preprocess=False)
-
-    # this is a necessary step
     satinstance.gen_basic_features()
 
     # test dpll probing
     print("probing")
-    # dpll_prober.unit_prop_probe(haltOnAssignment=False, doComp=True)
     satinstance.gen_dpll_probing_features()
 
-    satinstance.gen_local_search_probing_features()
+    # satinstance.gen_local_search_probing_features()
 
     print(satinstance.features_dict)

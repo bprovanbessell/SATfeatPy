@@ -7,40 +7,47 @@ This file documents the features that can be extracted by this software, and giv
 3. Ratio: c/v
 
 ### Variable-Clause Graph features
-#### A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause,
-#### and an edge between them whenever a variable occurs in a clause
+**A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause, 
+and an edge between them whenever a variable occurs in a clause **
+
 4-8. Variable nodes degree statistics: mean, coefficient of variation, min, max and entropy.
 9-13. Clause nodes degree statistics: mean, coefficient of variation, min, max and entropy.
 _The degree of a node is the number of edges incident (connected) to that node._
 
 ### Variable Graph features
-#### A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause
+**A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause**
+
 14-17. Nodes degree statistics: mean , coefficient of variation, min and max.
 
 ###Balance features
 18-20. Ratio of positive and negative literals in each clause: mean, variation coefficient and entropy (see extra notes). 
 _For each clause, the ratio is the number of positive literals/number of negative literals.
 These ratios are then aggregated, and statistics on them output._
-
 n.b. The _ratio_ is not actually a ratio, but a measure of the offset/bias between the positive and negative values:
-2 * abs(0.5 - pos/(pos + neg))
-
+2 * abs(0.5 - pos/(pos + neg))  
+21-25. Ratio of positive and negative occurrences of each variable: mean, coefficient of variation, min, max and entropy.  
 26-27. Fraction of binary and ternary clauses: Fraction of clauses that have 2 literals over total number of clauses,
-fraction of clauses with 3 literals, over total number of clauses.
+fraction of clauses with 2 or 3 literals, over total number of clauses.
 
 
 ### Proximity to Horn Formula
-#### A clause is a Horn clause if it contains at most one positive literal
-28. Fraction of Horn clauses
-
+**A clause is a Horn clause if it contains at most one positive literal**  
+28 Fraction of Horn clauses.  
 29-33. Number of occurrences in a Horn clause for each variable: mean, co-efficient of variation, minimum, maximum, entropy.
 The number of times a variable appears in all horn clauses.
 
 ### DPLL Probing Features
-#### DPLL (Davis-Putnam-Logemann-Loveland) algorithm is a backtracking algorithm for solving CNF SAT problems.
-
-34-38. Number of unit propagations: computed at depths 1, 4, 16, 64 and 256.
+**DPLL (Davis-Putnam-Logemann-Loveland) algorithm is a backtracking algorithm for solving CNF SAT problems.**  
+34-38. Number of unit propagations: computed at depths 1, 4, 16, 64 and 256.  
 39-40. Search space size estimate: mean depth to contradiction, estimate of the log of number of nodes.
+
+### Local Search Probing Features
+**The SAPS and GSAT algorithms for solving SAT problems are run up to 10000 times, 
+(or as many times within a 2 second time limit) on the cnf. Various statistics over the runs are calculated**  
+41-44. Number of steps to the best local minimum in a run: mean, median, 10th and 90th percentiles for SAPS and GSAT.  
+45 . Average improvement to best in a run: mean improvement to best solution for SAPS and GSAT.
+46-47. Fraction of improvement due to first local minimum: mean for SAPS and GSAT.
+48 . Coefficient of variation of the number of unsatisfied clauses in each local minimum.
 
 ###Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 
