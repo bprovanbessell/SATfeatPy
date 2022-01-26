@@ -1,4 +1,4 @@
-from feature_computation import preprocessing, parse_cnf, active_features, base_features
+from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing
 from feature_computation.dpll import DPLLProbing
 
 
@@ -43,9 +43,8 @@ class SATInstance:
         # necessary for unit propagation setup
         self.parse_active_features()
 
-        self.dpll_prober = DPLLProbing(self)
-
         # Do first round of unit prop to remove all unit clauses
+        self.dpll_prober = DPLLProbing(self)
         self.dpll_prober.unit_prop(0, 0)
 
     def clauses_with_literal(self, literal):
@@ -60,8 +59,6 @@ class SATInstance:
 
     def gen_basic_features(self):
 
-        # this should always be done after a round of unit prop
-
         base_features_dict = base_features.compute_base_features(self.clauses, self.c, self.v, self.num_active_vars,
                                                                  self.num_active_clauses)
         self.features_dict.update(base_features_dict)
@@ -74,4 +71,9 @@ class SATInstance:
 
         self.features_dict.update(self.dpll_prober.unit_props_log_nodes_dict)
 
+    def gen_local_search_probing_features(self):
+
+        saps_res_dict, gsat_res_dict = local_search_probing.local_search_probe(self.path_to_cnf)
+
+        print(saps_res_dict)
 

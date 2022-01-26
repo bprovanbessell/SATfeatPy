@@ -33,4 +33,6 @@ if __name__ == "__main__":
     # dpll_prober.unit_prop_probe(haltOnAssignment=False, doComp=True)
     satinstance.gen_dpll_probing_features()
 
+    satinstance.gen_local_search_probing_features()
+
     print(satinstance.features_dict)
