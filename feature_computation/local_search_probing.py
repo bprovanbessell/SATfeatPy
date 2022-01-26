@@ -21,7 +21,7 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         os.mkdir("results")
 
     args_list = []
-    args_list.append(".ubcsat/ubcsat_linux")
+    args_list.append("./ubcsat/ubcsat_linux")
     # add file instance to probe
     args_list.append("-inst")
     args_list.append(cnf_file)
@@ -46,6 +46,7 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
     args_list.append("-gtimeout")
     args_list.append(timelimit)
 
+    args_list.append("-r out null")
     saps_res_dict = {}
     gsat_res_dict = {}
 
@@ -76,6 +77,7 @@ def read_ubcsat_results():
         for line in f:
             res = line.split(" = ")
             if len(res) > 0:
+                print(res)
                 res_dict[res[0]] = float(res[1])
 
     return res_dict
