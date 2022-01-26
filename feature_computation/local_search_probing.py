@@ -21,7 +21,7 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         os.mkdir("results")
 
     args_list = []
-    args_list.append(".ubcsat/ubcsat_osx")
+    args_list.append(".ubcsat/ubcsat_linux")
     # add file instance to probe
     args_list.append("-inst")
     args_list.append(cnf_file)
