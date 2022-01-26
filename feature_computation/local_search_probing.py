@@ -76,7 +76,7 @@ def read_ubcsat_results():
     with open("ubcsat/results/out.txt") as f:
         for line in f:
             res = line.split(" = ")
-            if len(res) > 0:
+            if len(res) > 1:
                 print(res)
                 res_dict[res[0]] = float(res[1])
 
