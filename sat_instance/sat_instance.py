@@ -75,5 +75,6 @@ class SATInstance:
 
         saps_res_dict, gsat_res_dict = local_search_probing.local_search_probe(self.path_to_cnf)
 
-        print(saps_res_dict)
+        self.features_dict.update(saps_res_dict)
+        self.features_dict.update(gsat_res_dict)
 

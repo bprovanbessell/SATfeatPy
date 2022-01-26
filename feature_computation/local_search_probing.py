@@ -57,28 +57,34 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
 
         # command = "./ubcsat_osx " + file_inst + alg_inst + no_improve + stats + out_file + stats2 + runs
         command = " ".join(args_list)
-        print(command)
+        # print(command)
         # os.system(command)
 
-        saps_res_dict = read_ubcsat_results()
+        saps_res_dict = read_ubcsat_results(True)
 
     if gsat:
         args_list[-1] = "gsat"
         command = " ".join(args_list)
-        print(command)
+        # print(command)
+        gsat_res_dict = read_ubcsat_results(False)
+
 
     return saps_res_dict, gsat_res_dict
 
 
-def read_ubcsat_results():
-
+def read_ubcsat_results(saps):
+    if saps:
+        prefix = "saps_"
+    else:
+        prefix = "gsat_"
     res_dict = {}
     with open("ubcsat/results/out.txt") as f:
         for line in f:
+            line.strip("\n")
             res = line.split(" = ")
             if len(res) > 1:
-                print(res)
-                res_dict[res[0]] = float(res[1])
+                # print(res)
+                res_dict[prefix + res[0]] = float(res[1])
 
     return res_dict
 
