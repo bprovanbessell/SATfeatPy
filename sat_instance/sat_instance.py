@@ -49,7 +49,7 @@ class SATInstance:
         self.parse_active_features()
 
         # Do first round of unit prop to remove all unit clauses
-        self.dpll_prober = DPLLProbing(self)
+        self.dpll_prober = DPLLProbing(self, verbose=False)
         self.dpll_prober.unit_prop(0, 0)
 
     def clauses_with_literal(self, literal):

@@ -11,22 +11,22 @@ class DPLLProbing:
     The clauses themselves are not changed (I assume for storage reasons)
 
     So assignments of the variables are stored in varstate, if they are true, false, etc,
-     and then clauses are iterated through and checked if they are unassigned, so that is the next unit clause
+    and then clauses are iterated through and checked if they are unassigned, so that is the next unit clause
 
-     lengths of clauses kept track of in clause_lengths
+    lengths of clauses kept track of in clause_lengths
 
 
-     First check is for unit clauses -> if there are unit clauses
-     Within these clauses, the unassigned variable is found
-     This variable is set to the value of the literal (positive or negative)
-     and the clauses that contain this variable are reduced
+    First check is for unit clauses -> if there are unit clauses
+    Within these clauses, the unassigned variable is found
+    This variable is set to the value of the literal (positive or negative)
+    and the clauses that contain this variable are reduced
 
-     reduction
-     first remove all of the instances of the negative variable...
-     so reduce the size of clauses with this variable,
-     if the new size is 0, then we have a problem (inconsistent)
+    reduction
+    first remove all of the instances of the negative variable...
+    so reduce the size of clauses with this variable,
+    if the new size is 0, then we have a problem (inconsistent)
 
-     Then satisfy the consistent clauses (clauses that contain that literal)
+    Then satisfy the consistent clauses (clauses that contain that literal)
 
     """
 
@@ -53,7 +53,7 @@ class DPLLProbing:
     # unit propagation
 
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
-# this should change as the propogation happens
+# this should change as the propagation happens
 
     def search_space_probe(self, halt_on_assignment=False, doComp=True):
         # lobjois probe in satzilla
@@ -161,8 +161,6 @@ class DPLLProbing:
         current_depth = 0
         orig_num_active_vars = self.sat_instance.num_active_vars
         reached_bottom = False
-
-        print("unit prob original", orig_num_active_vars)
 
         for probe_num in range(self.num_probes):
             # sets depth to 1, 4, 16, 64, 256
@@ -279,7 +277,6 @@ class DPLLProbing:
             self.backtrack()
 
         # writefeature
-        # return self.unit_props_log_nodes_dict
 
     def set_var_and_prop(self, var, value):
         """
@@ -341,7 +338,6 @@ class DPLLProbing:
                 self.reduced_clauses.append(clause_num)
                 num_clauses_reduced += 1
 
-                # could be quite important
                 # decrease the size (this length actually represents the number of yet to be assigned variables within that clause)
                 self.sat_instance.clause_lengths[clause_num] -= 1
 
