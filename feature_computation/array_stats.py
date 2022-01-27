@@ -1,7 +1,7 @@
 import statistics as stats
 import math
 """
-File to control the computation and aggregation of statistics for arrays of values.
+File to control the computation and aggregation of statistics for lists of values.
 """
 
 
@@ -23,13 +23,13 @@ def get_stats(l):
 def get_stdev(l):
     return stats.pstdev(l)
 
-def get_stdev_satzilla(l, num, mean):
-    dtotal = 0.0
-    reserved_hits = 0
-    for t in range(num):
-        dtotal += (l[t] - mean) * (l[t] - mean)
-
-    return math.sqrt(dtotal/num)
+# def get_stdev_satzilla(l, num, mean):
+#     dtotal = 0.0
+#     reserved_hits = 0
+#     for t in range(num):
+#         dtotal += (l[t] - mean) * (l[t] - mean)
+#
+#     return math.sqrt(dtotal/num)
 
 
 def calc_coefficient_of_variation(mean, std):
