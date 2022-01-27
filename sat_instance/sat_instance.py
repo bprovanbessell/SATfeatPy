@@ -3,6 +3,12 @@ from feature_computation.dpll import DPLLProbing
 
 
 class SATInstance:
+    """
+    Class to hold the methods for generating features from a cnf. This class handles the parsing of the cnf file into
+    data structures necessary to the perform feature extraction. Then the various features can be generated, and are
+    stored in the features dictionary.
+
+    """
 
     def __init__(self, input_cnf, preprocess=True):
         self.path_to_cnf = input_cnf
@@ -47,6 +53,11 @@ class SATInstance:
         self.dpll_prober.unit_prop(0, 0)
 
     def clauses_with_literal(self, literal):
+        """
+        Returns a list of clauses that contain the literal
+        :param literal:
+        :return:
+        """
         if literal > 0:
             return self.clauses_with_positive_var[literal]
         else:
@@ -57,12 +68,18 @@ class SATInstance:
         active_features.get_active_features(self, self.clauses, self.c, self.v)
 
     def gen_basic_features(self):
+        """
+        Generates the basic features (Including but not limited to 1-33 from the satzilla paper).
+        """
 
         base_features_dict = base_features.compute_base_features(self.clauses, self.c, self.v, self.num_active_vars,
                                                                  self.num_active_clauses)
         self.features_dict.update(base_features_dict)
 
     def gen_dpll_probing_features(self):
+        """
+        Generates the dpll probing features (34-40 from the satzilla paper).
+        """
 
         self.dpll_prober.unit_propagation_probe(False, True)
 
@@ -71,6 +88,9 @@ class SATInstance:
         self.features_dict.update(self.dpll_prober.unit_props_log_nodes_dict)
 
     def gen_local_search_probing_features(self):
+        """
+        Generates the local search probing features (including but not limited to 41-48 from the satzilla paper).
+        """
         # also doesnt seem to fully work on osx.
 
         saps_res_dict, gsat_res_dict = local_search_probing.local_search_probe(self.path_to_cnf)
