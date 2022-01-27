@@ -1,4 +1,3 @@
-import statistics as stats
 
 
 def compute_balance_features(clauses, c, v):
@@ -25,7 +24,6 @@ def compute_balance_features(clauses, c, v):
     horn_clause_variable_count = [0] * v
 
     for clause in clauses:
-        # print("clause", clause)
 
         if len(clause) == 2:
             num_binary_clauses += 1

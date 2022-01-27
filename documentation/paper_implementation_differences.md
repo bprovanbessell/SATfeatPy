@@ -33,3 +33,35 @@ the clauses have been pre-processed.
 vcg variable degrees -> number of clauses that contain the variable (similar as with clause degrees)
 
 vg node degrees divided by number of active
+
+
+# Notes on implementation:
+different options
+- base is features 1-33 (+ a few other options)
+- SP is survey propagation ->
+- dia is diameter?
+- cl (quartiles, min, max etc) (executing zchaff07)
+- lp ??? lpslack
+- unit: features 34-38 number of unit propagations (eg, variables reduced at certain depth)
+- ls: (local search) executes ubcsat2006 (currently crashes) features 41-48 
+- lobjois: features 39-40 search space size estimate (stochastic in nature, will have to use a certain level of freedom 
+when checking results.) What happens if this times out?
+
+# Possible optimizations
+- Don't create graphs with networkx, use clauses with var, etc to calculate node degrees...
+
+Local search probing features
+BestSolution_Mean = 
+BestSolution_CoeffVariance = 
+FirstLocalMinStep_Mean = 41.
+FirstLocalMinStep_CoeffVariance = 0.0886780543814
+FirstLocalMinStep_Median = 42.
+FirstLocalMinStep_Q.10 = 43.
+FirstLocalMinStep_Q.90 = 44.
+BestAvgImprovement_Mean = 45.
+BestAvgImprovement_CoeffVariance = 0.19897743838
+FirstLocalMinRatio_Mean = 46
+FirstLocalMinRatio_CoeffVariance = 0.0465689902535
+EstACL_Mean = 6129.81555613
+
+41-44 (to first local minimum) (not best)
