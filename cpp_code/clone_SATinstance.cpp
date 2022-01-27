@@ -394,7 +394,10 @@ t++;
 
 // positive ratio in clauses
 // writeStats(pos_frac_in_clause,numClauses,"POSNEG-RATIO-CLAUSE");
+printf("\n");
+printf("posneg ratio clause entropy: ");
 std::cout << array_entropy(pos_frac_in_clause,numClauses,100,1);
+printf("\n");
 // writeFeature("POSNEG-RATIO-CLAUSE-entropy",array_entropy(pos_frac_in_clause,numClauses,100,1));
 // // clause side in the bipartite graph
 // writeStats(clause_array_norm,numClauses,"VCG-CLAUSE");
@@ -485,12 +488,10 @@ else fprintf(stderr, "c %lf\n", clause_array_norm[t]);
 
 double res = array_entropy(pos_frac_per_var+1,numActiveVars,100,1);
 
-printf("posneg ratio var: ");
+printf("\nposneg ratio var entropy: ");
 
 std::cout << res;
-
-std::cout << array_entropy(pos_frac_per_var+1,numActiveVars,100,1);
-
+ printf("\n");
 // // horn clauses
 // writeStats(horny_var_norm+1,numActiveVars,"HORNY-VAR");
 // writeFeature("HORNY-VAR-entropy",array_entropy(horny_var+1,numActiveVars,numActiveClauses+1));
@@ -719,7 +720,7 @@ return consistent;
 
 
 void SATinstance::backtrack() {
-    printf("backtrack\n");
+    // printf("backtrack\n");
 int numVarsReduced = numReducedVars.top();
 numReducedVars.pop();
 for (int i=0; i<numVarsReduced; i++) {
@@ -800,7 +801,7 @@ nextProbeDepth *= 4;
 }
 
 while (currentDepth < nextProbeDepth && !reachedBottom) {
-    printf("cdepth %d\n", currentDepth);
+    // printf("cdepth %d\n", currentDepth);
 int varsInMostBinClauses[NUM_VARS_TO_TRY];
 int numBin[NUM_VARS_TO_TRY];
 
@@ -864,7 +865,6 @@ assert (maxPropsVar != 0);
 
 if (!setVarAndProp(maxPropsVar, maxPropsVal)){
     	reachedBottom = true;
-        printf("make that shit true\n");
         char str[100];
         sprintf(str, "vars-reduced%d", currentDepth);
         printf(str);
