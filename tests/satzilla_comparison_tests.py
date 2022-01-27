@@ -243,7 +243,7 @@ class SatzillaComparisonTest(unittest.TestCase):
                 print(sat_feat_name, feat_name)
                 self.assertAlmostEqual(satzilla_features_dict[sat_feat_name], features_dict[feat_name], places=2)
 
-    @unittest.skip("Bug with satzilla???")
+    # @unittest.skip("Bug with satzilla???")
     def test_more_complex_cnfs(self):
 
         file_directory = "cnf_examples/more_complex_cnfs/"
