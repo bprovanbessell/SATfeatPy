@@ -34,6 +34,10 @@ vcg variable degrees -> number of clauses that contain the variable (similar as 
 
 vg node degrees divided by number of active
 
+# Features to improve/modify implemenation of
+* Entropy -> scipy has an implementation, we should change to use that one. (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html)
+* Overall refactor of methods to make them more pythonic (optimise with list comprehension instead of loops, etc. Look into numba to provide a precompiled version )
+
 
 # Notes on implementation:
 different options
@@ -50,18 +54,9 @@ when checking results.) What happens if this times out?
 # Possible optimizations
 - Don't create graphs with networkx, use clauses with var, etc to calculate node degrees...
 
-Local search probing features
-BestSolution_Mean = 
-BestSolution_CoeffVariance = 
-FirstLocalMinStep_Mean = 41.
-FirstLocalMinStep_CoeffVariance = 0.0886780543814
-FirstLocalMinStep_Median = 42.
-FirstLocalMinStep_Q.10 = 43.
-FirstLocalMinStep_Q.90 = 44.
-BestAvgImprovement_Mean = 45.
-BestAvgImprovement_CoeffVariance = 0.19897743838
-FirstLocalMinRatio_Mean = 46
-FirstLocalMinRatio_CoeffVariance = 0.0465689902535
-EstACL_Mean = 6129.81555613
+##Strange issue with entropy
+- for sat 4 colour xxxxx (more complex cnfs), the posneg var ratio entropy is different than expected. 
+Quite a strange issue, as the mean, max, min stdev are the same for the posneg ratio, and the same method gets an expected
+result with the posneg clause ratio entropy...
 
-41-44 (to first local minimum) (not best)
+In any case, this entropy implementation should be changes to use the scipy version.
