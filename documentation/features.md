@@ -56,10 +56,10 @@ The number of times a variable appears in all horn clauses.
 - log alpha_v: powerlaw exponent
 - Q: modularity (for VIG)
 
-A variable incidence graph: Set of vertexes is the set of boolean variables - weights assigned to edges as follows
+A variable incidence graph (VIG): Set of vertexes is the set of boolean variables - weights assigned to edges as follows
 W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the clause I am assuming)
 
-Clause variable incidence graph: set of vertexes is set of variables and clauses, weight function:
+Clause variable incidence graph (CVIG): set of vertexes is set of variables and clauses, weight function:
 w(x, c) = 1/|c| if x elem c
 0 otherwise
 
@@ -67,7 +67,7 @@ w(x, c) = 1/|c| if x elem c
 
 Scale free structure - power law distribution. Estimation computed by method of Maximum likelihood
 Modularity(Q) of VIG (louvain method)
-fractal dimensions of VIC and CVIG
+fractal dimensions of VIC and CVIG - How to estimate/calculate it
 
 ###Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 
