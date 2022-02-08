@@ -2,19 +2,36 @@ import networkx as nx
 from math import comb
 import community as community_louvain
 """
-Graph features from Structure features fro SAT instances classification (Ansotegui)
+Graph features from Structure features for SAT instances classification (Ansotegui)
+------
+The other feature is the scale free structure (based on variable occurrences) (estimation computed by method of maximum likelihood)
+
+exponent of the Power law distribution of variable occurrences
+compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
+Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v), we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
+This estimation is computed by the method of maximum likelihood
+--------
 
 Variable incidence graph (VIG)
 
 Clause variable incidence graph (CVIG)
 
 Then the fractal dimension of both the VIG and CVIG are calculated
-And the Modularity Q of the VIG is calculated
+by computing the function N(r) . can compute the degree d (fractal dimension) that best fits the function N(r). 
+This value is estimated by linear regression interpolating the points log N(r) vs log r
 
+
+And the Modularity Q of the VIG is calculated
 The modularity of a graph is the maximal modularity for any possible partition Q(C)  = max{Q(G,C) | C}
 Can be done using the community package
+----  
 
-The other feature is the scale free structure (based on variable occurrences) (estimation computed by method of maximum likelihood)
+
+Steps and features
+1. Create VIG and CVIG graphs (should be alright)
+2. Calculate the scale free structure based on variable occurrences (Figure it out?)
+3. Calculate self-similiar structure for VIG and CVIG
+4. Get the modularity Q (We can find the best partition, it is just left to get the modularity from that partition - Read more into what this is, and how to extract it from the partition.
 
 """
 
