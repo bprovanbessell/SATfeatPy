@@ -1,3 +1,4 @@
+import networkx
 import networkx as nx
 import math
 import community as community_louvain
@@ -91,7 +92,7 @@ def create_cvig(clauses, c, v):
     :param v:
     :return: Variable node degrees and clause node degrees
     """
-    vcg = nx.Graph()
+    cvig = nx.Graph()
 
     # Node for each variable
     # node for each clause
@@ -113,23 +114,12 @@ def create_cvig(clauses, c, v):
 
             if var_num in clause:
                 # weight should be 1/ size of the clause
-                vcg.add_edge(c_node, v_node, weight=weight)
+                cvig.add_edge(c_node, v_node, weight=weight)
             else:
                 # If the variable is not in the clause, then the weight should be 0
-                vcg.add_edge(c_node, v_node, weight=0)
+                cvig.add_edge(c_node, v_node, weight=0)
 
-    v_node_degrees = []
-    c_node_degrees = []
-    # get node statistics
-    for i in range(c):
-        degree = len(nx.edges(vcg, "c_" + str(i)))
-        c_node_degrees.append(degree)
-
-    for i in range(1, v+1):
-        degree = len(nx.edges(vcg, "v_" + str(i)))
-        v_node_degrees.append(degree)
-
-    return v_node_degrees, c_node_degrees
+    return cvig
 
 
 def create_vig(clauses, c, v):
@@ -163,13 +153,6 @@ def create_vig(clauses, c, v):
                 edge_weight += weight
                 vig.add_edge(v_node_i, v_node_j, weight=edge_weight)
 
-    # node_degrees = []
-    #
-    # for n in vg.nodes:
-    #     degree = len(nx.edges(vg, n))
-    #     node_degrees.append(degree)
-    #
-    # return node_degrees
     return vig
 
 
@@ -181,4 +164,57 @@ def compute_modularity_q(graph):
     modularity = community_louvain.modularity(partition, graph)
 
     return modularity
+
+
+def burning_by_node_degree(graph, n: int):
+    # order nodes according to their degree such that degree(vi) >= degree(vj) when i < j
+
+    # n is number of nodes
+    # pseudocode in thesis of jesus giraldez, page 67...
+    # returns vector N(r), then fractal dimension d must be calculated from this...
+    # Supposedly we can assume N(r) ~ r^-d
+    # Use regression, and then interpolation to get d...
+    N = [0] * n
+    N[1] = n
+    i = 2
+
+    # connected_components(graph)
+
+    # is the graph edited, does the number of connected components change??
+    while N[i - 1] > networkx.number_connected_components(graph):
+        burned = [False] * n
+        N[i] = 0
+
+        # if any member in burned is still false
+        while not all(burned):
+        # while exists_unburned_Node(burned):
+            c = highest_degree_unburned_node(graph, burned)
+
+            # for every possible node c
+            S = circle(c, i) #circle with centre c and radius i
+
+            for x in S:
+                burned[x] = True
+
+            N[i] += 1
+
+        i = i + 1
+    pass
+
+
+def highest_degree_unburned_node(graph, burned):
+    # TODO
+    # as the method says I guess??
+    # get the node with the highest degree that is also unburned (burned[node] = False)
+    pass
+
+
+def circle(centre, radius):
+    # circle with centre c and radius i
+    # centre is a node
+
+    # Really not sure what this does, more reading needed
+
+    # returns a list of nodes...
+    pass
 
