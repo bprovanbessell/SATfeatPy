@@ -1,4 +1,4 @@
-from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing
+from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing, graph_features_ansotegui
 from feature_computation.dpll import DPLLProbing
 
 
@@ -97,4 +97,13 @@ class SATInstance:
 
         self.features_dict.update(saps_res_dict)
         self.features_dict.update(gsat_res_dict)
+
+    def gen_ansotegui_features(self):
+
+        variable_occurrences = graph_features_ansotegui.variable_occurrences(self.clauses, self.num_active_clauses, self.num_active_vars)
+
+        alpha = graph_features_ansotegui.estimate_power_law_alpha(variable_occurrences)
+
+        print("alpha", alpha)
+
 

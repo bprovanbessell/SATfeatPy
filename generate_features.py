@@ -28,3 +28,5 @@ if __name__ == "__main__":
     # satinstance.gen_local_search_probing_features()
 
     print(satinstance.features_dict)
+
+    satinstance.gen_ansotegui_features()

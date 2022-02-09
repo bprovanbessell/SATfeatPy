@@ -1,29 +1,40 @@
 import networkx as nx
-from math import comb
+import math
 import community as community_louvain
+import powerlaw
 """
 Graph features from Structure features for SAT instances classification (Ansotegui)
 ------
-The other feature is the scale free structure (based on variable occurrences) (estimation computed by method of maximum likelihood)
+The scale free structure (based on variable occurrences) (estimation computed by method of maximum likelihood)
 
 exponent of the Power law distribution of variable occurrences
 compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
-Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v), we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
+# Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v), we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
 This estimation is computed by the method of maximum likelihood
+
+-Compute for all numbers k, f_v(k) = var(k)/n
+-for this series, estimate the power law exponent with maximum likelihood (ask/research more about this), also the plfit package
+
+alpha = 1 + n[sum(ln(x_i/x_min)]^-1
 --------
 
 Variable incidence graph (VIG)
 
 Clause variable incidence graph (CVIG)
 
+Methods for creating the VIG and CVIG should be alright
+
+
+Following details on formula and calculations still unclear
 Then the fractal dimension of both the VIG and CVIG are calculated
 by computing the function N(r) . can compute the degree d (fractal dimension) that best fits the function N(r). 
 This value is estimated by linear regression interpolating the points log N(r) vs log r
 
-
+------
 And the Modularity Q of the VIG is calculated
 The modularity of a graph is the maximal modularity for any possible partition Q(C)  = max{Q(G,C) | C}
-Can be done using the community package
+We can find this maximum partition with the community package (uses louvain method), we just need to find out how to get the 
+modularity of that partition 
 ----  
 
 
@@ -34,6 +45,58 @@ Steps and features
 4. Get the modularity Q (We can find the best partition, it is just left to get the modularity from that partition - Read more into what this is, and how to extract it from the partition.
 
 """
+
+
+def variable_occurrences(clauses, c, v):
+    # variable count is needed
+    # possibly more efficient to have this in active feature parsing...
+    variable_count = [0] * v + 1
+
+    for clause in clauses:
+        for literal in clause:
+            variable_count[abs(literal)] += 1
+
+    # compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
+    f_v_k = [0] * v + 1
+
+    for count in variable_count:
+        f_v_k[count] += 1
+
+    # divide by number of variables
+    f_v_k = [x/v for x in f_v_k]
+
+    return f_v_k
+
+
+def estimate_power_law_alpha(data,):
+    # Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v),
+    # we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
+    # Use maximum likelihood estimator
+
+    # Try the powerlaw packacke
+    # Quite likely that values will be 0, as there are no variables of that count, should these values be removed??? Try out an example first...
+
+
+    # using estimator equation from https://en.wikipedia.org/wiki/Power_law#Maximum_likelihood
+    # what should x_min be??
+    # if we use 0, every value should tend to infinity....
+    # what should be used in this case
+
+    # data = [math.log(x/x_min) for x in data]
+    #
+    # s = sum(data)
+    #
+    # s = math.pow(s, -1)
+    #
+    # alpha = 1 + (n * s)
+    #
+    # return alpha
+
+    results = powerlaw.Fit(data)
+    print(results.power_law.alpha)
+    print(results.power_law.xmin)
+
+    return results.power_law.alpha
 
 
 def create_cvig(clauses, c, v):
@@ -106,7 +169,7 @@ def create_vig(clauses, c, v):
     for k, clause in enumerate(clauses):
 
         # 1/ (|c| choose 2)
-        weight = 1 / comb(len(clause), 2)
+        weight = 1 / math.comb(len(clause), 2)
 
         for i in range(len(clause)):
             for j in range(i + 1, len(clause)):
@@ -128,7 +191,12 @@ def create_vig(clauses, c, v):
     return node_degrees
 
 
-def compute_modularity_Q(graph):
+def compute_modularity_q(graph):
+    # get the best partition
     partition = community_louvain.best_partition(graph)
 
+    # calculate the modularity of the partition
+    modularity = community_louvain.modularity(partition, graph)
+
+    return partition
 
