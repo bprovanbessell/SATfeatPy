@@ -106,4 +106,10 @@ class SATInstance:
 
         print("alpha", alpha)
 
+        vig = graph_features_ansotegui.create_vig(self.clauses, self.num_active_clauses, self.num_active_vars)
+
+        modularity = graph_features_ansotegui.compute_modularity_q(vig)
+
+        print("modularity", modularity)
+
 

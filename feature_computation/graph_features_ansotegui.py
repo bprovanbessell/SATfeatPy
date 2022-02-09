@@ -49,15 +49,14 @@ Steps and features
 
 def variable_occurrences(clauses, c, v):
     # variable count is needed
-    # possibly more efficient to have this in active feature parsing...
-    variable_count = [0] * v + 1
+    variable_count = [0] * (v + 1)
 
     for clause in clauses:
         for literal in clause:
             variable_count[abs(literal)] += 1
 
     # compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
-    f_v_k = [0] * v + 1
+    f_v_k = [0] * (v + 1)
 
     for count in variable_count:
         f_v_k[count] += 1
@@ -68,33 +67,15 @@ def variable_occurrences(clauses, c, v):
     return f_v_k
 
 
-def estimate_power_law_alpha(data,):
+def estimate_power_law_alpha(data):
     # Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v),
     # we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
     # Use maximum likelihood estimator
 
-    # Try the powerlaw packacke
-    # Quite likely that values will be 0, as there are no variables of that count, should these values be removed??? Try out an example first...
-
-
-    # using estimator equation from https://en.wikipedia.org/wiki/Power_law#Maximum_likelihood
-    # what should x_min be??
-    # if we use 0, every value should tend to infinity....
-    # what should be used in this case
-
-    # data = [math.log(x/x_min) for x in data]
-    #
-    # s = sum(data)
-    #
-    # s = math.pow(s, -1)
-    #
-    # alpha = 1 + (n * s)
-    #
-    # return alpha
+    # use pwerlaw package, results with 0 are removed... Not sure on a theoretical level if they should be replaced with something or...
+    data = [x for x in data if x > 0]
 
     results = powerlaw.Fit(data)
-    print(results.power_law.alpha)
-    print(results.power_law.xmin)
 
     return results.power_law.alpha
 
@@ -164,7 +145,7 @@ def create_vig(clauses, c, v):
     """
 
     # we need to make sure that we avoid the duplicates within a clause
-    vg = nx.Graph()
+    vig = nx.Graph()
 
     for k, clause in enumerate(clauses):
 
@@ -177,18 +158,19 @@ def create_vig(clauses, c, v):
                 v_node_j = "v_" + str(abs(clause[j]))
 
                 # get the weight of the edge if there is already an edge, otherwise 0 is the start of the sum
-                edge_weight = vg.get_edge_data(v_node_i, v_node_j, default={'weight': 0})['weight']
+                edge_weight = vig.get_edge_data(v_node_i, v_node_j, default={'weight': 0})['weight']
 
                 edge_weight += weight
-                vg.add_edge(v_node_i, v_node_j, weight=edge_weight)
+                vig.add_edge(v_node_i, v_node_j, weight=edge_weight)
 
-    node_degrees = []
-
-    for n in vg.nodes:
-        degree = len(nx.edges(vg, n))
-        node_degrees.append(degree)
-
-    return node_degrees
+    # node_degrees = []
+    #
+    # for n in vg.nodes:
+    #     degree = len(nx.edges(vg, n))
+    #     node_degrees.append(degree)
+    #
+    # return node_degrees
+    return vig
 
 
 def compute_modularity_q(graph):
@@ -198,5 +180,5 @@ def compute_modularity_q(graph):
     # calculate the modularity of the partition
     modularity = community_louvain.modularity(partition, graph)
 
-    return partition
+    return modularity
 
