@@ -253,3 +253,50 @@ def circle(centre, radius, graph):
 
     # return the nodes in the graph
     return subgraph.nodes
+
+
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+import matplotlib.pyplot as plt
+def linear_regression_fit(data):
+
+    data = data[1:]
+
+    # remove trailing 0's
+    Y_data = [x for x in data if x > 0]
+
+    # should it be normalised? # Nnorm = N(r)/N(1)
+    # 0 at the end, but ln(0) is undefined
+    Y_data.append(0.000000001)
+    X_data = [x for x in range(1, len(Y_data)+1)]
+    # The assumption is that N(r) ~ r^-d for some value d (for self similar graphs)
+    # So, we need to find d
+
+    # again, seems to be powerlaw... So what are they on about with the interpolation
+
+    # or, supposedly N(r) ~ e^-Br
+    # how to do this interpolation?
+
+    # This might also only be in some cases, e.g. these to formulas would not cover the structure of all SAT instances
+
+    # r^-d = 1/r^d
+
+    # We want to best fit the data (N(r)) that we have
+    print(Y_data, X_data)
+
+    fig, ax = plt.subplots()
+    ax.plot([1, 2, 3, 4], [148,2,1,0])
+    logged_Y = [math.log(x) for x in Y_data]
+    logged_r = [math.log(x) for x in X_data]
+
+    ax.scatter([1,2,3,4], logged_Y, label="logy")
+    ax.scatter([1,2,3,4], logged_r, label="logx")
+
+    plt.legend(loc='best')
+    plt.show()
+    # estimate with linear regression interpolating points log N(r) vs log r
+
+
+
+    pass
+

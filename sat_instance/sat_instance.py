@@ -116,4 +116,6 @@ class SATInstance:
 
         print(N_vig)
 
+        graph_features_ansotegui.linear_regression_fit(N_vig)
+
 
