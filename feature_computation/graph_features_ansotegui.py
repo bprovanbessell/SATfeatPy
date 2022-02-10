@@ -98,8 +98,8 @@ def create_cvig(clauses, c, v):
     # node for each clause
 
     # create the variable and clause nodes
-    v_nodes = ['v_' + str(i) for i in range(1, v+1)]
-    c_nodes = ['c_' + str(i) for i in range(0, c)]
+    v_nodes = [i for i in range(1, v+1)]
+    c_nodes = [i for i in range(v+1, v+1+c)]
 
     for i, clause in enumerate(clauses):
 
@@ -144,8 +144,9 @@ def create_vig(clauses, c, v):
 
         for i in range(len(clause)):
             for j in range(i + 1, len(clause)):
-                v_node_i = "v_" + str(abs(clause[i]))
-                v_node_j = "v_" + str(abs(clause[j]))
+                # integer for node keys
+                v_node_i = abs(clause[i])
+                v_node_j = abs(clause[j])
 
                 # get the weight of the edge if there is already an edge, otherwise 0 is the start of the sum
                 edge_weight = vig.get_edge_data(v_node_i, v_node_j, default={'weight': 0})['weight']
@@ -174,47 +175,81 @@ def burning_by_node_degree(graph, n: int):
     # returns vector N(r), then fractal dimension d must be calculated from this...
     # Supposedly we can assume N(r) ~ r^-d
     # Use regression, and then interpolation to get d...
-    N = [0] * n
+    N = [0] * (n)
     N[1] = n
     i = 2
 
-    # connected_components(graph)
+    # Order the nodes in terms of their degree
+    node_degrees = []
+    for node in graph.nodes:
+        degree = len(nx.edges(graph, node))
+        node_degrees.append((node, degree))
 
-    # is the graph edited, does the number of connected components change??
-    while N[i - 1] > networkx.number_connected_components(graph):
-        burned = [False] * n
+    # sort in terms of the degree, descending
+    node_degrees.sort(key=lambda x: x[1], reverse=True)
+
+    num_connected_components = networkx.number_connected_components(graph)
+
+    while N[i - 1] > num_connected_components:
+        burned = [False] * (n + 1)
+        burned[0] = True
         N[i] = 0
 
         # if any member in burned is still false
         while not all(burned):
         # while exists_unburned_Node(burned):
-            c = highest_degree_unburned_node(graph, burned)
+            c = highest_degree_unburned_node(node_degrees, burned)
+            #
+            # print(c)
+            # print(burned)
 
-            # for every possible node c
-            S = circle(c, i) #circle with centre c and radius i
+            # for every possible node c.
+            S = circle(c, i, graph) # circle with centre c and radius i
 
+            print("nodes in circle", S)
             for x in S:
+
                 burned[x] = True
 
             N[i] += 1
 
         i = i + 1
-    pass
+
+    return N
 
 
-def highest_degree_unburned_node(graph, burned):
+def highest_degree_unburned_node(node_degrees, burned):
+    # change the node keys s.t. they are integers instead of strings
+
+
+    for (node, degree) in node_degrees:
+        if not burned[node]:
+            return node
     # TODO
     # as the method says I guess??
     # get the node with the highest degree that is also unburned (burned[node] = False)
-    pass
+    # This should be done before, as the graph doesn't change
+    # Order the nodes in terms of their degree
 
 
-def circle(centre, radius):
+def circle(centre, radius, graph):
     # circle with centre c and radius i
     # centre is a node
+    print("centre node", centre)
+    print("radius", radius)
 
-    # Really not sure what this does, more reading needed
 
-    # returns a list of nodes...
-    pass
+    # A circle of centre c and radius r is a subset of nodes of G
+    # such that the distance between any of them and the node c, is smaller than r
 
+    # what exactly is the distance here? number of edges from centre, or weight on the edges (I will assume number of edges??)
+
+    # returns a list of all the nodes within the circle with centre and radius as stated...
+
+    # can specify distance as the weight here... Confirm what the distance is
+    subgraph = networkx.generators.ego_graph(G=graph, n=centre, radius=radius)
+    # TODO: check for faster way to do it
+    #  https://stackoverflow.com/questions/62843205/find-nodes-within-distance-in-networkx-and-python
+
+    # return the nodes in the graph
+    return subgraph.nodes

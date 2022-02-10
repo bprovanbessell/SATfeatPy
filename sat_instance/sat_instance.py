@@ -112,4 +112,8 @@ class SATInstance:
 
         print("modularity", modularity)
 
+        N_vig = graph_features_ansotegui.burning_by_node_degree(vig, self.num_active_vars)
+
+        print(N_vig)
+
 
