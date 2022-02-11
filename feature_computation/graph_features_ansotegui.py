@@ -50,22 +50,41 @@ Steps and features
 
 def variable_occurrences(clauses, c, v):
     # variable count is needed
+    # index of the variable will contain the number of times it occurs in the cnf formula (in all clauses)
     variable_count = [0] * (v + 1)
 
     for clause in clauses:
         for literal in clause:
             variable_count[abs(literal)] += 1
 
+    print(variable_count)
+
     # compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
     f_v_k = [0] * (v + 1)
 
-    for count in variable_count:
+    # there is no variable 0
+    for count in variable_count[1:]:
         f_v_k[count] += 1
+    count_occurrences = [(count, occurrences) for count, occurrences in enumerate(f_v_k) if occurrences != 0]
+    # print(count_occurrences)
+    # so far so good
 
-    # divide by number of variables
-    f_v_k = [x/v for x in f_v_k]
+    # print("arity?")
+    f_v_k = [x for x in f_v_k if x>0]
+    # print(f_v_k)
 
-    return f_v_k
+    # should be the number or literal occurrences
+    Sy = sum([occurrences for (count, occurrences) in count_occurrences])
+    # x is also used
+    x = [count for (count, occurrences) in count_occurrences]
+    y = [0] * (len(f_v_k)+1)
+
+    for i in range(len(f_v_k)-1, -1, -1):
+        y[i] = y[i+1] + count_occurrences[i][1] / Sy
+
+    # decreasing sequence, basically sum of all that came before
+
+    return y
 
 
 def estimate_power_law_alpha(data):
@@ -102,6 +121,7 @@ def create_cvig(clauses, c, v):
     c_nodes = [i for i in range(v+1, v+1+c)]
 
     for i, clause in enumerate(clauses):
+        abs_clause = [abs(lit) for lit in clause]
 
         weight = 1/len(clause)
 
@@ -112,12 +132,12 @@ def create_cvig(clauses, c, v):
 
             var_num = k+1
 
-            if var_num in clause:
+            if var_num in abs_clause:
                 # weight should be 1/ size of the clause
                 cvig.add_edge(c_node, v_node, weight=weight)
-            else:
-                # If the variable is not in the clause, then the weight should be 0
-                cvig.add_edge(c_node, v_node, weight=0)
+            # else:
+            #     # If the variable is not in the clause, then the weight should be 0
+            #     cvig.add_edge(c_node, v_node, weight=0)
 
     return cvig
 
@@ -189,114 +209,84 @@ def burning_by_node_degree(graph, n: int):
     node_degrees.sort(key=lambda x: x[1], reverse=True)
 
     num_connected_components = networkx.number_connected_components(graph)
+    dmaxx = 16
 
-    while N[i - 1] > num_connected_components:
-        burned = [False] * (n + 1)
-        burned[0] = True
-        N[i] = 0
+    for i in range(1, dmaxx+1):
+        if N[i - 1] > num_connected_components:
+            burned = [False] * (n + 1)
+            burned[0] = True
 
-        # if any member in burned is still false
-        while not all(burned):
-        # while exists_unburned_Node(burned):
-            c = highest_degree_unburned_node(node_degrees, burned)
-            #
-            # print(c)
-            # print(burned)
+            # if any member in burned is still false
+            while not all(burned):
+                c = highest_degree_unburned_node(node_degrees, burned)
+                # for every possible node c.
+                S = circle(c, i-1, graph) # circle with centre c and radius i
 
-            # for every possible node c.
-            S = circle(c, i, graph) # circle with centre c and radius i
+                # print("nodes in circle", S)
+                for x in S:
 
-            print("nodes in circle", S)
-            for x in S:
+                    burned[x] = True
 
-                burned[x] = True
-
-            N[i] += 1
-
-        i = i + 1
+                N[i] += 1
 
     return N
 
 
 def highest_degree_unburned_node(node_degrees, burned):
-    # change the node keys s.t. they are integers instead of strings
-
-
+    # nodes are pre sorted in terms of their degree, does not change
     for (node, degree) in node_degrees:
         if not burned[node]:
             return node
-    # TODO
-    # as the method says I guess??
-    # get the node with the highest degree that is also unburned (burned[node] = False)
-    # This should be done before, as the graph doesn't change
-    # Order the nodes in terms of their degree
 
 
 def circle(centre, radius, graph):
     # circle with centre c and radius i
     # centre is a node
-    print("centre node", centre)
-    print("radius", radius)
-
-
     # A circle of centre c and radius r is a subset of nodes of G
-    # such that the distance between any of them and the node c, is smaller than r
-
-    # what exactly is the distance here? number of edges from centre, or weight on the edges (I will assume number of edges??)
-
-    # returns a list of all the nodes within the circle with centre and radius as stated...
-
-    # can specify distance as the weight here... Confirm what the distance is
+    # such that the distance (just in terms of how many nodes away from the center) between any of them and the node c, is smaller than r
     subgraph = networkx.generators.ego_graph(G=graph, n=centre, radius=radius)
-    # TODO: check for faster way to do it
-    #  https://stackoverflow.com/questions/62843205/find-nodes-within-distance-in-networkx-and-python
 
     # return the nodes in the graph
     return subgraph.nodes
 
 
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import PolynomialFeatures
 import matplotlib.pyplot as plt
 def linear_regression_fit(data):
+    data = [x for x in data if x>0]
+    print(data)
 
-    data = data[1:]
+    # trim data to have no leading or trailing 0s
 
-    # remove trailing 0's
-    Y_data = [x for x in data if x > 0]
+    poly_regression_X = [math.log(x) for x in range(1, len(data))]
+    poly_regression_Y = [math.log(x) for x in data]
+    exp_regression_X = [x for x in range(1, len(data))]
+    exp_regression_Y = poly_regression_Y
 
-    # should it be normalised? # Nnorm = N(r)/N(1)
-    # 0 at the end, but ln(0) is undefined
-    Y_data.append(0.000000001)
-    X_data = [x for x in range(1, len(Y_data)+1)]
-    # The assumption is that N(r) ~ r^-d for some value d (for self similar graphs)
-    # So, we need to find d
+    alpha = regression(poly_regression_X, poly_regression_Y)
+    beta = regression(exp_regression_X, exp_regression_Y)
 
-    # again, seems to be powerlaw... So what are they on about with the interpolation
+    print(alpha)
+    print(beta)
 
-    # or, supposedly N(r) ~ e^-Br
-    # how to do this interpolation?
-
-    # This might also only be in some cases, e.g. these to formulas would not cover the structure of all SAT instances
-
-    # r^-d = 1/r^d
-
-    # We want to best fit the data (N(r)) that we have
-    print(Y_data, X_data)
-
-    fig, ax = plt.subplots()
-    ax.plot([1, 2, 3, 4], [148,2,1,0])
-    logged_Y = [math.log(x) for x in Y_data]
-    logged_r = [math.log(x) for x in X_data]
-
-    ax.scatter([1,2,3,4], logged_Y, label="logy")
-    ax.scatter([1,2,3,4], logged_r, label="logx")
-
-    plt.legend(loc='best')
-    plt.show()
     # estimate with linear regression interpolating points log N(r) vs log r
 
 
+def regression(X, Y):
+    # given list of points, computes the alpha abd beta of a regression, translated from paper
+    Sx = sum(X)
+    Sy = sum(Y)
+    Sxx = sum([x*x for x in X])
+    Syy = sum([y*y for y in Y])
+    Sxy = sum([x * y for (x, y) in zip(X, Y)])
 
-    pass
+    alpha = (Sx * Sy - len(X) * Sxy)/(Sx * Sx - len(X) * Sxx)
+    beta = Sy / len(X) - alpha * Sx / len(X)
 
+    return alpha, beta
+
+
+
+
+names = ["time-buildGraphs","alphaVarExp","time-AlphaVar","alphaClauExp","time-AlphaClau","dim","time-dim","dim-bip","time-dimBip","mod","comm-vig","time-mod","mod-bip","comm-cvigtime-mod-bip","time-total"]
+
+res = [0.002206, 8.01541, 0.006359, -4.68634e-310, 0.000375, 3.69989, 6.9e-05, 3.33772, 0.000615, 0.407965, 7, 0.00043, 0.61827, 14, 0.001545, 0.011599]
