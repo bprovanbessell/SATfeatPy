@@ -31,3 +31,5 @@ if __name__ == "__main__":
     print(satinstance.features_dict)
 
     satinstance.gen_ansotegui_features()
+
+    print(satinstance.features_dict)

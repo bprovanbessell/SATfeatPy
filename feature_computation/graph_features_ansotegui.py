@@ -253,23 +253,19 @@ def circle(centre, radius, graph):
 import matplotlib.pyplot as plt
 def linear_regression_fit(data):
     data = [x for x in data if x>0]
-    print(data)
-
     # trim data to have no leading or trailing 0s
 
-    poly_regression_X = [math.log(x) for x in range(1, len(data))]
+    poly_regression_X = [math.log(x) for x in range(1, len(data) + 1)]
     poly_regression_Y = [math.log(x) for x in data]
-    exp_regression_X = [x for x in range(1, len(data))]
+    exp_regression_X = [x for x in range(1, len(data) + 1)]
     exp_regression_Y = poly_regression_Y
 
-    alpha = regression(poly_regression_X, poly_regression_Y)
-    beta = regression(exp_regression_X, exp_regression_Y)
-
-    print(alpha)
-    print(beta)
+    poly = regression(poly_regression_X, poly_regression_Y)
+    exp = regression(exp_regression_X, exp_regression_Y)
 
     # estimate with linear regression interpolating points log N(r) vs log r
 
+    return -poly[0], -exp[0]
 
 def regression(X, Y):
     # given list of points, computes the alpha abd beta of a regression, translated from paper
@@ -283,8 +279,6 @@ def regression(X, Y):
     beta = Sy / len(X) - alpha * Sx / len(X)
 
     return alpha, beta
-
-
 
 
 names = ["time-buildGraphs","alphaVarExp","time-AlphaVar","alphaClauExp","time-AlphaClau","dim","time-dim","dim-bip","time-dimBip","mod","comm-vig","time-mod","mod-bip","comm-cvigtime-mod-bip","time-total"]

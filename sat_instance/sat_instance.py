@@ -112,16 +112,19 @@ class SATInstance:
 
         modularity = graph_features_ansotegui.compute_modularity_q(vig)
 
-        print("modularity", modularity)
-
         N_vig = graph_features_ansotegui.burning_by_node_degree(vig, self.num_active_vars)
 
         # cvig graph is incorrect
         N_cvig = graph_features_ansotegui.burning_by_node_degree(cvig, self.num_active_vars+ self.num_active_clauses)
 
-        print("NVIG", N_vig)
-        print("NCVIG", N_cvig)
+        d_poly, d_exp = graph_features_ansotegui.linear_regression_fit(N_vig)
+        db_poly, db_exp = graph_features_ansotegui.linear_regression_fit(N_cvig)
 
-        graph_features_ansotegui.linear_regression_fit(N_vig)
+        ansotegui_features = {"vig_modularty": modularity,
+                              "vig_d_poly": d_poly,
+                              "cvig_db_poly": db_poly
+                              }
+
+        self.features_dict.update(ansotegui_features)
 
 
