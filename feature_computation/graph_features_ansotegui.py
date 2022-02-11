@@ -57,8 +57,6 @@ def variable_occurrences(clauses, c, v):
         for literal in clause:
             variable_count[abs(literal)] += 1
 
-    print(variable_count)
-
     # compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
     f_v_k = [0] * (v + 1)
 
@@ -69,9 +67,9 @@ def variable_occurrences(clauses, c, v):
     # print(count_occurrences)
     # so far so good
 
-    # print("arity?")
+    print("arity?")
     f_v_k = [x for x in f_v_k if x>0]
-    # print(f_v_k)
+    print(f_v_k)
 
     # should be the number or literal occurrences
     Sy = sum([occurrences for (count, occurrences) in count_occurrences])
@@ -82,9 +80,16 @@ def variable_occurrences(clauses, c, v):
     for i in range(len(f_v_k)-1, -1, -1):
         y[i] = y[i+1] + count_occurrences[i][1] / Sy
 
+    # so far so good
+
     # decreasing sequence, basically sum of all that came before
 
     return y
+
+def most_likely(X, Y, maxxmin=10):
+    n = len(X)
+
+
 
 
 def estimate_power_law_alpha(data):
