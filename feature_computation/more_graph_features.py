@@ -109,14 +109,14 @@ def create_rg(clauses):
 
 def create_big(clauses):
     """
-    A binary implication graph (BIG) has a node for each binary clause, and an edge if there's an implication between
-    these clauses
+    A binary implication graph (BIG) it's a directed graph that has a node for each literal, and an edge if
+    there's an implication between the literals
 
     :param clauses:
     :return: The degree of each node in the variable graph and the weight of each edge
     """
 
-    big = nx.Graph()
+    big = nx.DiGraph()
 
     v_nodes = []
 
