@@ -48,6 +48,13 @@ Steps and features
 """
 
 
+def estimate_power_law_alpha(clauses, c, v):
+    X, Y, Sylogx, Syx = variable_occurrences(clauses, c, v)
+    alpha = most_likely(X, Y, Sylogx, Syx)
+
+    return alpha
+
+
 def variable_occurrences(clauses, c, v):
     # variable count is needed
     # index of the variable will contain the number of times it occurs in the cnf formula (in all clauses)
@@ -74,25 +81,147 @@ def variable_occurrences(clauses, c, v):
     # should be the number or literal occurrences
     Sy = sum([occurrences for (count, occurrences) in count_occurrences])
     # x is also used
-    x = [count for (count, occurrences) in count_occurrences]
-    y = [0] * (len(f_v_k)+1)
 
-    for i in range(len(f_v_k)-1, -1, -1):
-        y[i] = y[i+1] + count_occurrences[i][1] / Sy
+    n = len(f_v_k)
+    X = [count for (count, occurrences) in count_occurrences]
+    Y = [0] * (n+1)
+
+    Syx = [0] * (n + 1)
+    Sylogx = [0] * (n+1)
+
+    for i in range(n-1, -1, -1):
+        Y[i] = Y[i+1] + count_occurrences[i][1] / Sy
+
+        Sylogx[i] = Sylogx[i+1] + count_occurrences[i][1] / Sy * math.log(X[i])
+        Syx[i] = Syx[i + 1] + count_occurrences[i][1] / Sy * X[i]
 
     # so far so good
 
     # decreasing sequence, basically sum of all that came before
 
-    return y
+    return X, Y, Sylogx, Syx
 
-def most_likely(X, Y, maxxmin=10):
+
+def most_likely(X, Y, sylogx, syx, maxxmin=10):
+
+    # print("X and Y")
+    # print(X)
+    # print(Y)
+    #
+    # print("SYX AND LOGX")
+    # print(sylogx)
+    # print(syx)
+    # so far so good
+
+    best_alpha = 0
+    best_x_min_a = 0
+    best_diff_a = 1
+
+    best_ind_a = 0
+    where_a = 0
+
+    xmin = 0
     n = len(X)
 
+    for ind in range(1, maxxmin +1):
+        if ind < n-3:
+
+            xmin = X[ind]
+            alpha = -1 - (1 / ((sylogx[ind] / Y[ind]) - math.log((xmin - 0.5))))
+
+            print("ind ", ind, "alpha ", alpha)
+            # beta = math.log(1 / (syx[ind] / Y[ind] - xmin) + 1)
+
+            #model powerlaw
+            worst_diff = -1
+            worst_x = -1
+
+            for j in range(ind+1, n):
+                aux = abs(Y[j]/Y[ind] - pow_law_c(X[j], xmin, alpha))
+
+                if aux >= best_diff_a:
+                    worst_diff = aux
+                    worst_x = X[j]
+                    j = n
+                    break
+                elif aux >= worst_diff:
+                    worst_diff = aux
+                    worst_x = X[j]
+
+            for j in range(ind, n-1):
+                if X[j] + 1 < X[j+1]:
+                    aux = abs(Y[j+1]/Y[ind] - pow_law_c(X[j] + 1, xmin, alpha))
+
+                    if aux >= best_diff_a:
+                        worst_diff = aux
+                        worst_x = X[j]+1
+                        j = n
+                        # finish search of worst difference
+                        break
+                    elif aux >= worst_diff:
+                        worst_diff = aux
+                        worst_x = X[j]+1
+
+            if worst_diff < best_diff_a:
+                print("worstdiff ", worst_diff, "best_diff_a ", best_diff_a)
+                best_alpha = alpha
+                best_x_min_a = xmin
+                best_diff_a = worst_diff
+                best_ind_a = ind
+                where_a = worst_x
+
+    # if verbose:
+    print("alpha: ", -best_alpha)
+    print("min: ", best_x_min_a)
+    print("error ", best_diff_a, " in ", where_a)
+    return -best_alpha
 
 
+def pow_law_c(x, xmin, alpha):
+    """
+    Computes sum_{i = x} ^ {\infty} x ^ {alpha} / sum_{i = xmin} ^ {\infty} x ^ {alpha}
+    or approximates it as (x / xmin) ^ (alpha + 1)
+    :param x:
+    :param xmin:
+    :param alpha:
+    :return:
+    """
 
-def estimate_power_law_alpha(data):
+    assert (alpha < -1)
+    assert (xmin <= x)
+
+    max_iterations = 10000
+
+    num = 0
+    den = 0
+
+    i = xmin
+
+    if xmin < 25:
+        while i < x:
+            den += math.pow(i, alpha)
+            i += 1
+
+        p_old = -2
+        p = -1
+        n = 0
+
+        while abs(p - p_old) > 0.00000001 and n < max_iterations:
+            den += math.pow(i, alpha)
+            num += math.pow(i, alpha)
+
+            i += 1
+            n += 1
+            p_old = p
+            p = num/den
+
+        if(n < max_iterations):
+            return p
+
+    return math.pow(x / xmin, alpha + 1)
+
+
+def estimate_power_law_alpha_lib(data):
     # Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v),
     # we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
     # Use maximum likelihood estimator

@@ -102,7 +102,7 @@ class SATInstance:
 
         variable_occurrences = graph_features_ansotegui.variable_occurrences(self.clauses, self.num_active_clauses, self.num_active_vars)
 
-        alpha = graph_features_ansotegui.estimate_power_law_alpha(variable_occurrences)
+        alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses, self.num_active_vars)
 
         print("alpha", alpha)
 
