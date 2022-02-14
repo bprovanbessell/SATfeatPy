@@ -22,5 +22,5 @@ N.b. current implementation reliant on SatELite binaries, which only work on lin
 - sklearn ```pip install scikit-learn```
 
 **Important references**
-- Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT." Journal of Artificial Intelligence Research (2008): 565-606.
-- Ansotegui, Giraldez-Cru, et al. "Structure features for SAT instances classification"
+- Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT". Journal of Artificial Intelligence Research (2008): 565-606.
+- Ansotegui, Giraldez-Cru, et al. "Structure features for SAT instances classification". Journal of Applied Logic (2017): 23:27–39.
