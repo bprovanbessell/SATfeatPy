@@ -15,6 +15,9 @@ N.b. current implementation reliant on SatELite binaries, which only work on lin
 
 **Dependencies**
 - NetworkX:  ```pip install networkx```
+- community ```pip install python-louvain```
+- powerlaw ```pip install powerlaw```
+- sklearn ```pip install scikit-learn```
 
 **Important references**
 - Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT." Journal of Artificial Intelligence Research (2008): 565-606.

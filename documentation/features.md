@@ -49,12 +49,59 @@ The number of times a variable appears in all horn clauses.
 46-47. Fraction of improvement due to first local minimum: mean for SAPS and GSAT.
 48 . Coefficient of variation of the number of unsatisfied clauses in each local minimum.
 
+### Features from Structure features for SAT instances classification (Ansotegui)
+4 structure features
+- d: fractal dimension for VIG
+- d_b: fractal dimension for CVIG
+- log alpha_v: powerlaw exponent
+- Q: modularity (for VIG)
+
+A variable incidence graph (VIG): Set of vertexes is the set of boolean variables - weights assigned to edges as follows
+W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the clause I am assuming)
+
+Clause variable incidence graph (CVIG): set of vertexes is set of variables and clauses, weight function:
+w(x, c) = 1/|c| if x elem c
+0 otherwise
+
+(signs of literals not considered)
+
+Scale free structure - power law distribution. Estimation computed by method of Maximum likelihood
+Modularity(Q) of VIG (louvain method)
+fractal dimensions of VIC and CVIG - How to estimate/calculate it
+
 ###Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 
 The coefficient of variation represents the ratio of the standard deviation to the mean
 - Entropy: Shannon entropy (https://en.wikipedia.org/wiki/Entropy_(information_theory)). A distribution of the array is
 made, from which the entropy is calculated
 
+### Features from New CNF Features and Formula Classification (Alfonso)
+- Three new features
+- Link to source code does not work -> Email creators?  
+Features
+- Bunch of new graphs with weights
+- Binary Implication graph
+- Naive encoded restraints
+- Recursive weight heuristic
+
+New graphs
+- CV (clause variable) CV+ and CV- (for positive and negative literals) (degrees)
+- Variable graph (now with weights 2^-k) (without considering polarity) (degrees, weights) 
+- Clause graph (weights the size of the intersection of the clauses) (degrees, weights)
+- Resolution graph (Connects clauses when they produce a non-tautological resolvant) (degrees, weights)
+(clauses as vertices, edge between clauses iff | C_i intersection (not C_j) | = 1) (there is one literal in clause i that also appears as negated in clause j),
+with weights 2 ^ -(|C_i union C_j| -2) (degrees, weights)
+
+For the literal graph (what graph exactly?), the sequence deg +- = max(deg_cv+(i), deg_cv-(i))/deg_cv+(i) + deg_cv-(i) (represents major polarity of each clause)
+
+Binary Implication graph
+Simple graph of a formula, contains all literals as vertices (V = lits(F)), all edges in the graph correspond to the
+binary clauses in the current formula E = {(a, b), (not b, not a) | {not a, b} elem F}. Sequence with the degree of each node is used.
+
+Sequences from said graphs are taken and stats calculated (very similiar to SATzilla)
+
+Naive encoded Constraints
+Add undirected AND gates, Blocked AND gates, and Exactly One AND gates (psuedocode in paper)
 
 ## Basic notes on SAT problems
 Positive/negative literal is a respective instance of a variable.

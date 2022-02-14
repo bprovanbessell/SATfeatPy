@@ -19,12 +19,17 @@ if __name__ == "__main__":
     else:
         satinstance = SATInstance(cnf_path, preprocess=True)
 
+
     satinstance.gen_basic_features()
 
     # test dpll probing
     print("probing")
-    satinstance.gen_dpll_probing_features()
+    # satinstance.gen_dpll_probing_features()
 
     # satinstance.gen_local_search_probing_features()
+
+    print(satinstance.features_dict)
+
+    satinstance.gen_ansotegui_features()
 
     print(satinstance.features_dict)
