@@ -1,5 +1,6 @@
 import statistics as stats
 import math
+import scipy.stats as sci_stats
 """
 File to control the computation and aggregation of statistics for lists of values.
 """
@@ -21,15 +22,11 @@ def get_stats(l):
 
 
 def get_stdev(l):
+    """
+    :param l: data
+    :return: Population standard deviation
+    """
     return stats.pstdev(l)
-
-# def get_stdev_satzilla(l, num, mean):
-#     dtotal = 0.0
-#     reserved_hits = 0
-#     for t in range(num):
-#         dtotal += (l[t] - mean) * (l[t] - mean)
-#
-#     return math.sqrt(dtotal/num)
 
 
 def calc_coefficient_of_variation(mean, std):
@@ -45,6 +42,40 @@ def calc_coefficient_of_variation(mean, std):
     else:
         return std / mean
 
+def scipy_entropy_discrete(l, num_outcomes):
+    p = [0] * num_outcomes
+
+    for elem in l:
+        p[elem] += 1
+
+    p = [x/len(l) for x in p]
+
+    entropy = sci_stats.entropy(pk=p)
+    return entropy
+
+
+def scipy_entropy_continous(l, buckets=100):
+
+    maxval = 1
+    # we need to set up a probability distribution
+    p = [0] * buckets
+
+    for x in l:
+        index = math.floor(x * (buckets / maxval))
+
+        if index >= buckets:
+            index = buckets -1
+        if index < 0:
+            index = 0
+
+        p[index] += 1
+
+    # normalise
+    p = [x / len(l) for x in p]
+
+    entropy = sci_stats.entropy(pk=p)
+
+    return entropy
 
 def entropy_float_array(l, num, vals, maxval):
     """

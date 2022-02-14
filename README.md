@@ -21,6 +21,9 @@ N.b. current implementation reliant on SatELite binaries, which only work on lin
 - powerlaw ```pip install powerlaw```
 - sklearn ```pip install scikit-learn```
 
+A binary for ubcsat is included in the ubcsat folder, however you may have to compile and add this yourself for full functionality.
+Please clone and compile [ubcsat](https://github.com/dtompkins/ubcsat/tree/beta), and put the resulting binary in the ubcsat folder, if the current binary does not work. We found the beta branch to be stable.
+
 **Important references**
 - Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT". Journal of Artificial Intelligence Research (2008): 565-606.
 - Ansotegui, Giraldez-Cru, et al. "Structure features for SAT instances classification". Journal of Applied Logic (2017): 23:27–39.
