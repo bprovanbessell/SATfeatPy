@@ -96,7 +96,7 @@ class SATInstance:
         if self.verbose:
             print("DPLL probing")
 
-        self.dpll_prober.unit_propagation_probe(False, True)
+        self.dpll_prober.unit_propagation_probe(False)
 
         self.dpll_prober.search_space_probe()
 

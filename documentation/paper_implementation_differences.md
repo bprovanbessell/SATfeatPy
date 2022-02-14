@@ -38,7 +38,6 @@ vg node degrees divided by number of active
 * Entropy -> scipy has an implementation, we should change to use that one. (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html)
 * Overall refactor of methods to make them more pythonic (optimise with list comprehension instead of loops, etc. Look into numba to provide a precompiled version )
 
-
 # Notes on implementation:
 different options
 - base is features 1-33 (+ a few other options)
@@ -49,14 +48,5 @@ different options
 - unit: features 34-38 number of unit propagations (eg, variables reduced at certain depth)
 - ls: (local search) executes ubcsat2006 (currently crashes) features 41-48 
 - lobjois: features 39-40 search space size estimate (stochastic in nature, will have to use a certain level of freedom 
-when checking results.) What happens if this times out?
+when checking results.) 
 
-# Possible optimizations
-- Don't create graphs with networkx, use clauses with var, etc to calculate node degrees...
-
-##Strange issue with entropy
-- for sat 4 colour xxxxx (more complex cnfs), the posneg var ratio entropy is different than expected. 
-Quite a strange issue, as the mean, max, min stdev are the same for the posneg ratio, and the same method gets an expected
-result with the posneg clause ratio entropy...
-
-In any case, this entropy implementation should be changes to use the scipy version.

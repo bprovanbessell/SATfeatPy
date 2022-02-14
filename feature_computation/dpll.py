@@ -55,7 +55,7 @@ class DPLLProbing:
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
 # this should change as the propagation happens
 
-    def search_space_probe(self, halt_on_assignment=False, doComp=True):
+    def search_space_probe(self, halt_on_assignment=False):
         # lobjois probe in satzilla
         if self.verbose:
             print("search space estimate probe")
@@ -140,23 +140,13 @@ class DPLLProbing:
         if self.verbose:
             print("total time:", sw.lap())
 
-    def unit_propagation_probe(self, haltOnAssignment=False, doComp=True):
+    def unit_propagation_probe(self, haltOnAssignment=False):
         """
         Method to calculate the dpll probing features
 
         """
         if self.verbose:
             print("unit propagation probe")
-
-        if not doComp:
-            next_probe_depth = 1
-            for j in range(self.num_probes):
-                next_probe_depth = next_probe_depth * 4
-                print("vars-reduced-depth-", next_probe_depth)
-                # they also write the actual feature here? or just reserve the memory for it
-                print("feature")
-
-            print("time to calculate unit probing...")
 
         # the depths are manually set, multiples of 4 each time
         current_depth = 0
@@ -276,8 +266,6 @@ class DPLLProbing:
 
         while(self.sat_instance.num_active_vars != orig_num_active_vars):
             self.backtrack()
-
-        # writefeature
 
     def set_var_and_prop(self, var, value):
         """

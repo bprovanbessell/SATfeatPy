@@ -51,10 +51,10 @@ The number of times a variable appears in all horn clauses.
 
 ### Features from Structure features for SAT instances classification (Ansotegui)
 4 structure features
-- d: fractal dimension for VIG
-- d_b: fractal dimension for CVIG
-- log alpha_v: powerlaw exponent
-- Q: modularity (for VIG)
+- d: fractal dimension for VIG (_vig_d_poly_)
+- d_b: fractal dimension for CVIG (_cvig_db_poly_)
+- alpha_v: powerlaw exponent (_variable_alpha_)
+- Q: modularity (for VIG) (_vig_modularity_)
 
 A variable incidence graph (VIG): Set of vertexes is the set of boolean variables - weights assigned to edges as follows
 W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the clause I am assuming)
@@ -80,7 +80,6 @@ made, from which the entropy is calculated
 
 ### Features from New CNF Features and Formula Classification (Alfonso)
 - Three new features
-- Link to source code does not work -> Email creators?  
 Features
 - Bunch of new graphs with weights
 - Binary Implication graph
@@ -111,9 +110,4 @@ Positive/negative literal is a respective instance of a variable.
 Clause is a disjunction of literal(s)
 CNF (Conjunctive Normal Form): Conjunction (and) of disjunction (or) of literals.
 
-##Useful libraries/notes
-- NetworkX - for graph creation and statistics
 - cnfgen - for creating part of the testbed
-
-#Possible bugs in Satzilla feature code
-- float entropy - off by one error, 101 buckets are created as opposed to 100 (what everything is rounded to...)

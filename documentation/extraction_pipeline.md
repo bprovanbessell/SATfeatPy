@@ -6,3 +6,6 @@ Each of these processes _is_ available as an option. (Specify with input?).
 
 Features of the cnf are then extracted. Problem size features, balance features, graph features... (see [features](features.md)).
 Each of these feature sets is available as an option to compute.
+
+These features can be output through standard output, or saved to a file. Alternatively, you can access the features 
+directly from the satinstance object (they are stored as the dictionary _features_dict_).
