@@ -61,13 +61,16 @@ W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the claus
 
 Clause variable incidence graph (CVIG): set of vertexes is set of variables and clauses, weight function:
 w(x, c) = 1/|c| if x elem c
-0 otherwise
-
+0 otherwise.
 (signs of literals not considered)
 
 Scale free structure - power law distribution. Estimation computed by method of Maximum likelihood
-Modularity(Q) of VIG (louvain method)
-fractal dimensions of VIC and CVIG - How to estimate/calculate it
+Modularity(Q) of VIG (louvain method) of the best partition.
+Fractal dimensions of VIC and CVIG - computed by interpolating log N(r) vs log r, as N(r) ~ r^-d.
+N(r) is the estimate of the minimum number of circles with radius r that cover the graph.
+Estimated using the Burning by node degree algorithm.
+
+See [GraphFeatSat](https://www.ugr.es/~jgiraldez/) and [code](https://www.ugr.es/~jgiraldez/download/graph_features_sat_v_2_2.tar.gz) for original implementation.
 
 ###Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 

@@ -1,6 +1,5 @@
 # sys.path.append("/Users/bprovan/Insight/SAT-features/feature_computation")
 from feature_computation.enums import VarState, ClauseState
-# from feature_computation.features import Features
 
 """
 First we need to compute the active variables and clauses
@@ -10,7 +9,7 @@ This information is used when probing, and performing unit propagation.
 """
 
 
-def get_active_features(feats, clauses, c, v):
+def get_active_features(sat_instance, clauses, c, v):
 
     # initialize the lists that contain information on the clauses and variables
     clause_states = [ClauseState.PASSIVE] * c
@@ -111,20 +110,20 @@ def get_active_features(feats, clauses, c, v):
             var_states[i] = VarState.UNASSIGNED
 
     # set the satinstance class variables
-    feats.num_active_vars = num_active_vars
-    feats.num_active_clauses = num_active_clauses
+    sat_instance.num_active_vars = num_active_vars
+    sat_instance.num_active_clauses = num_active_clauses
 
-    feats.clauses = clauses
-    feats.clause_states = clause_states
-    feats.clause_lengths = clause_lengths
-    feats.num_active_clauses_with_var = num_active_clauses_with_var
+    sat_instance.clauses = clauses
+    sat_instance.clause_states = clause_states
+    sat_instance.clause_lengths = clause_lengths
+    sat_instance.num_active_clauses_with_var = num_active_clauses_with_var
 
-    feats.num_bin_clauses_with_var = num_bin_clauses_with_var
-    feats.unit_clauses = unit_clauses
+    sat_instance.num_bin_clauses_with_var = num_bin_clauses_with_var
+    sat_instance.unit_clauses = unit_clauses
 
-    feats.var_states = var_states
+    sat_instance.var_states = var_states
     # all of the clauses that contain a positive version of this variable
-    feats.clauses_with_positive_var = clauses_with_positive_var
-    feats.clauses_with_negative_var = clauses_with_negative_var
+    sat_instance.clauses_with_positive_var = clauses_with_positive_var
+    sat_instance.clauses_with_negative_var = clauses_with_negative_var
 
     return num_active_vars, num_active_clauses, clause_states, clauses, num_bin_clauses_with_var, var_states

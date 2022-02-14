@@ -20,6 +20,7 @@ N.b. current implementation reliant on SatELite binaries, which only work on lin
 - community ```pip install python-louvain```
 - powerlaw ```pip install powerlaw```
 - sklearn ```pip install scikit-learn```
+- scipy ```pip install scipy```
 
 A binary for ubcsat is included in the ubcsat folder, however you may have to compile and add this yourself for full functionality.
 Please clone and compile [ubcsat](https://github.com/dtompkins/ubcsat/tree/beta), and put the resulting binary in the ubcsat folder, if the current binary does not work. We found the beta branch to be stable.

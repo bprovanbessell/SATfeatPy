@@ -42,7 +42,14 @@ def calc_coefficient_of_variation(mean, std):
     else:
         return std / mean
 
+
 def scipy_entropy_discrete(l, num_outcomes):
+    """
+    Create a probability distribution of l, and then get the entropy of that distribution
+    :param l: Data
+    :param num_outcomes: The total possible number of outcomes
+    :return: Entropy of l
+    """
     p = [0] * num_outcomes
 
     for elem in l:
@@ -55,9 +62,14 @@ def scipy_entropy_discrete(l, num_outcomes):
 
 
 def scipy_entropy_continous(l, buckets=100):
+    """
+        Create a probability distribution of l, and then get the entropy of that distribution
+        :param l: Data
+        :return: Entropy of l
+        """
 
     maxval = 1
-    # we need to set up a probability distribution
+    # set up probability distribution with number of buckets
     p = [0] * buckets
 
     for x in l:
@@ -77,6 +89,7 @@ def scipy_entropy_continous(l, buckets=100):
 
     return entropy
 
+# Legacy
 def entropy_float_array(l, num, vals, maxval):
     """
     :param l: list of values (float, should be between 0 and 1)

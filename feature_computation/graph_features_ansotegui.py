@@ -25,25 +25,16 @@ Clause variable incidence graph (CVIG)
 
 Methods for creating the VIG and CVIG should be alright
 
-
-Following details on formula and calculations still unclear
 Then the fractal dimension of both the VIG and CVIG are calculated
-by computing the function N(r) . can compute the degree d (fractal dimension) that best fits the function N(r). 
-This value is estimated by linear regression interpolating the points log N(r) vs log r
+by computing the function N(r) (Computing by burning node degrees approximation algorithm). 
+This is an estimate of the minimum number of circles with radius r that can cover the graph.
+This value is estimated by linear regression interpolating the points log N(r) vs log r, as N(r) ~ r^-d.
 
 ------
 And the Modularity Q of the VIG is calculated
 The modularity of a graph is the maximal modularity for any possible partition Q(C)  = max{Q(G,C) | C}
-We can find this maximum partition with the community package (uses louvain method), we just need to find out how to get the 
-modularity of that partition 
+We can find this maximum partition with the community package (uses louvain method), and the result is the modularity of the best partition.
 ----  
-
-
-Steps and features
-1. Create VIG and CVIG graphs (should be alright)
-2. Calculate the scale free structure based on variable occurrences (Figure it out?)
-3. Calculate self-similiar structure for VIG and CVIG
-4. Get the modularity Q (We can find the best partition, it is just left to get the modularity from that partition - Read more into what this is, and how to extract it from the partition.
 
 """
 

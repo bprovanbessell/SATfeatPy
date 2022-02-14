@@ -10,7 +10,9 @@ class SATInstance:
 
     """
 
-    def __init__(self, input_cnf, preprocess=True):
+    def __init__(self, input_cnf, preprocess=True, verbose=False):
+        self.verbose = verbose
+
         self.path_to_cnf = input_cnf
 
         # satelite preprocessing
@@ -49,7 +51,7 @@ class SATInstance:
         self.parse_active_features()
 
         # Do first round of unit prop to remove all unit clauses
-        self.dpll_prober = DPLLProbing(self, verbose=False)
+        self.dpll_prober = DPLLProbing(self)
         self.dpll_prober.unit_prop(0, 0)
 
     def clauses_with_literal(self, literal):

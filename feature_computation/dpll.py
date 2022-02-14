@@ -30,9 +30,9 @@ class DPLLProbing:
 
     """
 
-    def __init__(self, sat_instance, verbose=True):
+    def __init__(self, sat_instance):
         self.sat_instance = sat_instance
-        self.verbose = verbose
+        self.verbose = sat_instance.verbose
         self.num_vars_to_try = 10
         self.num_probes = 5
 
@@ -137,7 +137,8 @@ class DPLLProbing:
         # print("lobjois log num nodes over vars", lobjois/self.sat_instance.v)
 
         # also should be timed
-        print("total time:", sw.lap())
+        if self.verbose:
+            print("total time:", sw.lap())
 
     def unit_propagation_probe(self, haltOnAssignment=False, doComp=True):
         """

@@ -9,6 +9,7 @@ Main file to control extraction of features
 
 '''
 
+
 def write_stats(l, name, features_dict):
     l_mean, l_coeff, l_min, l_max = array_stats.get_stats(l)
 
@@ -16,20 +17,6 @@ def write_stats(l, name, features_dict):
     features_dict[name + "_coeff"] = l_coeff
     features_dict[name + "_min"] = l_min
     features_dict[name + "_max"] = l_max
-
-
-def write_entropy(l, name, features_dict, c, number_of_outcomes):
-    entropy = array_stats.entropy_int_array(l, number_of_outcomes+1)
-    print("saten", entropy)
-    features_dict[name + "_entropy"] = entropy
-
-
-def write_entropy_float(l, name, features_dict, num, buckets=100, maxval=1):
-    # scipy has an implementation for shannon entropy (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html),
-    # could be something to look into changing to
-    entropy = array_stats.entropy_float_array(l, num, buckets, maxval)
-    print("saten", entropy)
-    features_dict[name + "_entropy"] = entropy
 
 
 def write_entropy_discrete(l, number_outcomes, name, features_dict):
@@ -106,3 +93,19 @@ def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     write_entropy_discrete(horn_clause_variable_count, c+1, "hc_var", features_dict)
 
     return features_dict
+
+# legacy
+
+
+def write_entropy(l, name, features_dict, c, number_of_outcomes):
+    entropy = array_stats.entropy_int_array(l, number_of_outcomes+1)
+    print("saten", entropy)
+    features_dict[name + "_entropy"] = entropy
+
+
+def write_entropy_float(l, name, features_dict, num, buckets=100, maxval=1):
+    # scipy has an implementation for shannon entropy (https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html),
+    # could be something to look into changing to
+    entropy = array_stats.entropy_float_array(l, num, buckets, maxval)
+    print("saten", entropy)
+    features_dict[name + "_entropy"] = entropy
