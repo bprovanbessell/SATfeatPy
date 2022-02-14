@@ -71,10 +71,7 @@ def variable_occurrences(clauses, c, v):
     for count in variable_count[1:]:
         f_v_k[count] += 1
     count_occurrences = [(count, occurrences) for count, occurrences in enumerate(f_v_k) if occurrences != 0]
-
-    print("arity?")
     f_v_k = [x for x in f_v_k if x>0]
-    print(f_v_k)
 
     # should be the number or literal occurrences
     Sy = sum([occurrences for (count, occurrences) in count_occurrences])
@@ -96,7 +93,7 @@ def variable_occurrences(clauses, c, v):
     return X, Y, Sylogx, Syx
 
 
-def most_likely(X, Y, sylogx, syx, maxxmin=10):
+def most_likely(X, Y, sylogx, syx, maxxmin=10, verbose=False):
 
     best_alpha = 0
     best_x_min_a = 0
@@ -113,7 +110,6 @@ def most_likely(X, Y, sylogx, syx, maxxmin=10):
             xmin = X[ind]
             alpha = -1 - (1 / ((sylogx[ind] / Y[ind]) - math.log((xmin - 0.5))))
 
-            print("ind ", ind, "alpha ", alpha)
             # beta = math.log(1 / (syx[ind] / Y[ind] - xmin) + 1)
 
             #model powerlaw
@@ -145,17 +141,16 @@ def most_likely(X, Y, sylogx, syx, maxxmin=10):
                         worst_x = X[j]+1
 
             if worst_diff < best_diff_a:
-                print("worstdiff ", worst_diff, "best_diff_a ", best_diff_a)
                 best_alpha = alpha
                 best_x_min_a = xmin
                 best_diff_a = worst_diff
                 best_ind_a = ind
                 where_a = worst_x
 
-    # if verbose:
-    print("alpha: ", -best_alpha)
-    print("min: ", best_x_min_a)
-    print("error ", best_diff_a, " in ", where_a)
+    if verbose:
+        print("alpha: ", -best_alpha)
+        print("min: ", best_x_min_a)
+        print("error ", best_diff_a, " in ", where_a)
     return -best_alpha
 
 
@@ -364,6 +359,23 @@ def circle(centre, radius, graph):
 
     # return the nodes in the graph
     return subgraph.nodes
+
+
+def linear_regression_fit(data):
+    data = [x for x in data if x>0]
+    # trim data to have no leading or trailing 0s
+
+    poly_regression_X = [math.log(x) for x in range(1, len(data) + 1)]
+    poly_regression_Y = [math.log(x) for x in data]
+    exp_regression_X = [x for x in range(1, len(data) + 1)]
+    exp_regression_Y = poly_regression_Y
+
+    poly = regression(poly_regression_X, poly_regression_Y)
+    exp = regression(exp_regression_X, exp_regression_Y)
+
+    # estimate with linear regression interpolating points log N(r) vs log r
+
+    return -poly[0], -exp[0]
 
 
 def regression(X, Y):
