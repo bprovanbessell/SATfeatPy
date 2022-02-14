@@ -71,8 +71,6 @@ def variable_occurrences(clauses, c, v):
     for count in variable_count[1:]:
         f_v_k[count] += 1
     count_occurrences = [(count, occurrences) for count, occurrences in enumerate(f_v_k) if occurrences != 0]
-    # print(count_occurrences)
-    # so far so good
 
     print("arity?")
     f_v_k = [x for x in f_v_k if x>0]
@@ -95,23 +93,10 @@ def variable_occurrences(clauses, c, v):
         Sylogx[i] = Sylogx[i+1] + count_occurrences[i][1] / Sy * math.log(X[i])
         Syx[i] = Syx[i + 1] + count_occurrences[i][1] / Sy * X[i]
 
-    # so far so good
-
-    # decreasing sequence, basically sum of all that came before
-
     return X, Y, Sylogx, Syx
 
 
 def most_likely(X, Y, sylogx, syx, maxxmin=10):
-
-    # print("X and Y")
-    # print(X)
-    # print(Y)
-    #
-    # print("SYX AND LOGX")
-    # print(sylogx)
-    # print(syx)
-    # so far so good
 
     best_alpha = 0
     best_x_min_a = 0
@@ -120,10 +105,9 @@ def most_likely(X, Y, sylogx, syx, maxxmin=10):
     best_ind_a = 0
     where_a = 0
 
-    xmin = 0
     n = len(X)
 
-    for ind in range(1, maxxmin +1):
+    for ind in range(1, maxxmin + 1):
         if ind < n-3:
 
             xmin = X[ind]
@@ -142,7 +126,6 @@ def most_likely(X, Y, sylogx, syx, maxxmin=10):
                 if aux >= best_diff_a:
                     worst_diff = aux
                     worst_x = X[j]
-                    j = n
                     break
                 elif aux >= worst_diff:
                     worst_diff = aux
@@ -155,7 +138,6 @@ def most_likely(X, Y, sylogx, syx, maxxmin=10):
                     if aux >= best_diff_a:
                         worst_diff = aux
                         worst_x = X[j]+1
-                        j = n
                         # finish search of worst difference
                         break
                     elif aux >= worst_diff:
@@ -215,7 +197,7 @@ def pow_law_c(x, xmin, alpha):
             p_old = p
             p = num/den
 
-        if(n < max_iterations):
+        if n < max_iterations:
             return p
 
     return math.pow(x / xmin, alpha + 1)
@@ -384,23 +366,6 @@ def circle(centre, radius, graph):
     return subgraph.nodes
 
 
-import matplotlib.pyplot as plt
-def linear_regression_fit(data):
-    data = [x for x in data if x>0]
-    # trim data to have no leading or trailing 0s
-
-    poly_regression_X = [math.log(x) for x in range(1, len(data) + 1)]
-    poly_regression_Y = [math.log(x) for x in data]
-    exp_regression_X = [x for x in range(1, len(data) + 1)]
-    exp_regression_Y = poly_regression_Y
-
-    poly = regression(poly_regression_X, poly_regression_Y)
-    exp = regression(exp_regression_X, exp_regression_Y)
-
-    # estimate with linear regression interpolating points log N(r) vs log r
-
-    return -poly[0], -exp[0]
-
 def regression(X, Y):
     # given list of points, computes the alpha abd beta of a regression, translated from paper
     Sx = sum(X)
@@ -413,8 +378,3 @@ def regression(X, Y):
     beta = Sy / len(X) - alpha * Sx / len(X)
 
     return alpha, beta
-
-
-names = ["time-buildGraphs","alphaVarExp","time-AlphaVar","alphaClauExp","time-AlphaClau","dim","time-dim","dim-bip","time-dimBip","mod","comm-vig","time-mod","mod-bip","comm-cvigtime-mod-bip","time-total"]
-
-res = [0.002206, 8.01541, 0.006359, -4.68634e-310, 0.000375, 3.69989, 6.9e-05, 3.33772, 0.000615, 0.407965, 7, 0.00043, 0.61827, 14, 0.001545, 0.011599]

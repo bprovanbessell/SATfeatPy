@@ -100,29 +100,23 @@ class SATInstance:
 
     def gen_ansotegui_features(self):
 
-        variable_occurrences = graph_features_ansotegui.variable_occurrences(self.clauses, self.num_active_clauses, self.num_active_vars)
-
         alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses, self.num_active_vars)
 
-        print("alpha", alpha)
-
         vig = graph_features_ansotegui.create_vig(self.clauses, self.num_active_clauses, self.num_active_vars)
-        # vig graph is correct at least
         cvig = graph_features_ansotegui.create_cvig(self.clauses, self.num_active_clauses, self.num_active_vars)
 
         modularity = graph_features_ansotegui.compute_modularity_q(vig)
 
         N_vig = graph_features_ansotegui.burning_by_node_degree(vig, self.num_active_vars)
-
-        # cvig graph is incorrect
-        N_cvig = graph_features_ansotegui.burning_by_node_degree(cvig, self.num_active_vars+ self.num_active_clauses)
+        N_cvig = graph_features_ansotegui.burning_by_node_degree(cvig, self.num_active_vars + self.num_active_clauses)
 
         d_poly, d_exp = graph_features_ansotegui.linear_regression_fit(N_vig)
         db_poly, db_exp = graph_features_ansotegui.linear_regression_fit(N_cvig)
 
         ansotegui_features = {"vig_modularty": modularity,
                               "vig_d_poly": d_poly,
-                              "cvig_db_poly": db_poly
+                              "cvig_db_poly": db_poly,
+                              "variable_alpha": alpha
                               }
 
         self.features_dict.update(ansotegui_features)
