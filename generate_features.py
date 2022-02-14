@@ -19,21 +19,16 @@ if __name__ == "__main__":
     else:
         satinstance = SATInstance(cnf_path, preprocess=True)
 
-    if satinstance.verbose:
-        print("Generating basic features")
     satinstance.gen_basic_features()
 
-    if satinstance.verbose:
-        print("DPLL probing")
     satinstance.gen_dpll_probing_features()
 
-    if satinstance.verbose:
-        print("Local search probing with SAPS and GSAT")
     # N.b. ubcsat binary currently only runs on linux
     # satinstance.gen_local_search_probing_features()
 
-    if satinstance.verbose:
-        print("Generating features from Ansotegui")
+
     satinstance.gen_ansotegui_features()
 
     print(satinstance.features_dict)
+
+    satinstance.write_results()

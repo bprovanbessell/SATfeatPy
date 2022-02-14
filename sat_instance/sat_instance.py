@@ -1,5 +1,6 @@
 from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing, graph_features_ansotegui
 from feature_computation.dpll import DPLLProbing
+from sat_instance import write_to_file
 
 
 class SATInstance:
@@ -19,10 +20,14 @@ class SATInstance:
         # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
 
         if preprocess:
+            if self.verbose:
+                print("Preprocessing with SatELite")
             preprocessed_path = preprocessing.satelite_preprocess(self.path_to_cnf)
             self.path_to_cnf = preprocessed_path
 
         # parse the cnf file
+        if self.verbose:
+            print("Parsing cnf file")
         self.clauses, self.c, self.v = parse_cnf.parse_cnf(self.path_to_cnf)
 
         # computed with active features
@@ -48,10 +53,14 @@ class SATInstance:
         self.features_dict = {}
 
         # necessary for unit propagation setup
+        if self.verbose:
+            print("Parsing active features")
         self.parse_active_features()
 
         # Do first round of unit prop to remove all unit clauses
         self.dpll_prober = DPLLProbing(self)
+        if self.verbose:
+            print("First round of unit propagation")
         self.dpll_prober.unit_prop(0, 0)
 
     def clauses_with_literal(self, literal):
@@ -73,6 +82,8 @@ class SATInstance:
         """
         Generates the basic features (Including but not limited to 1-33 from the satzilla paper).
         """
+        if self.verbose:
+            print("Generating basic features")
 
         base_features_dict = base_features.compute_base_features(self.clauses, self.c, self.v, self.num_active_vars,
                                                                  self.num_active_clauses)
@@ -82,6 +93,8 @@ class SATInstance:
         """
         Generates the dpll probing features (34-40 from the satzilla paper).
         """
+        if self.verbose:
+            print("DPLL probing")
 
         self.dpll_prober.unit_propagation_probe(False, True)
 
@@ -94,6 +107,8 @@ class SATInstance:
         Generates the local search probing features (including but not limited to 41-48 from the satzilla paper).
         """
         # also doesnt seem to fully work on osx.
+        if self.verbose:
+            print("Local search probing with SAPS and GSAT")
 
         saps_res_dict, gsat_res_dict = local_search_probing.local_search_probe(self.path_to_cnf)
 
@@ -101,6 +116,8 @@ class SATInstance:
         self.features_dict.update(gsat_res_dict)
 
     def gen_ansotegui_features(self):
+        if self.verbose:
+            print("Generating features from Ansotegui")
 
         alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses, self.num_active_vars)
 
@@ -122,5 +139,8 @@ class SATInstance:
                               }
 
         self.features_dict.update(ansotegui_features)
+
+    def write_results(self):
+        write_to_file.write_features_to_json(self.features_dict)
 
 
