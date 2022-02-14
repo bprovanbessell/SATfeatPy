@@ -33,7 +33,7 @@ def create_vcg(clauses, c, v):
         degree = len(nx.edges(vcg, "c_" + str(i)))
         c_node_degrees.append(degree)
 
-    for i in range(1, v+1):
+    for i in range(1, v + 1):
         degree = len(nx.edges(vcg, "v_" + str(i)))
         v_node_degrees.append(degree)
 
@@ -54,7 +54,7 @@ def create_vg(clauses):
     for k, clause in enumerate(clauses):
 
         for i in range(len(clause)):
-            for j in range(i+1, len(clause)):
+            for j in range(i + 1, len(clause)):
                 v_node_i = "v_" + str(abs(clause[i]))
                 v_node_j = "v_" + str(abs(clause[j]))
                 vg.add_edge(v_node_i, v_node_j)
