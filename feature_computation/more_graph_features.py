@@ -143,3 +143,78 @@ def create_big(clauses):
 
     return big, node_degrees, weights
 
+
+def neighbors_nodes(l, clauses):
+    big, _, _ = create_big(clauses)
+    neighbors = big.neighbors('v_' + str(l))
+    return neighbors
+
+
+def create_exo_and_band(clauses):
+    andg = nx.Graph()
+    bandg = nx.Graph()
+    exog = nx.Graph()
+
+    for k, clause in enumerate(clauses):
+        for i in range(len(clause)):
+            v_node1 = "v_" + str(abs(clause[i]))
+            v_node2 = "v_" + str(-abs(clause[i]))
+            andg.add_node(v_node1)
+            andg.add_node(v_node2)
+            bandg.add_node(v_node1)
+            bandg.add_node(v_node2)
+            exog.add_node(v_node1)
+            exog.add_node(v_node2)
+
+    for clause in clauses:
+        if len(clause) > 2:
+            exo = True
+            for l0 in clause:
+                k = 0
+                rem_clause = clause[:]
+                rem_clause.remove(l0)
+                for l1 in rem_clause:
+                    if l1 not in neighbors_nodes(l0, clauses):
+                        exo = False
+                        break
+                    k += 1
+                    andg.add_edge('v_' + str(l1), 'v_' + str(-l0), weight=pow(2, -k))
+                if not exo:
+                    break
+
+            if not exo:
+                obv_block = True
+                for l0 in clause:
+                    k = 0
+                    rem_clause = clause[:]
+                    rem_clause.remove(l0)
+                    for l1 in rem_clause:
+                        if len(clause) > 3:
+                            obv_block = False
+                            break
+                        k += 1
+                        bandg.add_edge('v_' + str(l1), 'v_' + str(-l0), weight=pow(2, -k))
+                    if not obv_block:
+                        break
+            elif exo:
+                for l0 in clause:
+                    rem_clause = clause[:]
+                    rem_clause.remove(l0)
+                    for l1 in rem_clause:
+                        exog.add_edge('v_' + str(l1), 'v_' + str(l0))
+
+    return andg, bandg, exog
+
+
+def return_degrees_weights(G):
+
+    node_degrees = []
+    weights = []
+
+    for n in G.nodes:
+        degree = len(nx.edges(G, n))
+        for weight in G.edges.data("weight", n):
+            weights.append(weight[2])
+        node_degrees.append(degree)
+
+    return node_degrees, weights
