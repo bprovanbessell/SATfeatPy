@@ -118,18 +118,19 @@ def create_big(clauses):
 
     big = nx.DiGraph()
 
-    v_nodes = []
-
     for k, clause in enumerate(clauses):
         for i in range(len(clause)):
-            v_node = "v_" + str(clause[i])
-            v_nodes.append(v_node)
+            v_node1 = "v_" + str(abs(clause[i]))
+            v_node2 = "v_" + str(-abs(clause[i]))
+            big.add_node(v_node1)
+            big.add_node(v_node2)
 
     for clause in clauses:
         if len(clause) == 2:
             a = clause[0]
             b = clause[1]
             big.add_edge('v_' + str(-a), 'v_' + str(b), weight=1)
+            big.add_edge('v_' + str(-b), 'v_' + str(a), weight=1)
 
     node_degrees = []
     weights = []
@@ -140,4 +141,5 @@ def create_big(clauses):
             weights.append(weight[2])
         node_degrees.append(degree)
 
-    return node_degrees, weights
+    return big, node_degrees, weights
+
