@@ -1,4 +1,7 @@
+import math
+
 import networkx as nx
+import scipy.stats
 
 
 def create_vg(clauses):
@@ -218,3 +221,119 @@ def return_degrees_weights(G):
         node_degrees.append(degree)
 
     return node_degrees, weights
+
+
+def recursive_weight_heuristic(max_clause_size, clauses, v):
+
+    assert(max_clause_size > 0)
+
+    # current value for each literal
+    # Might want to add +1 so we can use the literals as indices...
+    this_data_pos = [0] * (v+1)
+    this_data_neg = [0] * (v + 1)
+
+    this_data = [this_data_pos, this_data_neg]
+    last_data_pos = [1] * (v + 1)
+    last_data_neg = [1] * (v + 1)
+
+    last_data = [last_data_pos, last_data_neg]
+
+    muh = 1
+    gamma = 5
+    max_double = 10e200
+
+    all_sequences = []
+
+    # for 3 interations
+    for iteration in range(1, (3+1)):
+
+        iteration_steps = 0
+        this_iteration_sequence = []
+
+        # how likely the remaining clauses will be falsified by the model
+        for i in range(len(clauses)):
+
+            clause = clauses[i]
+            clause_len = len(clause)
+
+            if (clause_len == 1): continue
+
+            if max_clause_size < clause_len:
+                exponent = 0
+            else:
+                exponent = max_clause_size - clause_len
+
+            clause_constant = math.pow(gamma, exponent) / math.pow(muh, clause_len - 1)
+
+            found_zero = False
+            clause_value = 1
+            # calculate the constant for the clause
+            for j in range(clause_len):
+                curr_lit = clause[j]
+
+                if curr_lit < 0:
+                    comp_ind = 0
+                else:
+                    comp_ind = 1
+
+                # tilde is complement
+                if last_data[comp_ind][curr_lit] == 0:
+                    found_zero = True
+                    break
+
+                clause_value = clause_value * last_data[comp_ind][curr_lit]
+                iteration_steps += 1
+
+            if not found_zero:
+                # only if there is no non-zero literal inside, add the values
+                print("update value")
+                print("cc", clause_constant)
+                print("cv", clause_value)
+                clause_value = clause_value * clause_constant
+                print(clause_value)
+
+                # for each literal, divide the clause value by the  value for the corresponding complement to fit the calculation formula
+                for j in range(clause_len):
+                    curr_lit = clause[j]
+
+                    if curr_lit < 0:
+                        comp_ind = 0
+                    else:
+                        comp_ind = 1
+
+                    this_data[comp_ind][curr_lit] += clause_value / last_data[comp_ind][curr_lit]
+
+        # sequence for iteration i
+        muh = 0
+        for num_v in range(1, v+1):
+            for p in range(2):
+
+                # basically for positive and negative literals
+                val = this_data[p][v]
+                if val > max_double:
+                    this_iteration_sequence.append(max_double)
+                else:
+                    this_iteration_sequence.append(val)
+
+                muh += val
+
+            iteration_steps += 1
+
+        muh = muh / 2 * v
+
+        if muh < 1: muh = 1
+
+        print(this_data)
+        print(last_data)
+
+        last_data = this_data
+        this_data_pos = [0] * (v + 1)
+        this_data_neg = [0] * (v + 1)
+
+        this_data = [this_data_pos, this_data_neg]
+
+        print(this_iteration_sequence)
+
+        all_sequences.append(this_iteration_sequence)
+
+    return all_sequences

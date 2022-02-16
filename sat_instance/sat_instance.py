@@ -1,4 +1,4 @@
-from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing, graph_features_ansotegui
+from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing, graph_features_ansotegui, more_graph_features
 from feature_computation.dpll import DPLLProbing
 from sat_instance import write_to_file
 
@@ -139,6 +139,11 @@ class SATInstance:
                               }
 
         self.features_dict.update(ansotegui_features)
+
+    def gen_alfonso_features(self):
+        max_clause_size = 5
+
+        more_graph_features.recursive_weight_heuristic(max_clause_size, self.clauses, self.num_active_vars)
 
     def write_results(self):
         write_to_file.write_features_to_json(self.features_dict)

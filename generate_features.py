@@ -14,12 +14,15 @@ if __name__ == "__main__":
     if sys.platform == "darwin":
         # osx
         cnf_path = "cnf_examples/sat_4color_200_1126_10020_preprocessed.cnf"
+        cnf_path = "cnf_examples/basic.cnf"
         satinstance = SATInstance(cnf_path, preprocess=False)
 
     else:
         satinstance = SATInstance(cnf_path, preprocess=True)
 
     satinstance.gen_basic_features()
+
+    satinstance.gen_alfonso_features()
 
     satinstance.gen_dpll_probing_features()
 
