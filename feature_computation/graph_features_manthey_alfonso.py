@@ -1,4 +1,59 @@
 import networkx as nx
+import numpy as np
+from scipy import stats
+
+
+def create_vcg(clauses):
+    """
+    Create VCG
+    Variable-Clause Graph features
+    A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause,
+    and an edge between them whenever a variable occurs in a clause
+
+    :param clauses:
+    :param c:
+    :param v:
+    :return: Variable node degrees and clause node degrees
+    """
+    vcgpos = nx.Graph()
+    vcgneg = nx.Graph()
+
+    # Node for each variable
+    # node for each clause
+
+    for i, clause in enumerate(clauses):
+        c_node = "c_" + str(i)
+
+        for literal in clause:
+            if literal > 0:
+                v_node = "v_" + str(literal)
+                vcgpos.add_edge(c_node, v_node)
+            elif literal < 0:
+                v_node = "v_" + str(literal)
+                vcgneg.add_edge(c_node, v_node)
+
+    v_node_degrees_pos = []
+    v_node_degrees_neg = []
+    c_node_degrees_pos = []
+    c_node_degrees_neg = []
+
+    # get node statistics
+    for i in vcgpos.nodes():
+        if 'c' in i:
+            degree = len(nx.edges(vcgpos, i))
+            c_node_degrees_pos.append(degree)
+        elif 'v' in i:
+            degree = len(nx.edges(vcgpos, i))
+            v_node_degrees_pos.append(degree)
+    for i in vcgneg.nodes():
+        if 'c' in i:
+            degree = len(nx.edges(vcgneg, i))
+            c_node_degrees_neg.append(degree)
+        elif 'v' in i:
+            degree = len(nx.edges(vcgneg, i))
+            v_node_degrees_pos.append(degree)
+
+    return v_node_degrees_pos, v_node_degrees_neg, c_node_degrees_pos, c_node_degrees_neg
 
 
 def create_vg(clauses):
@@ -68,7 +123,7 @@ def create_cg(clauses):
             weights.append(weight[2])
         node_degrees.append(degree)
 
-    return cg, node_degrees, weights
+    return node_degrees, weights
 
 
 def create_rg(clauses):
@@ -174,7 +229,8 @@ def create_exo_and_band(clauses):
                 rem_clause = clause[:]
                 rem_clause.remove(l0)
                 for l1 in rem_clause:
-                    if l1 not in neighbors_nodes(l0, clauses):
+                    nodel1neg = 'v_' + str(-l1)
+                    if nodel1neg not in neighbors_nodes(l0, clauses):
                         exo = False
                         break
                     k += 1
@@ -206,8 +262,7 @@ def create_exo_and_band(clauses):
     return andg, bandg, exog
 
 
-def return_degrees_weights(G):
-
+def get_degrees_weights(G):
     node_degrees = []
     weights = []
 
@@ -218,3 +273,29 @@ def return_degrees_weights(G):
         node_degrees.append(degree)
 
     return node_degrees, weights
+
+
+def get_graph_stats(node_degrees=0, weights=0):
+    node_min = np.min(node_degrees)
+    node_max = np.max(node_degrees)
+    node_mode = stats.mode(node_degrees)[0]
+    node_mean = np.mean(node_degrees)
+    node_std = np.std(node_degrees)
+    node_zeros = np.count_nonzero(node_degrees == 0)
+    node_entropy = stats.entropy(node_degrees)
+    node_quantiles = stats.mstats.mquantiles(node_degrees)
+    node_val_rate = np.divide(node_degrees, len(node_degrees))
+    node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles,
+                  node_val_rate]
+    weights_min = np.min(weights)
+    weights_max = np.max(weights)
+    weights_mode = stats.mode(weights)[0]
+    weights_mean = np.mean(weights)
+    weights_std = np.std(weights)
+    weights_zeros = np.count_nonzero(weights == 0)
+    weights_entropy = stats.entropy(weights)
+    weights_quantiles = stats.mstats.mquantiles(weights)
+    weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
+                     weights_quantiles]
+
+    return node_stats, weights_stats
