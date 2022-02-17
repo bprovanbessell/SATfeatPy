@@ -204,6 +204,13 @@ def neighbors_nodes(l, clauses):
 
 
 def create_exo_and_band(clauses):
+    """
+        Full-AND, Blocked-AND and Exactly One Constraint Graphs
+
+        :param clauses:
+        :return: The degree of each node in the variable graph and the weight of each edge
+    """
+
     andg = nx.Graph()
     bandg = nx.Graph()
     exog = nx.Graph()
