@@ -84,6 +84,8 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
             # print(file_name)
             print(i / len(file_list) * 100, " percent complete", end="\r")
             sat_inst = SATInstance(file_name, preprocess=True)
+            if sat_inst.solved:
+                continue
 
             t1 = time.time()
             sat_inst.gen_basic_features()
