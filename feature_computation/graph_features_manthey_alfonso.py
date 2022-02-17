@@ -289,7 +289,7 @@ def get_graph_stats(node_degrees, weights=0):
 
     node_min = np.min(node_degrees)
     node_max = np.max(node_degrees)
-    node_mode = stats.mode(node_degrees)[0]
+    node_mode = stats.mode(node_degrees)[0][0]
     node_mean = np.mean(node_degrees)
     node_std = np.std(node_degrees)
     node_zeros = np.count_nonzero(node_degrees == 0)
@@ -301,7 +301,7 @@ def get_graph_stats(node_degrees, weights=0):
 
     weights_min = np.min(weights)
     weights_max = np.max(weights)
-    weights_mode = stats.mode(weights)[0]
+    weights_mode = stats.mode(weights)[0][0]
     weights_mean = np.mean(weights)
     weights_std = np.std(weights)
     weights_zeros = np.count_nonzero(weights == 0)
