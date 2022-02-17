@@ -9,7 +9,7 @@ import csv
 def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv="features.csv"):
     # for each file, we need to create a sat_instance for it
     # file_list = glob.glob(path_to_cnfs + "sat_4*.cnf")
-    file_list = glob.glob(path_to_cnfs + "basic.cnf")
+    file_list = glob.glob(path_to_cnfs + "*.cnf")
     dict_keys = ['c', 'v', 'clauses_vars_ratio', 'vars_clauses_ratio', 'vcg_var_mean', 'vcg_var_coeff', 'vcg_var_min',
      'vcg_var_max', 'vcg_var_entropy', 'vcg_clause_mean', 'vcg_clause_coeff', 'vcg_clause_min', 'vcg_clause_max',
      'vcg_clause_entropy', 'vg_mean', 'vg_coeff', 'vg_min', 'vg_max', 'pnc_ratio_mean', 'pnc_ratio_coeff',
@@ -104,6 +104,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
 
 
 if __name__ == "__main__":
-    path_to_cnfs = "cnf_examples/"
+    # path_to_cnfs = "cnf_examples/"
+    path_to_cnfs = "/projects/satdb/dataset_final/"
 
     bulk_gen_features(path_to_cnfs)
