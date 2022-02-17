@@ -16,6 +16,7 @@ python features.py path/to/cnf_file.cnf
 N.b. current implementation reliant on SatELite binaries, which only work on linux systems.
 
 **Dependencies**
+- Python 3.8
 - NetworkX:  ```pip install networkx```
 - community ```pip install python-louvain```
 - powerlaw ```pip install powerlaw```

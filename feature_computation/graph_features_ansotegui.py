@@ -56,7 +56,7 @@ def variable_occurrences(clauses, c, v):
             variable_count[abs(literal)] += 1
 
     # compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
-    f_v_k = [0] * (v + 1)
+    f_v_k = [0] * (c + 1)
 
     # there is no variable 0
     for count in variable_count[1:]:
@@ -313,7 +313,7 @@ def burning_by_node_degree(graph, n: int):
     num_connected_components = networkx.number_connected_components(graph)
     dmaxx = 16
 
-    for i in range(1, dmaxx+1):
+    for i in range(1, min(dmaxx+1, len(N))):
         if N[i - 1] > num_connected_components:
             burned = [False] * (n + 1)
             burned[0] = True

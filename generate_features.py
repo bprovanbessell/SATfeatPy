@@ -14,7 +14,7 @@ if __name__ == "__main__":
     if sys.platform == "darwin":
         # osx
         cnf_path = "cnf_examples/sat_4color_200_1126_10020_preprocessed.cnf"
-        cnf_path = "cnf_examples/basic.cnf"
+        cnf_path = "cnf_examples/count_10_4.cnf"
         satinstance = SATInstance(cnf_path, preprocess=False)
 
     else:
@@ -22,17 +22,18 @@ if __name__ == "__main__":
 
     satinstance.gen_basic_features()
 
-    satinstance.gen_alfonso_features()
+    # satinstance.gen_alfonso_features()
 
     satinstance.gen_dpll_probing_features()
 
     # N.b. ubcsat binary currently only runs on linux
-    satinstance.gen_local_search_probing_features()
+    # satinstance.gen_local_search_probing_features()
 
     satinstance.gen_ansotegui_features()
 
-    satinstance.gen_manthey_alfonso_graph_features()
+    # satinstance.gen_manthey_alfonso_graph_features()
 
     print(satinstance.features_dict)
+    print(satinstance.features_dict.keys())
 
     satinstance.write_results()

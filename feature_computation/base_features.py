@@ -54,7 +54,7 @@ def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     vcg_c_node_degrees_norm = [x / v for x in vcg_c_node_degrees]
     # 9-13
     write_stats(vcg_c_node_degrees_norm, "vcg_clause", features_dict)
-    write_entropy_discrete(vcg_v_node_degrees, v + 1, "vcg_clause", features_dict)
+    write_entropy_discrete(vcg_c_node_degrees, v + 1, "vcg_clause", features_dict)
     # write_entropy(vcg_c_node_degrees, "vcg_clause", features_dict, c, v)
 
     # Variable graph features
