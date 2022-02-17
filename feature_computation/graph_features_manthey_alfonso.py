@@ -280,7 +280,7 @@ def get_degrees_weights(G):
     return node_degrees, weights
 
 
-def get_graph_stats(node_degrees, weights=0):
+def get_graph_stats(name, node_degrees, weights=0):
 
     if not node_degrees:
         node_degrees = 0
@@ -307,9 +307,6 @@ def get_graph_stats(node_degrees, weights=0):
     weights_zeros = np.count_nonzero(weights == 0)
     weights_entropy = stats.entropy(weights)
     weights_quantiles = stats.mstats.mquantiles(weights)
-    weights_q1 = weights_quantiles[0]
-    weights_q2 = weights_quantiles[1]
-    weights_q3 = weights_quantiles[2]
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
                      weights_quantiles[0], weights_quantiles[1], weights_quantiles[2]]
 
@@ -322,6 +319,10 @@ def get_graph_stats(node_degrees, weights=0):
     weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros", "weights_entropy",
                      "weights_q1", "weights_q2", "weights_q3"]
 
+    deg_names = [name + x for x in deg_names]
+    weights_names = [name + x for x in weights_names]
 
+    stats_dict = dict(zip(deg_names, node_stats))
+    stats_dict.update(dict(zip(weights_names, weights_stats)))
 
-    return node_stats, weights_stats
+    return stats_dict

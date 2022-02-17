@@ -152,44 +152,42 @@ class SATInstance:
 
         v_nd_p, v_nd_n, c_nd_p, c_nd_n = graph_features_manthey_alfonso.create_vcg(self.clauses)
 
-        vcg_stats = [graph_features_manthey_alfonso.get_graph_stats(v_nd_p),
-                     graph_features_manthey_alfonso.get_graph_stats(v_nd_n),
-                     graph_features_manthey_alfonso.get_graph_stats(c_nd_p),
-                     graph_features_manthey_alfonso.get_graph_stats(c_nd_n)]
+        all_stats = [graph_features_manthey_alfonso.get_graph_stats("v_nd_p_", v_nd_p),
+                     graph_features_manthey_alfonso.get_graph_stats("v_nd_n_", v_nd_n),
+                     graph_features_manthey_alfonso.get_graph_stats("c_nd_p_", c_nd_p),
+                     graph_features_manthey_alfonso.get_graph_stats("c_nd_n_", c_nd_n)]
 
         nd, w = graph_features_manthey_alfonso.create_vg(self.clauses)
-        vg_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        all_stats.append(graph_features_manthey_alfonso.get_graph_stats("vg_al_", nd, w))
 
         nd, w = graph_features_manthey_alfonso.create_cg(self.clauses)
-        cg_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        cg_stats = graph_features_manthey_alfonso.get_graph_stats("cg_al_", nd, w)
+        all_stats.append(cg_stats)
 
         nd, w = graph_features_manthey_alfonso.create_rg(self.clauses)
-        rg_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        rg_stats = graph_features_manthey_alfonso.get_graph_stats("rg_", nd, w)
+        all_stats.append(rg_stats)
 
         _, nd, w = graph_features_manthey_alfonso.create_big(self.clauses)
-        big_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        big_stats = graph_features_manthey_alfonso.get_graph_stats("big_", nd, w)
+        all_stats.append(big_stats)
 
         andg, bandg, exog = graph_features_manthey_alfonso.create_exo_and_band(self.clauses)
 
         nd, w = graph_features_manthey_alfonso.get_degrees_weights(andg)
-        and_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        and_stats = graph_features_manthey_alfonso.get_graph_stats("and_", nd, w)
+        all_stats.append(and_stats)
 
         nd, w = graph_features_manthey_alfonso.get_degrees_weights(bandg)
-        band_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        band_stats = graph_features_manthey_alfonso.get_graph_stats("band_", nd, w)
+        all_stats.append(band_stats)
 
         nd, w = graph_features_manthey_alfonso.get_degrees_weights(exog)
-        exo_stats = [graph_features_manthey_alfonso.get_graph_stats(nd, w)]
+        exo_stats = graph_features_manthey_alfonso.get_graph_stats("exo_", nd, w)
+        all_stats.append(exo_stats)
 
-        manthey_alfonso_features = {"vc_graph": vcg_stats,
-                                    "v_graph": vg_stats,
-                                    "c_graph": cg_stats,
-                                    "r_graph": rg_stats,
-                                    "bi_graph": big_stats,
-                                    "and_graph": and_stats,
-                                    "band_graph": band_stats,
-                                    "exo_graph": exo_stats}
-
-        self.features_dict.update(manthey_alfonso_features)
+        for stats_dict in all_stats:
+            self.features_dict.update(stats_dict)
 
     def write_results(self):
         write_to_file.write_features_to_json(self.features_dict)
