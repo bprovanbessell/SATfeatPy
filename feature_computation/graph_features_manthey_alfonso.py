@@ -304,12 +304,12 @@ def get_graph_stats(node_degrees, weights=0):
     weights_mean = np.mean(weights)
     weights_std = np.std(weights)
     weights_zeros = np.count_nonzero(weights == 0)
-    print("LENGTH", weights_zeros.shape)
     weights_entropy = stats.entropy(weights)
     weights_quantiles = stats.mstats.mquantiles(weights)
-    print("LENGTH2", len(weights_quantiles))
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
                      weights_quantiles]
+
+    print([type(w) for w in weights_stats])
 
     deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_quantiles", "node_val_rate"]
     weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros", "weights_entropy",
