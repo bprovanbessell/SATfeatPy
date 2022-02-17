@@ -1,5 +1,5 @@
 import math
-
+from feature_computation import array_stats
 import networkx as nx
 import scipy.stats
 
@@ -227,6 +227,8 @@ def recursive_weight_heuristic(max_clause_size, clauses, v):
 
     assert(max_clause_size > 0)
 
+    feat_dict = {}
+
     # current value for each literal
     # Might want to add +1 so we can use the literals as indices...
     this_data_pos = [0] * (v+1)
@@ -286,11 +288,7 @@ def recursive_weight_heuristic(max_clause_size, clauses, v):
 
             if not found_zero:
                 # only if there is no non-zero literal inside, add the values
-                print("update value")
-                print("cc", clause_constant)
-                print("cv", clause_value)
                 clause_value = clause_value * clause_constant
-                print(clause_value)
 
                 # for each literal, divide the clause value by the  value for the corresponding complement to fit the calculation formula
                 for j in range(clause_len):
@@ -323,17 +321,23 @@ def recursive_weight_heuristic(max_clause_size, clauses, v):
 
         if muh < 1: muh = 1
 
-        print(this_data)
-        print(last_data)
-
         last_data = this_data
         this_data_pos = [0] * (v + 1)
         this_data_neg = [0] * (v + 1)
 
         this_data = [this_data_pos, this_data_neg]
 
-        print(this_iteration_sequence)
-
         all_sequences.append(this_iteration_sequence)
 
-    return all_sequences
+    for i, s in enumerate(all_sequences):
+        write_stats(s, "rwh_" + str(i), feat_dict)
+
+    return feat_dict
+
+def write_stats(l, name, features_dict):
+    l_mean, l_coeff, l_min, l_max = array_stats.get_stats(l)
+
+    features_dict[name + "_mean"] = l_mean
+    features_dict[name + "_coeff"] = l_coeff
+    features_dict[name + "_min"] = l_min
+    features_dict[name + "_max"] = l_max
