@@ -51,7 +51,7 @@ def create_vcg(clauses):
             c_node_degrees_neg.append(degree)
         elif 'v' in i:
             degree = len(nx.edges(vcgneg, i))
-            v_node_degrees_pos.append(degree)
+            v_node_degrees_neg.append(degree)
 
     return v_node_degrees_pos, v_node_degrees_neg, c_node_degrees_pos, c_node_degrees_neg
 
