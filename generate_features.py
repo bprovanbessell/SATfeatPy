@@ -17,7 +17,7 @@ if __name__ == "__main__":
         satinstance = SATInstance(cnf_path, preprocess=False)
 
     else:
-        satinstance = SATInstance(cnf_path, preprocess=True)
+        satinstance = SATInstance(cnf_path, preprocess=False)
 
     satinstance.gen_basic_features()
 
