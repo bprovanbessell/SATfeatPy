@@ -307,7 +307,10 @@ def get_graph_stats(name, node_degrees, weights=0):
     weights_zeros = np.count_nonzero(weights == 0)
     weights_entropy = stats.entropy(weights)
     weights_quantiles = stats.mstats.mquantiles(weights)
-    weights_val_rate = np.count_nonzero(weights == weights_mode) / len(weights)
+    if weights != 0:
+        weights_val_rate = np.count_nonzero(weights == weights_mode) / len(weights)
+    else:
+        weights_val_rate = 1
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
                      weights_quantiles[0], weights_quantiles[1], weights_quantiles[2], weights_val_rate]
 
