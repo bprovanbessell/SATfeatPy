@@ -1,3 +1,5 @@
+import time
+
 import sat_instance.sat_instance
 from sat_instance.sat_instance import SATInstance
 import glob
@@ -73,6 +75,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'exo_weights_val_rate', 'rwh_0_mean', 'rwh_0_coeff', 'rwh_0_min', 'rwh_0_max', 'rwh_1_mean', 'rwh_1_coeff',
      'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max']
 
+    times = []
     with open(results_csv, 'w') as f:
         writer = csv.DictWriter(f, fieldnames=dict_keys)
         writer.writeheader()
@@ -82,15 +85,22 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
             print(i / len(file_list) * 100, " percent complete", end="\r")
             sat_inst = SATInstance(file_name, preprocess=True)
 
+            t1 = time.time()
             sat_inst.gen_basic_features()
+            t2 = time.time()
             sat_inst.gen_dpll_probing_features()
             # linux only
             sat_inst.gen_local_search_probing_features()
+            t3 = time.time()
             sat_inst.gen_ansotegui_features()
+            t4 = time.time()
             sat_inst.gen_manthey_alfonso_graph_features()
+            t5 = time.time()
             writer.writerow(sat_inst.features_dict)
 
+            times.append((t2 - t1, t3 - t2, t4 -t3, t5-t4))
     f.close()
+    print(times)
 
 
 if __name__ == "__main__":
