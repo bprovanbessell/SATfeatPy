@@ -296,7 +296,7 @@ def get_graph_stats(node_degrees, weights=0):
     node_entropy = stats.entropy(node_degrees)
     node_quantiles = stats.mstats.mquantiles(node_degrees)
     node_val_rate = np.divide(node_degrees, len(node_degrees))
-    node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles,
+    node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles[0], node_quantiles[1], node_quantiles[2],
                   node_val_rate]
 
     weights_min = np.min(weights)
@@ -311,20 +311,16 @@ def get_graph_stats(node_degrees, weights=0):
     weights_q2 = weights_quantiles[1]
     weights_q3 = weights_quantiles[2]
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
-                     weights_quantiles]
-
-
-    print(len(weights_quantiles))
-    # .25, .5 .75 quantile
-
-    print([type(w) for w in weights_stats])
+                     weights_quantiles[0], weights_quantiles[1], weights_quantiles[2]]
 
     # class 'numpy.int64'>, < class 'numpy.int64' >, < class 'numpy.ndarray' >, < class 'numpy.float64' >, < class 'numpy.float64' >, < class 'int' >, < class 'numpy.float64' >, < class 'numpy.ma.core.MaskedArray' >]
 
+    print([type(w) for w in weights_stats])
 
-    deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_quantiles", "node_val_rate"]
+    deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_q1", "node_q2", "node_q3", "node_val_rate"]
+
     weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros", "weights_entropy",
-                     "weights_quantiles"]
+                     "weights_q1", "weights_q2", "weights_q3"]
 
 
 
