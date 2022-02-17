@@ -38,6 +38,8 @@ class SATInstance:
         if self.v == 0 or self.c == 0:
             self.solved = True
             return
+        else:
+            self.solved = False
 
         # computed with active features
         # These change as they are processed with dpll probing algorithms
