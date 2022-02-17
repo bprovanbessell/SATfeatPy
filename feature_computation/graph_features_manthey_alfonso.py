@@ -11,8 +11,6 @@ def create_vcg(clauses):
     and an edge between them whenever a variable occurs in a clause
 
     :param clauses:
-    :param c:
-    :param v:
     :return: Variable node degrees and clause node degrees
     """
     vcgpos = nx.Graph()
@@ -275,7 +273,13 @@ def get_degrees_weights(G):
     return node_degrees, weights
 
 
-def get_graph_stats(node_degrees=0, weights=0):
+def get_graph_stats(node_degrees, weights=0):
+
+    if not node_degrees:
+        node_degrees = 0
+    if not weights:
+        weights = 0
+
     node_min = np.min(node_degrees)
     node_max = np.max(node_degrees)
     node_mode = stats.mode(node_degrees)[0]
