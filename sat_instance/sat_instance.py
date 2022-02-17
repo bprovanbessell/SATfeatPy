@@ -1,4 +1,5 @@
-from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing, graph_features_ansotegui, more_graph_features
+from feature_computation import preprocessing, parse_cnf, active_features, base_features, local_search_probing, \
+    graph_features_ansotegui, graph_features_manthey_alfonso
 from feature_computation.dpll import DPLLProbing
 from sat_instance import write_to_file
 
@@ -123,7 +124,8 @@ class SATInstance:
         if self.verbose:
             print("Generating features from Ansotegui")
 
-        alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses, self.num_active_vars)
+        alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses,
+                                                                  self.num_active_vars)
 
         vig = graph_features_ansotegui.create_vig(self.clauses, self.num_active_clauses, self.num_active_vars)
         cvig = graph_features_ansotegui.create_cvig(self.clauses, self.num_active_clauses, self.num_active_vars)
@@ -144,12 +146,5 @@ class SATInstance:
 
         self.features_dict.update(ansotegui_features)
 
-    def gen_alfonso_features(self):
-        max_clause_size = 5
-
-        more_graph_features.recursive_weight_heuristic(max_clause_size, self.clauses, self.num_active_vars)
-
     def write_results(self):
         write_to_file.write_features_to_json(self.features_dict)
-
-
