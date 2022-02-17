@@ -11,7 +11,7 @@ class SATInstance:
 
     """
 
-    def __init__(self, input_cnf, preprocess=True, verbose=False):
+    def __init__(self, input_cnf, preprocess=True, verbose=False, preprocess_tmp=True):
         self.verbose = verbose
 
         self.path_to_cnf = input_cnf
@@ -22,7 +22,11 @@ class SATInstance:
         if preprocess:
             if self.verbose:
                 print("Preprocessing with SatELite")
-            preprocessed_path = preprocessing.satelite_preprocess(self.path_to_cnf)
+
+            if preprocess_tmp:
+                preprocessed_path = preprocessing.satelite_preprocess_tmp(self.path_to_cnf)
+            else:
+                preprocessed_path = preprocessing.satelite_preprocess(self.path_to_cnf)
             self.path_to_cnf = preprocessed_path
 
         # parse the cnf file
