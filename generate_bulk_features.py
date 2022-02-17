@@ -24,8 +24,8 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
         writer.writeheader()
 
         for i, file_name in enumerate(file_list):
-            print(file_name)
-            print("File ", i, "of ", len(file_list))
+            # print(file_name)
+            print(i / len(file_list) * 100, " percent complete", end="\r")
             sat_inst = SATInstance(file_name, preprocess=False)
 
             sat_inst.gen_basic_features()
