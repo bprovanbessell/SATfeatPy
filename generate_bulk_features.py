@@ -72,7 +72,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'exo_weights_zeros', 'exo_weights_entropy', 'exo_weights_q1', 'exo_weights_q2', 'exo_weights_q3',
      'exo_weights_val_rate', 'rwh_0_mean', 'rwh_0_coeff', 'rwh_0_min', 'rwh_0_max', 'rwh_1_mean', 'rwh_1_coeff',
      'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max']
-    
+
     with open(results_csv, 'w') as f:
         writer = csv.DictWriter(f, fieldnames=dict_keys)
         writer.writeheader()
@@ -80,7 +80,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
         for i, file_name in enumerate(file_list):
             # print(file_name)
             print(i / len(file_list) * 100, " percent complete", end="\r")
-            sat_inst = SATInstance(file_name, preprocess=False)
+            sat_inst = SATInstance(file_name, preprocess=True)
 
             sat_inst.gen_basic_features()
             sat_inst.gen_dpll_probing_features()
