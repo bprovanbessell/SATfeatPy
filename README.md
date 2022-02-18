@@ -40,5 +40,9 @@ TODO: add command line specification for file, different groups of features.
 The sat_instance class contains all methods necessary to generate the variety of features.
 
 **Important references**
-- Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT". Journal of Artificial Intelligence Research (2008): 565-606.
-- Ansotegui, Giraldez-Cru, et al. "Structure features for SAT instances classification". Journal of Applied Logic (2017): 23:27–39.
+[1] Lin Xu, Frank Hutter, Holger H Hoos, and Kevin Leyton-Brown. Satzilla: portfolio-based algorithm selection for sat. 
+Journal of artificial intelligence research, 32:565–606, 2008  
+[2] Carlos Ansótegui, Maria Luisa Bonet, Jesús Giráldez-Cru, and Jordi Levy. Structure features 
+for sat instances classification. Journal of Applied Logic, 23:27–39, 2017  
+[3] Enrique Matos Alfonso and Norbert Manthey. New cnf features and formula classification. In
+POS@ SAT, pages 57–71, 2014

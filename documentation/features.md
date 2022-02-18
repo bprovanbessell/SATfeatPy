@@ -1,6 +1,7 @@
 #Feature extraction implementation
 This file documents the features that can be extracted by this software, and gives a brief explanation of each feature.
 
+N.B. numbers refer to the feature number within [1].
 ### Size features
 1. Number of clauses: denoted c
 2. Number of variables: denoted v
@@ -70,6 +71,8 @@ Fractal dimensions of VIC and CVIG - computed by interpolating log N(r) vs log r
 N(r) is the estimate of the minimum number of circles with radius r that cover the graph.
 Estimated using the Burning by node degree algorithm.
 
+Please refer to [2] for a more theoretical description of the features.
+
 See [GraphFeatSat](https://www.ugr.es/~jgiraldez/) and [code](https://www.ugr.es/~jgiraldez/download/graph_features_sat_v_2_2.tar.gz) for original implementation.
 
 ###Extra Notes on aggregation and statistical references
@@ -100,10 +103,12 @@ Binary Implication graph
 Simple graph of a formula, contains all literals as vertices (V = lits(F)), all edges in the graph correspond to the
 binary clauses in the current formula E = {(a, b), (not b, not a) | {not a, b} elem F}. Sequence with the degree of each node is used.
 
-Sequences from said graphs are taken and stats calculated (very similiar to SATzilla)
+Sequences from said graphs are taken and stats calculated, with additional statistics such as quantiles, 0 weight occurrences and the number times in which the modal value occurs.
 
 Naive encoded Constraints
 Add undirected AND gates, Blocked AND gates, and Exactly One AND gates (psuedocode in paper)
+
+Please refer to [3] for a more detailed and theoretical description of the features.
 
 ## Basic notes on SAT problems
 Positive/negative literal is a respective instance of a variable.
