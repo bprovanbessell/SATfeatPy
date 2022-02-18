@@ -108,6 +108,10 @@ Sequences from said graphs are taken and stats calculated, with additional stati
 Naive encoded Constraints
 Add undirected AND gates, Blocked AND gates, and Exactly One AND gates (psuedocode in paper)
 
+Recursive Weight Heuristic
+The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
+This is computed for 3 iterations.
+
 Please refer to [3] for a more detailed and theoretical description of the features.
 
 ## Basic notes on SAT problems

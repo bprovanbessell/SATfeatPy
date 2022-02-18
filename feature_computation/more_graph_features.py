@@ -225,6 +225,8 @@ def return_degrees_weights(G):
 
 def recursive_weight_heuristic(max_clause_size, clauses, v):
 
+    # Code translated from RISS... I am sure there are some errors in the original code, which have been translated to this python implementation
+
     assert(max_clause_size > 0)
 
     feat_dict = {}
@@ -265,7 +267,15 @@ def recursive_weight_heuristic(max_clause_size, clauses, v):
             else:
                 exponent = max_clause_size - clause_len
 
-            clause_constant = math.pow(gamma, exponent) / math.pow(muh, clause_len - 1)
+            try:
+                a1 = math.pow(gamma, exponent)
+            except OverflowError:
+                a1 = float("inf")
+            try:
+                a2 = math.pow(muh, clause_len - 1)
+            except OverflowError:
+                a2 = float("inf")
+            clause_constant = a1 / a2
 
             found_zero = False
             clause_value = 1
