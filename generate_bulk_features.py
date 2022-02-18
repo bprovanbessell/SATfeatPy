@@ -73,9 +73,9 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'exo_weights_min', 'exo_weights_max', 'exo_weights_mode', 'exo_weights_mean', 'exo_weights_std',
      'exo_weights_zeros', 'exo_weights_entropy', 'exo_weights_q1', 'exo_weights_q2', 'exo_weights_q3',
      'exo_weights_val_rate', 'rwh_0_mean', 'rwh_0_coeff', 'rwh_0_min', 'rwh_0_max', 'rwh_1_mean', 'rwh_1_coeff',
-     'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max', "file_name"]
+     'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max',
+                 "file_name", "satzilla_base_t", "satzilla_probe_t", "ansotegui_t", "alfonso_t"]
 
-    times = []
     with open(results_csv, 'w') as f:
         writer = csv.DictWriter(f, fieldnames=dict_keys)
         writer.writeheader()
@@ -100,11 +100,13 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
             t5 = time.time()
 
             sat_inst.features_dict["file_name"] = file_name
+            sat_inst.features_dict["satzilla_base_t"] = (t2 - t1)
+            sat_inst.features_dict["satzilla_probe_t"] = (t3 - t2)
+            sat_inst.features_dict["ansotegui_t"] = (t4 - t3)
+            sat_inst.features_dict["alfonso_t"] = (t5 - t4)
             writer.writerow(sat_inst.features_dict)
 
-            times.append((t2 - t1, t3 - t2, t4 -t3, t5-t4))
     f.close()
-    print(times)
 
 
 if __name__ == "__main__":
