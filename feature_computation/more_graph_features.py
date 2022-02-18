@@ -1,57 +1,7 @@
+import math
+from feature_computation import array_stats
 import networkx as nx
-import numpy as np
-from scipy import stats
-
-
-def create_vcg(clauses):
-    """
-    Create VCG
-    Variable-Clause Graph features
-    A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause,
-    and an edge between them whenever a variable occurs in a clause
-
-    :param clauses:
-    :return: Variable node degrees and clause node degrees
-    """
-    vcgpos = nx.Graph()
-    vcgneg = nx.Graph()
-
-    # Node for each variable
-    # node for each clause
-
-    for i, clause in enumerate(clauses):
-        c_node = "c_" + str(i)
-
-        for literal in clause:
-            if literal > 0:
-                v_node = "v_" + str(literal)
-                vcgpos.add_edge(c_node, v_node)
-            elif literal < 0:
-                v_node = "v_" + str(literal)
-                vcgneg.add_edge(c_node, v_node)
-
-    v_node_degrees_pos = []
-    v_node_degrees_neg = []
-    c_node_degrees_pos = []
-    c_node_degrees_neg = []
-
-    # get node statistics
-    for i in vcgpos.nodes():
-        if 'c' in i:
-            degree = len(nx.edges(vcgpos, i))
-            c_node_degrees_pos.append(degree)
-        elif 'v' in i:
-            degree = len(nx.edges(vcgpos, i))
-            v_node_degrees_pos.append(degree)
-    for i in vcgneg.nodes():
-        if 'c' in i:
-            degree = len(nx.edges(vcgneg, i))
-            c_node_degrees_neg.append(degree)
-        elif 'v' in i:
-            degree = len(nx.edges(vcgneg, i))
-            v_node_degrees_neg.append(degree)
-
-    return v_node_degrees_pos, v_node_degrees_neg, c_node_degrees_pos, c_node_degrees_neg
+import scipy.stats
 
 
 def create_vg(clauses):
@@ -121,7 +71,7 @@ def create_cg(clauses):
             weights.append(weight[2])
         node_degrees.append(degree)
 
-    return node_degrees, weights
+    return cg, node_degrees, weights
 
 
 def create_rg(clauses):
@@ -204,13 +154,6 @@ def neighbors_nodes(l, clauses):
 
 
 def create_exo_and_band(clauses):
-    """
-        Full-AND, Blocked-AND and Exactly One Constraint Graphs
-
-        :param clauses:
-        :return: The degree of each node in the variable graph and the weight of each edge
-    """
-
     andg = nx.Graph()
     bandg = nx.Graph()
     exog = nx.Graph()
@@ -234,8 +177,7 @@ def create_exo_and_band(clauses):
                 rem_clause = clause[:]
                 rem_clause.remove(l0)
                 for l1 in rem_clause:
-                    nodel1neg = 'v_' + str(-l1)
-                    if nodel1neg not in neighbors_nodes(l0, clauses):
+                    if l1 not in neighbors_nodes(l0, clauses):
                         exo = False
                         break
                     k += 1
@@ -267,7 +209,8 @@ def create_exo_and_band(clauses):
     return andg, bandg, exog
 
 
-def get_degrees_weights(G):
+def return_degrees_weights(G):
+
     node_degrees = []
     weights = []
 
@@ -280,47 +223,121 @@ def get_degrees_weights(G):
     return node_degrees, weights
 
 
-def get_graph_stats(name, node_degrees, weights=0):
+def recursive_weight_heuristic(max_clause_size, clauses, v):
 
-    if not node_degrees:
-        node_degrees = [0]
-    if not weights:
-        weights = [0]
+    assert(max_clause_size > 0)
 
-    node_min = np.min(node_degrees)
-    node_max = np.max(node_degrees)
-    node_mode = stats.mode(node_degrees)[0][0]
-    node_mean = np.mean(node_degrees)
-    node_std = np.std(node_degrees)
-    node_zeros = np.count_nonzero(node_degrees == 0)
-    node_entropy = stats.entropy(node_degrees)
-    node_quantiles = stats.mstats.mquantiles(node_degrees)
-    node_val_rate = np.count_nonzero(node_degrees == node_mode) / len(node_degrees)
-    node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles[0], node_quantiles[1], node_quantiles[2], node_val_rate]
+    feat_dict = {}
 
-    weights_min = np.min(weights)
-    weights_max = np.max(weights)
-    weights_mode = stats.mode(weights)[0][0]
-    weights_mean = np.mean(weights)
-    weights_std = np.std(weights)
-    weights_zeros = np.count_nonzero(weights == 0)
-    weights_entropy = stats.entropy(weights)
-    weights_quantiles = stats.mstats.mquantiles(weights)
-    weights_val_rate = np.count_nonzero(weights == weights_mode) / len(weights)
-    weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
-                     weights_quantiles[0], weights_quantiles[1], weights_quantiles[2], weights_val_rate]
+    # current value for each literal
+    # Might want to add +1 so we can use the literals as indices...
+    this_data_pos = [0] * (v+1)
+    this_data_neg = [0] * (v + 1)
 
-    # class 'numpy.int64'>, < class 'numpy.int64' >, < class 'numpy.ndarray' >, < class 'numpy.float64' >, < class 'numpy.float64' >, < class 'int' >, < class 'numpy.float64' >, < class 'numpy.ma.core.MaskedArray' >]
+    this_data = [this_data_pos, this_data_neg]
+    last_data_pos = [1] * (v + 1)
+    last_data_neg = [1] * (v + 1)
 
-    deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_q1", "node_q2", "node_q3", "node_val_rate"]
+    last_data = [last_data_pos, last_data_neg]
 
-    weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros", "weights_entropy",
-                     "weights_q1", "weights_q2", "weights_q3", "weights_val_rate"]
+    muh = 1
+    gamma = 5
+    max_double = 10e200
 
-    deg_names = [name + x for x in deg_names]
-    weights_names = [name + x for x in weights_names]
+    all_sequences = []
 
-    stats_dict = dict(zip(deg_names, node_stats))
-    stats_dict.update(dict(zip(weights_names, weights_stats)))
+    # for 3 interations
+    for iteration in range(1, (3+1)):
 
-    return stats_dict
+        iteration_steps = 0
+        this_iteration_sequence = []
+
+        # how likely the remaining clauses will be falsified by the model
+        for i in range(len(clauses)):
+
+            clause = clauses[i]
+            clause_len = len(clause)
+
+            if (clause_len == 1): continue
+
+            if max_clause_size < clause_len:
+                exponent = 0
+            else:
+                exponent = max_clause_size - clause_len
+
+            clause_constant = math.pow(gamma, exponent) / math.pow(muh, clause_len - 1)
+
+            found_zero = False
+            clause_value = 1
+            # calculate the constant for the clause
+            for j in range(clause_len):
+                curr_lit = clause[j]
+
+                if curr_lit < 0:
+                    comp_ind = 0
+                else:
+                    comp_ind = 1
+
+                # tilde is complement
+                if last_data[comp_ind][curr_lit] == 0:
+                    found_zero = True
+                    break
+
+                clause_value = clause_value * last_data[comp_ind][curr_lit]
+                iteration_steps += 1
+
+            if not found_zero:
+                # only if there is no non-zero literal inside, add the values
+                clause_value = clause_value * clause_constant
+
+                # for each literal, divide the clause value by the  value for the corresponding complement to fit the calculation formula
+                for j in range(clause_len):
+                    curr_lit = clause[j]
+
+                    if curr_lit < 0:
+                        comp_ind = 0
+                    else:
+                        comp_ind = 1
+
+                    this_data[comp_ind][curr_lit] += clause_value / last_data[comp_ind][curr_lit]
+
+        # sequence for iteration i
+        muh = 0
+        for num_v in range(1, v+1):
+            for p in range(2):
+
+                # basically for positive and negative literals
+                val = this_data[p][v]
+                if val > max_double:
+                    this_iteration_sequence.append(max_double)
+                else:
+                    this_iteration_sequence.append(val)
+
+                muh += val
+
+            iteration_steps += 1
+
+        muh = muh / 2 * v
+
+        if muh < 1: muh = 1
+
+        last_data = this_data
+        this_data_pos = [0] * (v + 1)
+        this_data_neg = [0] * (v + 1)
+
+        this_data = [this_data_pos, this_data_neg]
+
+        all_sequences.append(this_iteration_sequence)
+
+    for i, s in enumerate(all_sequences):
+        write_stats(s, "rwh_" + str(i), feat_dict)
+
+    return feat_dict
+
+def write_stats(l, name, features_dict):
+    l_mean, l_coeff, l_min, l_max = array_stats.get_stats(l)
+
+    features_dict[name + "_mean"] = l_mean
+    features_dict[name + "_coeff"] = l_coeff
+    features_dict[name + "_min"] = l_min
+    features_dict[name + "_max"] = l_max
