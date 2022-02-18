@@ -153,6 +153,9 @@ class DPLLProbing:
         orig_num_active_vars = self.sat_instance.num_active_vars
         reached_bottom = False
 
+        sw = Stopwatch()
+        sw.start()
+
         for probe_num in range(self.num_probes):
             # sets depth to 1, 4, 16, 64, 256
 
@@ -164,7 +167,7 @@ class DPLLProbing:
             if self.verbose:
                 print("searching depth: ", next_probe_depth)
             # the actual searching
-            while current_depth < next_probe_depth and not reached_bottom:
+            while current_depth < next_probe_depth and not reached_bottom and sw.lap() < self.time_limit:
                 # print("c depth", current_depth)
 
                 vars_in_most_bin_clauses = [0] * self.num_vars_to_try

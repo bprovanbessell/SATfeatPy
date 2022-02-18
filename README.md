@@ -16,6 +16,7 @@ python features.py path/to/cnf_file.cnf
 N.b. current implementation reliant on SatELite binaries, which only work on linux systems.
 
 **Dependencies**
+- Python 3.8
 - NetworkX:  ```pip install networkx```
 - community ```pip install python-louvain```
 - powerlaw ```pip install powerlaw```
@@ -24,6 +25,19 @@ N.b. current implementation reliant on SatELite binaries, which only work on lin
 
 A binary for ubcsat is included in the ubcsat folder, however you may have to compile and add this yourself for full functionality.
 Please clone and compile [ubcsat](https://github.com/dtompkins/ubcsat/tree/beta), and put the resulting binary in the ubcsat folder, if the current binary does not work. We found the beta branch to be stable.
+
+## How to use this package
+Download dependencies
+Clone this repository within your project.
+You can call the feature generation from the command line by invoking the generate features python file
+```python generate_features.py```
+You can specify the features to generate from within this file or via command line 
+TODO: add command line specification for file, different groups of features.
+
+- From command line:
+
+- Within python applications:
+The sat_instance class contains all methods necessary to generate the variety of features.
 
 **Important references**
 - Xu, Lin, et al. "SATzilla: portfolio-based algorithm selection for SAT". Journal of Artificial Intelligence Research (2008): 565-606.
