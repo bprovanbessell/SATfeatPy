@@ -1,7 +1,13 @@
 #Feature extraction implementation
 This file documents the features that can be extracted by this software, and gives a brief explanation of each feature.
 
-N.B. numbers refer to the feature number within [1].
+N.B. The CNF first undergoes pre-processing by SATELite, a preprocessor provided by MiniSAT. Implementation of different,
+and more up to date pre-processing algorithms is planned, and suggestions are welcome. It is also possible to perform the
+feature extraction on non pre-processed CNF, although many SATzilla features make assumptions based on conditions that 
+the preprocessing ensures.
+
+
+Numbers refer to the feature number within [1].
 ### Size features
 1. Number of clauses: denoted c
 2. Number of variables: denoted v
@@ -52,22 +58,22 @@ The number of times a variable appears in all horn clauses.
 
 ### Features from Structure features for SAT instances classification (Ansotegui)
 4 structure features
-- d: fractal dimension for VIG (_vig_d_poly_)
-- d_b: fractal dimension for CVIG (_cvig_db_poly_)
 - alpha_v: powerlaw exponent (_variable_alpha_)
 - Q: modularity (for VIG) (_vig_modularity_)
+- - d: fractal dimension for VIG (_vig_d_poly_)
+- d_b: fractal dimension for CVIG (_cvig_db_poly_)
 
 A variable incidence graph (VIG): Set of vertexes is the set of boolean variables - weights assigned to edges as follows
 W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the clause I am assuming)
 
-Clause variable incidence graph (CVIG): set of vertexes is set of variables and clauses, weight function:
+Clause variable incidence graph (CVIG): Set of vertexes is set of variables and clauses, weight function:
 w(x, c) = 1/|c| if x elem c
 0 otherwise.
 (signs of literals not considered)
 
-Scale free structure - power law distribution. Estimation computed by method of Maximum likelihood
-Modularity(Q) of VIG (louvain method) of the best partition.
-Fractal dimensions of VIC and CVIG - computed by interpolating log N(r) vs log r, as N(r) ~ r^-d.
+- Scale free structure  - power law distribution. Estimation computed by method of Maximum likelihood
+- Modularity(Q) of VIG (louvain method) of the best partition.
+- Fractal dimensions of VIG and CVIG - computed by interpolating log N(r) vs log r, as N(r) ~ r^-d.
 N(r) is the estimate of the minimum number of circles with radius r that cover the graph.
 Estimated using the Burning by node degree algorithm.
 
@@ -82,35 +88,22 @@ The coefficient of variation represents the ratio of the standard deviation to t
 made, from which the entropy is calculated
 
 ### Features from New CNF Features and Formula Classification (Alfonso)
-- Three new features
 Features
-- Bunch of new graphs with weights
-- Binary Implication graph
-- Naive encoded restraints
-- Recursive weight heuristic
-
-New graphs
-- CV (clause variable) CV+ and CV- (for positive and negative literals) (degrees)
-- Variable graph (now with weights 2^-k) (without considering polarity) (degrees, weights) 
-- Clause graph (weights the size of the intersection of the clauses) (degrees, weights)
-- Resolution graph (Connects clauses when they produce a non-tautological resolvant) (degrees, weights)
-(clauses as vertices, edge between clauses iff | C_i intersection (not C_j) | = 1) (there is one literal in clause i that also appears as negated in clause j),
-with weights 2 ^ -(|C_i union C_j| -2) (degrees, weights)
-
-For the literal graph (what graph exactly?), the sequence deg +- = max(deg_cv+(i), deg_cv-(i))/deg_cv+(i) + deg_cv-(i) (represents major polarity of each clause)
-
-Binary Implication graph
-Simple graph of a formula, contains all literals as vertices (V = lits(F)), all edges in the graph correspond to the
+- 8 graphs with weights
+  - Clause Variable (for positive variables, and negative variables, otherwise the same as previously described)
+  - Variable graph (Does not consider polarity of literals, and with weights as the number of common clauses)
+  - Clause graph (Same as previously described, with weights the size of the intersection of clauses)
+  - Resolution graph (Connects clauses when they produce a non-tautological resolvant, weights as 2^-(|C_i union C_j| - 2))
+  - Binary Implication graph (BIG) (Edges correspond to the binary clauses in the current formula, and if the 
+corresponding variable is implicated by the variables in that clause) (clauses as vertices, edge between clauses iff 
+| C_i intersection (not C_j) | = 1) (there is one literal in clause i that also appears as negated in clause j),
+with weights 2 ^ -(|C_i union C_j| -2) (degrees, weights). All edges in the graph correspond to the
 binary clauses in the current formula E = {(a, b), (not b, not a) | {not a, b} elem F}. Sequence with the degree of each node is used.
-
-Sequences from said graphs are taken and stats calculated, with additional statistics such as quantiles, 0 weight occurrences and the number times in which the modal value occurs.
-
-Naive encoded Constraints
-Add undirected AND gates, Blocked AND gates, and Exactly One AND gates (psuedocode in paper)
-
-Recursive Weight Heuristic
-The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
+  - AND, BAND, EXO graph (These naive encoded restraints create 3 graphs, extracted from the BIG)
+- Recursive weight heuristic. The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
 This is computed for 3 iterations.
+
+Sequences from graphs are the weights of edges and degrees ofnodes. Statistics from these are calculated (Similiar as to SATzilla, with additional statistics such as quantiles, 0 weight occurrences and the number times in which the modal value occurs.
 
 Please refer to [3] for a more detailed and theoretical description of the features.
 
@@ -118,5 +111,3 @@ Please refer to [3] for a more detailed and theoretical description of the featu
 Positive/negative literal is a respective instance of a variable.
 Clause is a disjunction of literal(s)
 CNF (Conjunctive Normal Form): Conjunction (and) of disjunction (or) of literals.
-
-- cnfgen - for creating part of the testbed
