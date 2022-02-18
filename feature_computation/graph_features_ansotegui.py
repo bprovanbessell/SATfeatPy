@@ -40,6 +40,13 @@ We can find this maximum partition with the community package (uses louvain meth
 
 
 def estimate_power_law_alpha(clauses, c, v):
+    """
+    Estimates the power law alpha (Code adapted from Ansotegui implementation)
+    :param clauses:
+    :param c:
+    :param v:
+    :return: best fit estimated alpha
+    """
     X, Y, Sylogx, Syx = variable_occurrences(clauses, c, v)
     alpha = most_likely(X, Y, Sylogx, Syx)
 
@@ -47,6 +54,13 @@ def estimate_power_law_alpha(clauses, c, v):
 
 
 def variable_occurrences(clauses, c, v):
+    """
+    Computes the number of occurrences of each variable, and extra values based on these occurrences needed to estimate the power law fit
+    :param clauses:
+    :param c:
+    :param v:
+    :return:
+    """
     # variable count is needed
     # index of the variable will contain the number of times it occurs in the cnf formula (in all clauses)
     variable_count = [0] * (v + 1)
@@ -85,6 +99,16 @@ def variable_occurrences(clauses, c, v):
 
 
 def most_likely(X, Y, sylogx, syx, maxxmin=10, verbose=False):
+    """
+    Fits the data to a powerlaw
+    :param X:
+    :param Y:
+    :param sylogx:
+    :param syx:
+    :param maxxmin:
+    :param verbose:
+    :return: The best alpha
+    """
 
     best_alpha = 0
     best_x_min_a = 0
@@ -190,6 +214,11 @@ def pow_law_c(x, xmin, alpha):
 
 
 def estimate_power_law_alpha_lib(data):
+    """
+    Uses the powerlaw package to fit data, however this does not take into account missing data
+    :param data:
+    :return:
+    """
     # Assuming that this function follows a power-law distribution (f_v(k) roughly = ck^-a_v),
     # we can estimate the exponent a_v of the power law distribution that bes fits this collection of points.
     # Use maximum likelihood estimator
@@ -280,6 +309,11 @@ def create_vig(clauses, c, v):
 
 
 def compute_modularity_q(graph):
+    """
+    Compute the modularity of the best partition (as estimated by the louvain method, using the python-louvain package
+    :param graph:
+    :return: The modularit of the graph
+    """
     # get the best partition
     partition = community_louvain.best_partition(graph)
 
@@ -290,6 +324,12 @@ def compute_modularity_q(graph):
 
 
 def burning_by_node_degree(graph, n: int):
+    """
+    Burning by node degree algorithm, adapted from paper pseudocode and implementation
+    :param graph:
+    :param n:
+    :return: N(r) estimated number of circles needed to cover the graph for each circle radius r
+    """
     # order nodes according to their degree such that degree(vi) >= degree(vj) when i < j
 
     # n is number of nodes
@@ -335,6 +375,12 @@ def burning_by_node_degree(graph, n: int):
 
 
 def highest_degree_unburned_node(node_degrees, burned):
+    """
+    Get the node with the highest degree that is still unburned
+    :param node_degrees:
+    :param burned:
+    :return:
+    """
     # nodes are pre sorted in terms of their degree, does not change
     for (node, degree) in node_degrees:
         if not burned[node]:
@@ -342,6 +388,13 @@ def highest_degree_unburned_node(node_degrees, burned):
 
 
 def circle(centre, radius, graph):
+    """
+    Get the nodes within the circle with centre and radius
+    :param centre:
+    :param radius:
+    :param graph:
+    :return:
+    """
     # circle with centre c and radius i
     # centre is a node
     # A circle of centre c and radius r is a subset of nodes of G
@@ -353,6 +406,11 @@ def circle(centre, radius, graph):
 
 
 def linear_regression_fit(data):
+    """
+    Fit data with a linear regression and interpolation, adapted from code for ansotegui
+    :param data:
+    :return:
+    """
     data = [x for x in data if x>0]
     # trim data to have no leading or trailing 0s
 
@@ -370,6 +428,12 @@ def linear_regression_fit(data):
 
 
 def regression(X, Y):
+    """
+    Perform the regression
+    :param X:
+    :param Y:
+    :return:
+    """
     # given list of points, computes the alpha abd beta of a regression, translated from paper
     Sx = sum(X)
     Sy = sum(Y)

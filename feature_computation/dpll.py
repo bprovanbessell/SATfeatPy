@@ -28,6 +28,8 @@ class DPLLProbing:
 
     Then satisfy the consistent clauses (clauses that contain that literal)
 
+    Code adapted from SATzilla implementation
+
     """
 
     def __init__(self, sat_instance):
@@ -56,6 +58,13 @@ class DPLLProbing:
 # this should change as the propagation happens
 
     def search_space_probe(self, halt_on_assignment=False):
+        """
+        Randomly choose a variable, propagate, and see how deep you get. This generates the mean depth to contradiction
+        and an estimate on the number of nodes.
+        Timeout of 2 seconds (can be changed, more runs means a more accurate result, as the algorithm is stochastic)
+        :param halt_on_assignment:
+        :return:
+        """
         # lobjois probe in satzilla
         if self.verbose:
             print("search space estimate probe")
@@ -272,7 +281,7 @@ class DPLLProbing:
 
     def set_var_and_prop(self, var, value):
         """
-
+        Sets the variable to the value, and then propagates the assignment
         :param var: integer, the variable
         :param value: boolean, value that the variable should get set to
         :return:
@@ -281,8 +290,6 @@ class DPLLProbing:
         num_clauses_reduced = 0
         num_vars_reduced = 1
 
-        # print("Variable to set:", var, self.feats.var_states[var])
-        # print("active vars", self.feats.num_active_vars)
         # can only set an unassigned variable to a value
         assert self.sat_instance.var_states[var] == VarState.UNASSIGNED
 
@@ -298,16 +305,10 @@ class DPLLProbing:
         self.sat_instance.num_active_vars -= 1
 
         consistent, num_clauses_reduced, num_vars_reduced = self.reduce_clauses(literal, num_clauses_reduced, num_vars_reduced)
-        # print("reduce c, v, con", num_clauses_reduced, num_vars_reduced, consistent)
 
         if consistent:
             consistent, num_clauses_reduced, num_vars_reduced = self.unit_prop(num_clauses_reduced, num_vars_reduced)
-        # print("num clauses reduced", num_clauses_reduced)
-        # print("num clauses reduced", num_clauses_reduced)
 
-        # print("consistent 1: ", consistent)
-        # differing here... check unit prop
-        # print("clauses reduced, vars_reduced", num_clauses_reduced, num_vars_reduced)
         # stack to hold the number that have been reduced, used in backtracking
         self.num_reduced_clauses.append(num_clauses_reduced)
         self.num_reduced_vars.append(num_vars_reduced)
@@ -315,16 +316,19 @@ class DPLLProbing:
         return consistent
 
     def reduce_clauses(self, orig_literal, num_clauses_reduced, num_vars_reduced):
+        """
+        Reduce clauses
+        :param orig_literal:
+        :param num_clauses_reduced:
+        :param num_vars_reduced:
+        :return:
+        """
         # we are trying to assign this literal value to true (in all clauses that contain it)
-
         # "remove" vars from inconsistent clauses
-
         # check which clauses contain the negative of this literal, and remove that negative literal from them
-        # clauses_with_literal = self.feats.clauses_with_literal(-literal)
-        # print(self.feats.clauses_with_literal(-orig_literal))
+
         for clause_num in self.sat_instance.clauses_with_literal(-orig_literal):
             # iterate through all of the clauses that contain this literal
-            # clause_num = self.feats.clauses_with_literal(-literal)[i]
             # if it is active
             if self.sat_instance.clause_states[clause_num] == ClauseState.ACTIVE:
                 self.reduced_clauses.append(clause_num)
@@ -370,10 +374,6 @@ class DPLLProbing:
                 self.reduced_clauses.append(clause_num)
                 self.sat_instance.num_active_clauses -= 1
 
-                # Seems to be iterating through the clause again
-                # j=0
-                # int otherVarInClause = ABS(clauses[clause][j]);
-                # while other_var_in_clause != 0:
                 for j in range(len(self.sat_instance.clauses[clause_num])):
                     curr_var = abs(self.sat_instance.clauses[clause_num][j])
                     self.sat_instance.num_active_clauses_with_var[curr_var] -= 1

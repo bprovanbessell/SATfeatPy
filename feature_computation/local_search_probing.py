@@ -2,6 +2,13 @@ import os
 
 
 def local_search_probe(cnf_file, saps=True, gsat=True):
+    """
+    Perform the local search probing with SAPS and GSAT algorithms, via ubcsat.
+    :param cnf_file:
+    :param saps:
+    :param gsat:
+    :return:
+    """
     # should be run from project root directory
 
     # Run from ubcsat directory
@@ -70,11 +77,15 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         os.system(command)
         gsat_res_dict = read_ubcsat_results(False)
 
-
     return saps_res_dict, gsat_res_dict
 
 
 def read_ubcsat_results(saps):
+    """
+    Read the results of the ubcsat saps or gsat runs, and put them into a dictionary
+    :param saps:
+    :return:
+    """
     if saps:
         prefix = "saps_"
     else:
@@ -89,10 +100,3 @@ def read_ubcsat_results(saps):
                 res_dict[prefix + res[0]] = float(res[1])
 
     return res_dict
-
-
-
-
-
-
-# local_search_probe()
