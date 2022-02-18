@@ -73,7 +73,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'exo_weights_min', 'exo_weights_max', 'exo_weights_mode', 'exo_weights_mean', 'exo_weights_std',
      'exo_weights_zeros', 'exo_weights_entropy', 'exo_weights_q1', 'exo_weights_q2', 'exo_weights_q3',
      'exo_weights_val_rate', 'rwh_0_mean', 'rwh_0_coeff', 'rwh_0_min', 'rwh_0_max', 'rwh_1_mean', 'rwh_1_coeff',
-     'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max']
+     'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max', "file_name"]
 
     times = []
     with open(results_csv, 'w') as f:
@@ -82,7 +82,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
 
         for i, file_name in enumerate(file_list):
             # print(file_name)
-            print(i / len(file_list) * 100, " percent complete", end="\r")
+            print("file ", i, " out of ", len(file_list))
             sat_inst = SATInstance(file_name, preprocess=True)
             if sat_inst.solved:
                 continue
@@ -98,6 +98,8 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
             t4 = time.time()
             sat_inst.gen_manthey_alfonso_graph_features()
             t5 = time.time()
+
+            sat_inst.features_dict["file_name"] = file_name
             writer.writerow(sat_inst.features_dict)
 
             times.append((t2 - t1, t3 - t2, t4 -t3, t5-t4))
