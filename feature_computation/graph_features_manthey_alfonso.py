@@ -262,7 +262,7 @@ def create_exo_and_band(clauses):
                     rem_clause = clause[:]
                     rem_clause.remove(l0)
                     for l1 in rem_clause:
-                        exog.add_edge('v_' + str(l1), 'v_' + str(l0), weights=1)
+                        exog.add_edge('v_' + str(l1), 'v_' + str(l0), weight=1)
 
     return andg, bandg, exog
 
