@@ -22,8 +22,6 @@ if __name__ == "__main__":
 
     satinstance.gen_basic_features()
 
-    # satinstance.gen_alfonso_features()
-
     satinstance.gen_dpll_probing_features()
 
     # N.b. ubcsat binary currently only runs on linux
@@ -34,6 +32,5 @@ if __name__ == "__main__":
     satinstance.gen_manthey_alfonso_graph_features()
 
     print(satinstance.features_dict)
-    print(satinstance.features_dict.keys())
 
-    satinstance.write_results()
+    # satinstance.write_results()
