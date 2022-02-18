@@ -283,9 +283,9 @@ def get_degrees_weights(G):
 def get_graph_stats(node_degrees, weights=0):
 
     if not node_degrees:
-        node_degrees = 0
+        node_degrees = [0]
     if not weights:
-        weights = 0
+        weights = [0]
 
     node_min = np.min(node_degrees)
     node_max = np.max(node_degrees)
@@ -295,7 +295,7 @@ def get_graph_stats(node_degrees, weights=0):
     node_zeros = np.count_nonzero(node_degrees == 0)
     node_entropy = stats.entropy(node_degrees)
     node_quantiles = stats.mstats.mquantiles(node_degrees)
-    node_val_rate = np.count_nonzero(node_degrees == node_mode ) / len(node_degrees)
+    node_val_rate = np.count_nonzero(node_degrees == node_mode) / len(node_degrees)
     node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles,
                   node_val_rate]
 
