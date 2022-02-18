@@ -310,8 +310,6 @@ def get_graph_stats(name, node_degrees, weights=0):
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
                      weights_quantiles[0], weights_quantiles[1], weights_quantiles[2], weights_val_rate]
 
-    # class 'numpy.int64'>, < class 'numpy.int64' >, < class 'numpy.ndarray' >, < class 'numpy.float64' >, < class 'numpy.float64' >, < class 'int' >, < class 'numpy.float64' >, < class 'numpy.ma.core.MaskedArray' >]
-
     deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_q1", "node_q2", "node_q3", "node_val_rate"]
 
     weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros", "weights_entropy",
