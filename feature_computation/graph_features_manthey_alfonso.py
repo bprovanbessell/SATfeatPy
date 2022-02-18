@@ -283,9 +283,9 @@ def get_degrees_weights(G):
 def get_graph_stats(name, node_degrees, weights=0):
 
     if not node_degrees:
-        node_degrees = 0
+        node_degrees = [0]
     if not weights:
-        weights = 0
+        weights = [0]
 
     node_min = np.min(node_degrees)
     node_max = np.max(node_degrees)
@@ -295,10 +295,7 @@ def get_graph_stats(name, node_degrees, weights=0):
     node_zeros = np.count_nonzero(node_degrees == 0)
     node_entropy = stats.entropy(node_degrees)
     node_quantiles = stats.mstats.mquantiles(node_degrees)
-    if node_degrees != 0:
-        node_val_rate = np.count_nonzero(node_degrees == node_mode ) / len(node_degrees)
-    else:
-        node_val_rate = 1
+    node_val_rate = np.count_nonzero(node_degrees == node_mode) / len(node_degrees)
     node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles[0], node_quantiles[1], node_quantiles[2], node_val_rate]
 
     weights_min = np.min(weights)
@@ -309,10 +306,7 @@ def get_graph_stats(name, node_degrees, weights=0):
     weights_zeros = np.count_nonzero(weights == 0)
     weights_entropy = stats.entropy(weights)
     weights_quantiles = stats.mstats.mquantiles(weights)
-    if weights != 0:
-        weights_val_rate = np.count_nonzero(weights == weights_mode) / len(weights)
-    else:
-        weights_val_rate = 1
+    weights_val_rate = np.count_nonzero(weights == weights_mode) / len(weights)
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
                      weights_quantiles[0], weights_quantiles[1], weights_quantiles[2], weights_val_rate]
 
