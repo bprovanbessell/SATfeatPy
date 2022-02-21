@@ -441,7 +441,11 @@ def regression(X, Y):
     Syy = sum([y*y for y in Y])
     Sxy = sum([x * y for (x, y) in zip(X, Y)])
 
-    alpha = (Sx * Sy - len(X) * Sxy)/(Sx * Sx - len(X) * Sxx)
-    beta = Sy / len(X) - alpha * Sx / len(X)
+    try:
+        alpha = (Sx * Sy - len(X) * Sxy)/(Sx * Sx - len(X) * Sxx)
+        beta = Sy / len(X) - alpha * Sx / len(X)
+    except ZeroDivisionError:
+        alpha = 1
+        beta = 1
 
     return alpha, beta
