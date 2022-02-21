@@ -1,4 +1,4 @@
-#Feature extraction implementation
+# Feature extraction implementation
 This file documents the features that can be extracted by this software, and gives a brief explanation of each feature.
 
 N.B. The CNF first undergoes pre-processing by SATELite, a preprocessor provided by MiniSAT. Implementation of different,
@@ -17,19 +17,19 @@ Numbers refer to the feature number within [1].
 *A variable-clause graph (VCG) is a bipartite graph with a node for each variable, a node for each clause, 
 and an edge between them whenever a variable occurs in a clause.*
 
-- Variable nodes degree statistics: mean, coefficient of variation, min, max and entropy. *vcg_var_~statistic~* (4-8. )
-- Clause nodes degree statistics: mean, coefficient of variation, min, max and entropy. *vcg_clause_~statistic~* (9-13. )
+- Variable nodes degree statistics: mean, coefficient of variation, min, max and entropy. *vcg_var_**statistic*** (4-8. )
+- Clause nodes degree statistics: mean, coefficient of variation, min, max and entropy. *vcg_clause_**statistic*** (9-13. )
 
 ### Variable Graph features
 **A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause**
 
 - Nodes degree statistics: mean , coefficient of variation, min and max. *vg_~statistic~* (14-17. )
 
-###Balance features
-- Ratio of positive and negative literals in each clause: mean, variation coefficient and entropy (see extra notes). *pnc_ratio_~statistic~* (18-20.)
+### Balance features
+- Ratio of positive and negative literals in each clause: mean, variation coefficient and entropy (see extra notes). *pnc_ratio_**statistic*** (18-20.)
 n.b. The _ratio_ is not actually a ratio, but a measure of the offset/bias between the positive and negative values,
 as calculated by: 2 * abs(0.5 - pos/(pos + neg))  
-- Ratio of positive and negative occurrences of each variable: mean, coefficient of variation, min, max and entropy. *pnv_ratio_~statistic~* (21-25. )
+- Ratio of positive and negative occurrences of each variable: mean, coefficient of variation, min, max and entropy. *pnv_ratio_**statistic*** (21-25. )
 - Fraction of binary and ternary clauses: Fraction of clauses that have 2 literals over total number of clauses, 
 fraction of clauses with 2 or 3 literals, fraction of clauses with 3 literals,  over total number of clauses. _binary_ratio_, _ternary+_, _ternary_ratio_, (respectively) (26-27.)
 
@@ -41,7 +41,7 @@ fraction of clauses with 2 or 3 literals, fraction of clauses with 3 literals,  
 
 ### DPLL Probing Features
 **DPLL (Davis-Putnam-Logemann-Loveland) algorithm is a backtracking algorithm for solving CNF SAT problems.**  
-- Number of unit propagations: computed at depths 1, 4, 16, 64 and 256. *unit_props_at_depth_~depth~* (34-38.)
+- Number of unit propagations: computed at depths 1, 4, 16, 64 and 256. *unit_props_at_depth_**depth*** (34-38.)
 - Search space size estimate: mean depth to contradiction, estimate of the log of number of nodes. _mean_depth_to_contradiction_over_vars_, _estimate_log_number_nodes_over_vars_ (39-40.)
 
 ### Local Search Probing Features
@@ -52,11 +52,11 @@ fraction of clauses with 2 or 3 literals, fraction of clauses with 3 literals,  
 - Fraction of improvement due to first local minimum: mean for SAPS and GSAT. (46-47.)
 - Coefficient of variation of the number of unsatisfied clauses in each local minimum. (48.)
 
-~alg~ = saps or gsat
-_~alg~_BestSolution_Mean_, _~alg~_BestSolution_CoeffVariance_, _~alg~_FirstLocalMinStep_Mean_,
-_~alg~_FirstLocalMinStep_CoeffVariance_, _~alg~_FirstLocalMinStep_Median_, *~alg~_FirstLocalMinStepQ_.10*,
-_~alg~_FirstLocalMinStep_Q.90_, _~alg~_BestAvgImprovement_Mean_, _~alg~_BestAvgImprovement_CoeffVariance_,
-_~alg~_FirstLocalMinRatio_Mean_, _~alg~_FirstLocalMinRatio_CoeffVariance_, _~alg~_EstACL_Mean_
+**alg** = saps or gsat
+_**alg**_BestSolution_Mean_, _**alg**_BestSolution_CoeffVariance_, _**alg**_FirstLocalMinStep_Mean_,
+_**alg**_FirstLocalMinStep_CoeffVariance_, _**alg**_FirstLocalMinStep_Median_, ***alg**_FirstLocalMinStepQ_.10*,
+_**alg**_FirstLocalMinStep_Q.90_, _**alg**_BestAvgImprovement_Mean_, _**alg**_BestAvgImprovement_CoeffVariance_,
+_**alg**_FirstLocalMinRatio_Mean_, _**alg**_FirstLocalMinRatio_CoeffVariance_, _**alg**_EstACL_Mean_
 
 ### Features from Structure features for SAT instances classification (Ansotegui)
 4 structure features
@@ -83,7 +83,7 @@ Please refer to [2] for a more theoretical description of the features.
 
 See [GraphFeatSat](https://www.ugr.es/~jgiraldez/) and [code](https://www.ugr.es/~jgiraldez/download/graph_features_sat_v_2_2.tar.gz) for original implementation.
 
-###Extra Notes on aggregation and statistical references
+### Extra Notes on aggregation and statistical references
 - Coefficient of variation (variation coefficient in paper): 
 The coefficient of variation represents the ratio of the standard deviation to the mean
 - Entropy: Shannon entropy (https://en.wikipedia.org/wiki/Entropy_(information_theory)). A distribution of the array is
@@ -93,17 +93,17 @@ made, from which the entropy is calculated
 ### Features from New CNF Features and Formula Classification (Alfonso)
 Features
 - 8 graphs with weights
-  - Clause Variable: *c_nd_p_~statistic~*, *c_nd_n_~statistic~*, *v_nd_p_~statistic~*, *v_nd_n_~statistic~*, (for positive and negative, clause and variable node statistics, respectively) (for positive variables, and negative variables, otherwise the same as previously described) 
-  - Variable graph: *vg_al_~statistic~* (Does not consider polarity of literals, and with weights as the number of common clauses) 
-  - Clause graph: *cg_al_~statistic~* (Same as previously described, with weights the size of the intersection of clauses) 
-  - Resolution graph: *rg_~statistic~* (Connects clauses when they produce a non-tautological resolvant, weights as 2^-(|C_i union C_j| - 2)) 
-  - Binary Implication graph (BIG): *big_~statistic~* (Edges correspond to the binary clauses in the current formula, and if the 
+  - Clause Variable: *c_nd_p_**statistic***, *c_nd_n_**statistic***, *v_nd_p_**statistic***, *v_nd_n_**statistic***, (for positive and negative, clause and variable node statistics, respectively) (for positive variables, and negative variables, otherwise the same as previously described) 
+  - Variable graph: *vg_al_**statistic*** (Does not consider polarity of literals, and with weights as the number of common clauses) 
+  - Clause graph: *cg_al_**statistic*** (Same as previously described, with weights the size of the intersection of clauses) 
+  - Resolution graph: *rg_**statistic*** (Connects clauses when they produce a non-tautological resolvant, weights as 2^-(|C_i union C_j| - 2)) 
+  - Binary Implication graph (BIG): *big_**statistic*** (Edges correspond to the binary clauses in the current formula, and if the 
 corresponding variable is implicated by the variables in that clause) (clauses as vertices, edge between clauses iff 
 | C_i intersection (not C_j) | = 1) (there is one literal in clause i that also appears as negated in clause j),
 with weights 2 ^ -(|C_i union C_j| -2) (degrees, weights). All edges in the graph correspond to the
 binary clauses in the current formula E = {(a, b), (not b, not a) | {not a, b} elem F}. Sequence with the degree of each node is used.
-  - AND, BAND, EXO graph: *_and_~statistic~*, *band_~statistic~*, *exo_~statistic~* (These naive encoded restraints create 3 graphs, extracted from the BIG)
-- Recursive weight heuristic: *rwh_~iteration~_~statistic~* The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
+  - AND, BAND, EXO graph: *_and_**statistic***, *band_**statistic***, *exo_**statistic*** (These naive encoded restraints create 3 graphs, extracted from the BIG)
+- Recursive weight heuristic: *rwh_**iteration**_**statistic*** The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
 This is computed for 3 iterations.
 
 Sequences from graphs are the weights of edges and degrees ofnodes. Statistics from these are calculated (Similiar as to SATzilla, with additional statistics such as quantiles, 0 weight occurrences and the number times in which the modal value occurs.
