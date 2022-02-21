@@ -81,7 +81,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
         writer.writeheader()
 
         for i, file_name in enumerate(file_list):
-            # print(file_name)
+            print(file_name)
             print("file ", i, " out of ", len(file_list))
             sat_inst = SATInstance(file_name, preprocess=True)
             if sat_inst.solved:

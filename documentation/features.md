@@ -23,7 +23,7 @@ and an edge between them whenever a variable occurs in a clause.*
 ### Variable Graph features
 **A variable graph (VG) has a node for each variable, and an edge between variables that occur together in at least one clause**
 
-- Nodes degree statistics: mean , coefficient of variation, min and max. *vg_~statistic~* (14-17. )
+- Nodes degree statistics: mean , coefficient of variation, min and max. *vg_**statistic*** (14-17. )
 
 ### Balance features
 - Ratio of positive and negative literals in each clause: mean, variation coefficient and entropy (see extra notes). *pnc_ratio_**statistic*** (18-20.)
@@ -37,7 +37,7 @@ fraction of clauses with 2 or 3 literals, fraction of clauses with 3 literals,  
 **A clause is a Horn clause if it contains at most one positive literal**  
 - Fraction of Horn clauses: _hc_fraction_ (28.)
 - Number of occurrences in a Horn clause for each variable: mean, coefficient of variation, minimum, maximum, entropy.
-*hc_var_~statistic~* The number of times a variable appears in all horn clauses. (29-33.)
+*hc_var_**statistic*** The number of times a variable appears in all horn clauses. (29-33.)
 
 ### DPLL Probing Features
 **DPLL (Davis-Putnam-Logemann-Loveland) algorithm is a backtracking algorithm for solving CNF SAT problems.**  
@@ -53,18 +53,19 @@ fraction of clauses with 2 or 3 literals, fraction of clauses with 3 literals,  
 - Coefficient of variation of the number of unsatisfied clauses in each local minimum. (48.)
 
 **alg** = saps or gsat
-_**alg**_BestSolution_Mean_, _**alg**_BestSolution_CoeffVariance_, _**alg**_FirstLocalMinStep_Mean_,
-_**alg**_FirstLocalMinStep_CoeffVariance_, _**alg**_FirstLocalMinStep_Median_, ***alg**_FirstLocalMinStepQ_.10*,
-_**alg**_FirstLocalMinStep_Q.90_, _**alg**_BestAvgImprovement_Mean_, _**alg**_BestAvgImprovement_CoeffVariance_,
-_**alg**_FirstLocalMinRatio_Mean_, _**alg**_FirstLocalMinRatio_CoeffVariance_, _**alg**_EstACL_Mean_
+***alg**_BestSolution_Mean*, ***alg**_BestSolution_CoeffVariance*, ***alg**_FirstLocalMinStep_Mean*,
+***alg**_FirstLocalMinStep_CoeffVariance*, ***alg**_FirstLocalMinStep_Median*, ***alg**_FirstLocalMinStepQ_.10*,
+***alg**_FirstLocalMinStep_Q.90*, ***alg**_BestAvgImprovement_Mean*, ***alg**_BestAvgImprovement_CoeffVariance*,
+***alg**_FirstLocalMinRatio_Mean*, ***alg**_FirstLocalMinRatio_CoeffVariance*, ***alg**_EstACL_Mean*
 
 ### Features from Structure features for SAT instances classification (Ansotegui)
 4 structure features
 - alpha_v: powerlaw exponent (_variable_alpha_)
 - Q: modularity (for VIG) (_vig_modularity_)
-- - d: fractal dimension for VIG (_vig_d_poly_)
+- d: fractal dimension for VIG (_vig_d_poly_)
 - d_b: fractal dimension for CVIG (_cvig_db_poly_)
 
+TODO: bteer explanation of all features, starting with variable occurrences alpha
 A variable incidence graph (VIG): Set of vertexes is the set of boolean variables - weights assigned to edges as follows
 W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the clause I am assuming)
 
@@ -83,13 +84,6 @@ Please refer to [2] for a more theoretical description of the features.
 
 See [GraphFeatSat](https://www.ugr.es/~jgiraldez/) and [code](https://www.ugr.es/~jgiraldez/download/graph_features_sat_v_2_2.tar.gz) for original implementation.
 
-### Extra Notes on aggregation and statistical references
-- Coefficient of variation (variation coefficient in paper): 
-The coefficient of variation represents the ratio of the standard deviation to the mean
-- Entropy: Shannon entropy (https://en.wikipedia.org/wiki/Entropy_(information_theory)). A distribution of the array is
-made, from which the entropy is calculated
-- The degree of a node is the number of edges incident (connected) to that node.
-
 ### Features from New CNF Features and Formula Classification (Alfonso)
 Features
 - 8 graphs with weights
@@ -102,7 +96,7 @@ corresponding variable is implicated by the variables in that clause) (clauses a
 | C_i intersection (not C_j) | = 1) (there is one literal in clause i that also appears as negated in clause j),
 with weights 2 ^ -(|C_i union C_j| -2) (degrees, weights). All edges in the graph correspond to the
 binary clauses in the current formula E = {(a, b), (not b, not a) | {not a, b} elem F}. Sequence with the degree of each node is used.
-  - AND, BAND, EXO graph: *_and_**statistic***, *band_**statistic***, *exo_**statistic*** (These naive encoded restraints create 3 graphs, extracted from the BIG)
+  - AND, BAND, EXO graph: *and_**statistic***, *band_**statistic***, *exo_**statistic*** (These naive encoded restraints create 3 graphs, extracted from the BIG)
 - Recursive weight heuristic: *rwh_**iteration**_**statistic*** The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
 This is computed for 3 iterations.
 
@@ -114,7 +108,9 @@ Statistics for these graphs: node_min, node_max, node_mode, node_mean, node_std,
 weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy, weights_q1, weights_q2, weights_q3, weights_val_rate,
 **where** node represents the degrees of the nodes, and weights represents the weights of the edges.
 
-## Basic notes on SAT problems
-Positive/negative literal is a respective instance of a variable.
-Clause is a disjunction of literal(s)
-CNF (Conjunctive Normal Form): Conjunction (and) of disjunction (or) of literals.
+### Extra Notes on aggregation and statistical references
+- Coefficient of variation (variation coefficient in paper): 
+The coefficient of variation represents the ratio of the standard deviation to the mean
+- Entropy: Shannon entropy (https://en.wikipedia.org/wiki/Entropy_(information_theory)). A distribution of the array is
+made, from which the entropy is calculated.
+- The degree of a node is the number of edges incident (connected) to that node.

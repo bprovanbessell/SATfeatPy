@@ -39,7 +39,9 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
 
     # set up statistics used as features
     args_list.append("-r stats")
-    args_list.append("ubcsat/results/out.txt")
+    temp_fn = os.popen("mktemp /tmp/sapsgsat-XXXX").read().strip("\n")
+    # args_list.append("ubcsat/results/out.txt")
+    args_list.append(temp_fn)
     args_list.append("best[mean+cv],firstlmstep[mean+median+cv+q10+q90],bestavgimpr[mean+cv],firstlmratio[mean+cv],estacl")
     # this file gets overwritten every time, probably useful to look into temporary files in the future
 
@@ -67,7 +69,7 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         # run saps
         os.system(command)
 
-        saps_res_dict = read_ubcsat_results(True)
+        saps_res_dict = read_ubcsat_results(True, temp_fn)
 
     if gsat:
         args_list[-1] = "gsat"
@@ -75,12 +77,12 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
         # print(command)
         # run gsat
         os.system(command)
-        gsat_res_dict = read_ubcsat_results(False)
+        gsat_res_dict = read_ubcsat_results(False, temp_fn)
 
     return saps_res_dict, gsat_res_dict
 
 
-def read_ubcsat_results(saps):
+def read_ubcsat_results(saps, temp_fn):
     """
     Read the results of the ubcsat saps or gsat runs, and put them into a dictionary
     :param saps:
@@ -91,7 +93,7 @@ def read_ubcsat_results(saps):
     else:
         prefix = "gsat_"
     res_dict = {}
-    with open("ubcsat/results/out.txt") as f:
+    with open(temp_fn) as f:
         for line in f:
             line.strip("\n")
             res = line.split(" = ")
@@ -99,4 +101,5 @@ def read_ubcsat_results(saps):
                 # print(res)
                 res_dict[prefix + res[0]] = float(res[1])
 
+    assert(len(res_dict) == 12)
     return res_dict
