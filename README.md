@@ -3,9 +3,13 @@
 Python library to extract features from SAT problems. Re-production of SATzilla feature extractor.
 
 Features implemented:
-1-48. of Satzilla paper (see [features](documentation/features.md)).
+1-48. of Satzilla paper [1].
 
-Fractal dimension of CVIG and VIG, modularity of VIG, and alpha (powerlaw fit of variable occurrences) from Structure Features for SAT instances classification.
+Fractal dimension of CVIG and VIG, modularity of VIG, and alpha (powerlaw fit of variable occurrences) from [2].
+
+Graph features of and Recursive Weight Heuristic from [3].
+
+(see [features](documentation/features.md))
 
 Current command line usage, from project root directory.
 This will print a dictionary of the features. Abbreviations can be found in (see [features](documentation/features.md)). [TO DO].

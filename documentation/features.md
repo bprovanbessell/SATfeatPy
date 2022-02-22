@@ -65,14 +65,16 @@ fraction of clauses with 2 or 3 literals, fraction of clauses with 3 literals,  
 - d: fractal dimension for VIG (_vig_d_poly_)
 - d_b: fractal dimension for CVIG (_cvig_db_poly_)
 
-TODO: bteer explanation of all features, starting with variable occurrences alpha
+TODO: better explanation of all features, starting with variable occurrences alpha
 A variable incidence graph (VIG): Set of vertexes is the set of boolean variables - weights assigned to edges as follows
-W(x, y) = sum (1/(c choose 2)) where x and y are an element of c (c is the clause I am assuming)
+W(x, y) = sum (1/(|c| choose 2)) where x and y are an element of c
 
 Clause variable incidence graph (CVIG): Set of vertexes is set of variables and clauses, weight function:
 w(x, c) = 1/|c| if x elem c
 0 otherwise.
 (signs of literals not considered)
+
+Graphs are the same as the variable graph and variable clause graph from SATzilla, just with weights, which are, incidentally, unused.
 
 - Scale free structure  - power law distribution. Estimation computed by method of Maximum likelihood
 - Modularity(Q) of VIG (louvain method) of the best partition.
@@ -80,7 +82,7 @@ w(x, c) = 1/|c| if x elem c
 N(r) is the estimate of the minimum number of circles with radius r that cover the graph.
 Estimated using the Burning by node degree algorithm.
 
-Please refer to [2] for a more theoretical description of the features.
+Please refer to [2] for a more detailed and theoretical description of the features.
 
 See [GraphFeatSat](https://www.ugr.es/~jgiraldez/) and [code](https://www.ugr.es/~jgiraldez/download/graph_features_sat_v_2_2.tar.gz) for original implementation.
 

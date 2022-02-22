@@ -118,3 +118,26 @@ if __name__ == "__main__":
     results_csv = file_type + "_features.csv"
 
     bulk_gen_features(path_to_cnfs=path_to_cnfs, results_csv=results_csv, file_type=file_type)
+
+    """
+    sat clique
+    sat color
+    unsat clique
+    unsat color
+    sat/unsat cliquecoloring
+    sat dominating
+    --- unsat dominating 1 3
+    sat matching
+    unsat matching 1 4
+    sat op/unsat 0 5
+    sat/unsat php
+    --- sat subsetcard 0 7
+    unsat subsetcard
+    sat tiling 0 8
+    unsat tiling
+    --- sat tsetin 0 9
+    unsat tiling
+    unsat tseitin
+    
+    random
+    """
