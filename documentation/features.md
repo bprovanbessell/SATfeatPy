@@ -98,9 +98,10 @@ corresponding variable is implicated by the variables in that clause) (clauses a
 | C_i intersection (not C_j) | = 1) (there is one literal in clause i that also appears as negated in clause j),
 with weights 2 ^ -(|C_i union C_j| -2) (degrees, weights). All edges in the graph correspond to the
 binary clauses in the current formula E = {(a, b), (not b, not a) | {not a, b} elem F}. Sequence with the degree of each node is used.
-  - AND, BAND, EXO graph: *and_**statistic***, *band_**statistic***, *exo_**statistic*** (These naive encoded restraints create 3 graphs, extracted from the BIG)
+  - AND, BAND, EXO graph: *and_**statistic***, *band_**statistic***, *exo_**statistic*** (These naive encoded restraints create 3 graphs, extracted from the BIG). 
+Creation of the graphs is based on theoretical description of them and pseudocode as provided in [3].
 - Recursive weight heuristic: *rwh_**iteration**_**statistic*** The heuristic provides a score for each literal x that represents the tendency whether x is present in a model of the formula F.
-This is computed for 3 iterations.
+This is computed for 3 iterations. This was based on the implementation of the RISS sat solver.
 
 Sequences from graphs are the weights of edges and degrees ofnodes. Statistics from these are calculated (Similiar as to SATzilla, with additional statistics such as quantiles, 0 weight occurrences and the number times in which the modal value occurs.
 

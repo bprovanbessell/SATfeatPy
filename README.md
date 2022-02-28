@@ -38,10 +38,13 @@ You can call the feature generation from the command line by invoking the genera
 You can specify the features to generate from within this file or via command line 
 TODO: add command line specification for file, different groups of features.
 
-- From command line:
-
-- Within python applications:
-The sat_instance class contains all methods necessary to generate the variety of features.
+The steps below illustrate a brief example of how to use this tool.
+1. Clone SATfeatPy repository https://github.com/bprovanbessell/SATfeatPy.
+2. Follow instructions on README of SATfeatPy.
+3. Create a ```sat_instance object``` from the CNF to extract features from.
+4. Extract the sets of features desired by calling the functions of the instance:
+e.g. ```sat_instance.gen_basic_features().```
+5. The features generated can be found in the internal dictionary ```sat_instance.features_dict.```
 
 **Important references**
 [1] Lin Xu, Frank Hutter, Holger H Hoos, and Kevin Leyton-Brown. Satzilla: portfolio-based algorithm selection for sat. 
