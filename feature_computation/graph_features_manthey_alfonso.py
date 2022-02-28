@@ -296,7 +296,8 @@ def get_graph_stats(name, node_degrees, weights=0):
     node_entropy = stats.entropy(node_degrees)
     node_quantiles = stats.mstats.mquantiles(node_degrees)
     node_val_rate = np.count_nonzero(node_degrees == node_mode) / len(node_degrees)
-    node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles[0], node_quantiles[1], node_quantiles[2], node_val_rate]
+    node_stats = [node_min, node_max, node_mode, node_mean, node_std, node_zeros, node_entropy, node_quantiles[0],
+                  node_quantiles[1], node_quantiles[2], node_val_rate]
 
     weights_min = np.min(weights)
     weights_max = np.max(weights)
@@ -310,10 +311,11 @@ def get_graph_stats(name, node_degrees, weights=0):
     weights_stats = [weights_min, weights_max, weights_mode, weights_mean, weights_std, weights_zeros, weights_entropy,
                      weights_quantiles[0], weights_quantiles[1], weights_quantiles[2], weights_val_rate]
 
-    deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_q1", "node_q2", "node_q3", "node_val_rate"]
+    deg_names = ["node_min", "node_max", "node_mode", "node_mean", "node_std", "node_zeros", "node_entropy", "node_q1",
+                 "node_q2", "node_q3", "node_val_rate"]
 
-    weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros", "weights_entropy",
-                     "weights_q1", "weights_q2", "weights_q3", "weights_val_rate"]
+    weights_names = ["weights_min", "weights_max", "weights_mode", "weights_mean", "weights_std", "weights_zeros",
+                     "weights_entropy", "weights_q1", "weights_q2", "weights_q3", "weights_val_rate"]
 
     deg_names = [name + x for x in deg_names]
     weights_names = [name + x for x in weights_names]
