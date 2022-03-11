@@ -268,6 +268,12 @@ def create_exo_and_band(clauses):
 
 
 def get_degrees_weights(G):
+    """
+            Function to get node degrees and weights for Full-AND, Blocked-AND and Exactly One Constraint Graphs
+
+            :param Graph:
+            :return: The degree of each node in the variable graph and the weight of each edge
+    """
     node_degrees = []
     weights = []
 
@@ -281,6 +287,12 @@ def get_degrees_weights(G):
 
 
 def get_graph_stats(name, node_degrees, weights=0):
+    """
+                Function to get statistics for different graphs
+
+                :param node_degrees and weights:
+                :return: dictionary with different stats
+    """
 
     if not node_degrees:
         node_degrees = [0]
