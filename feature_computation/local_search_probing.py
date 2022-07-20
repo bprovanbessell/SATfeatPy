@@ -25,7 +25,7 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
 
     # file = "cnf_examples/basic.cnf"
     if not os.path.isdir("ubcsat/results/"):
-        os.mkdir("results")
+        os.mkdir("ubcsat/results")
 
     args_list = []
     args_list.append("./ubcsat/ubcsat_linux")
