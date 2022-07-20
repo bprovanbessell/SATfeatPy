@@ -10,6 +10,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
     # for each file, we need to create a sat_instance for it
     # file_list = glob.glob(path_to_cnfs + "sat_4*.cnf")
     file_list = glob.glob(path_to_cnfs + file_type + ".cnf")
+    # satzilla base and probing
     dict_keys = ['c', 'v', 'clauses_vars_ratio', 'vars_clauses_ratio', 'vcg_var_mean', 'vcg_var_coeff', 'vcg_var_min',
      'vcg_var_max', 'vcg_var_entropy', 'vcg_clause_mean', 'vcg_clause_coeff', 'vcg_clause_min', 'vcg_clause_max',
      'vcg_clause_entropy', 'vg_mean', 'vg_coeff', 'vg_min', 'vg_max', 'pnc_ratio_mean', 'pnc_ratio_coeff',
@@ -26,6 +27,8 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'gsat_FirstLocalMinStep_CoeffVariance', 'gsat_FirstLocalMinStep_Median', 'gsat_FirstLocalMinStep_Q.10',
      'gsat_FirstLocalMinStep_Q.90', 'gsat_BestAvgImprovement_Mean', 'gsat_BestAvgImprovement_CoeffVariance',
      'gsat_FirstLocalMinRatio_Mean', 'gsat_FirstLocalMinRatio_CoeffVariance', 'gsat_EstACL_Mean',
+                 ]
+    '''
                  'vig_modularty',
      'vig_d_poly', 'cvig_db_poly', 'variable_alpha', 'v_nd_p_node_min', 'v_nd_p_node_max', 'v_nd_p_node_mode',
      'v_nd_p_node_mean', 'v_nd_p_node_std', 'v_nd_p_node_zeros', 'v_nd_p_node_entropy', 'v_nd_p_node_q1',
@@ -76,6 +79,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'exo_weights_val_rate', 'rwh_0_mean', 'rwh_0_coeff', 'rwh_0_min', 'rwh_0_max', 'rwh_1_mean', 'rwh_1_coeff',
      'rwh_1_min', 'rwh_1_max', 'rwh_2_mean', 'rwh_2_coeff', 'rwh_2_min', 'rwh_2_max',
                  "file_name", "satzilla_base_t", "satzilla_probe_t", "ansotegui_t", "alfonso_t"]
+                 '''
 
     with open(results_csv, 'w') as f:
         writer = csv.DictWriter(f, fieldnames=dict_keys)
@@ -88,23 +92,23 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
             if sat_inst.solved:
                 continue
 
-            t1 = time.time()
+            # t1 = time.time()
             sat_inst.gen_basic_features()
-            t2 = time.time()
+            # t2 = time.time()
             sat_inst.gen_dpll_probing_features()
             # linux only
             sat_inst.gen_local_search_probing_features()
-            t3 = time.time()
-            sat_inst.gen_ansotegui_features()
-            t4 = time.time()
-            sat_inst.gen_manthey_alfonso_graph_features()
-            t5 = time.time()
+            # t3 = time.time()
+            # sat_inst.gen_ansotegui_features()
+            # t4 = time.time()
+            # sat_inst.gen_manthey_alfonso_graph_features()
+            # t5 = time.time()
 
             sat_inst.features_dict["file_name"] = file_name
-            sat_inst.features_dict["satzilla_base_t"] = (t2 - t1)
-            sat_inst.features_dict["satzilla_probe_t"] = (t3 - t2)
-            sat_inst.features_dict["ansotegui_t"] = (t4 - t3)
-            sat_inst.features_dict["alfonso_t"] = (t5 - t4)
+            # sat_inst.features_dict["satzilla_base_t"] = (t2 - t1)
+            # sat_inst.features_dict["satzilla_probe_t"] = (t3 - t2)
+            # sat_inst.features_dict["ansotegui_t"] = (t4 - t3)
+            # sat_inst.features_dict["alfonso_t"] = (t5 - t4)
             writer.writerow(sat_inst.features_dict)
 
     f.close()
@@ -112,13 +116,13 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
 
 if __name__ == "__main__":
     # path_to_cnfs = "cnf_examples/"
-    classes = ["clique_", "colour_", "cliquecoloring", "dominating", "matching", "op", "php", "subsetcard", "tiling", "tseitin"]
-    binary = ["sat", "unsat"]
-    path_to_cnfs = "/projects/satdb/dataset_final/"
-    file_type = binary[0] + "*" + classes[0] + "*"
-    results_csv = file_type + "_features.csv"
+    # classes = ["clique_", "colour_", "cliquecoloring", "dominating", "matching", "op", "php", "subsetcard", "tiling", "tseitin"]
+    # binary = ["sat", "unsat"]
+    path_to_cnfs = "/home/bprovan/SATfeatPy/2006_instances/SAT-Race_TS_1/"
+    # file_type = binary[0] + "*" + classes[0] + "*"
+    # results_csv = file_type + "_features.csv"
 
-    bulk_gen_features(path_to_cnfs=path_to_cnfs, results_csv=results_csv, file_type=file_type)
+    bulk_gen_features(path_to_cnfs=path_to_cnfs, results_csv="2006_comp_features.csv")
 
     """
     sat clique
