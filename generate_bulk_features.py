@@ -27,7 +27,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
      'gsat_FirstLocalMinStep_CoeffVariance', 'gsat_FirstLocalMinStep_Median', 'gsat_FirstLocalMinStep_Q.10',
      'gsat_FirstLocalMinStep_Q.90', 'gsat_BestAvgImprovement_Mean', 'gsat_BestAvgImprovement_CoeffVariance',
      'gsat_FirstLocalMinRatio_Mean', 'gsat_FirstLocalMinRatio_CoeffVariance', 'gsat_EstACL_Mean',
-                 ]
+                 "file_name"]
     '''
                  'vig_modularty',
      'vig_d_poly', 'cvig_db_poly', 'variable_alpha', 'v_nd_p_node_min', 'v_nd_p_node_max', 'v_nd_p_node_mode',
