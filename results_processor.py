@@ -43,3 +43,4 @@ if __name__ == "__main__":
     # res = get_sat_unsat_results("2006_instances/SAT-Race_TS_1/Solver2005-results.txt")
     res = get_sat_unsat_2007_results("2007/phase1.txt")
     print(res)
+    print(len(res))
