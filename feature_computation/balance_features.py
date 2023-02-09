@@ -70,7 +70,11 @@ def compute_balance_features(clauses, c, v):
             vi_ratio = pos_instances / neg_instances
 
         pos_neg_variable_ratios.append(vi_ratio)
-        pos_neg_variable_balance.append(2.0 * abs(0.5 - (pos_instances / (pos_instances + neg_instances))))
+
+        if (pos_instances == 0) and (neg_instances == 0):
+            pos_neg_variable_balance.append(0.0)
+        else:
+            pos_neg_variable_balance.append(2.0 * abs(0.5 - (pos_instances / (pos_instances + neg_instances))))
 
     # dictionary could be a cleaner way to format and return the results
     return pos_neg_clause_ratios, pos_neg_clause_balance, pos_neg_variable_ratios, pos_neg_variable_balance, \

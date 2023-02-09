@@ -14,13 +14,13 @@ class SATInstance:
 
     def __init__(self, input_cnf, preprocess=True, verbose=False, preprocess_tmp=True):
         self.verbose = verbose
-
+        self.preprocess = preprocess
         self.path_to_cnf = input_cnf
 
         # satelite preprocessing
         # n.b. satelite only works on linux, mac no longer supports 32 bit binaries...
 
-        if preprocess:
+        if self.preprocess:
             if self.verbose:
                 print("Preprocessing with SatELite")
 
@@ -96,7 +96,7 @@ class SATInstance:
         if self.verbose:
             print("Generating basic features")
 
-        base_features_dict = base_features.compute_base_features(self.clauses, self.c, self.v, self.num_active_vars,
+        base_features_dict = base_features.compute_base_features(self.preprocess, self.clauses, self.c, self.v, self.num_active_vars,
                                                                  self.num_active_clauses)
         self.features_dict.update(base_features_dict)
 

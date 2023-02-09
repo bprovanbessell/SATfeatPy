@@ -29,7 +29,7 @@ def write_entropy_continous(l, name, features_dict):
     features_dict[name + "_entropy"] = entropy
 
 
-def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
+def compute_base_features(preprocess, clauses, c, v, num_active_vars, num_active_clauses):
     features_dict = {}
 
     # 1-3
@@ -38,8 +38,11 @@ def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     features_dict["clauses_vars_ratio"] = num_active_clauses / num_active_vars
     features_dict["vars_clauses_ratio"] = num_active_vars / num_active_clauses
 
-    c = num_active_clauses
-    v = num_active_vars
+    if not preprocess:
+        pass
+    else:
+        c = num_active_clauses
+        v = num_active_vars
 
     # Variable Clause Graph features
     vcg_v_node_degrees, vcg_c_node_degrees = graph_features.create_vcg(clauses, c, v)
@@ -47,7 +50,7 @@ def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     vcg_v_node_degrees_norm = [x / c for x in vcg_v_node_degrees]
     # 4-8
     write_stats(vcg_v_node_degrees_norm, "vcg_var", features_dict)
-    write_entropy_discrete(vcg_v_node_degrees, c+1, "vcg_var", features_dict)
+    write_entropy_discrete(vcg_v_node_degrees, c + 1, "vcg_var", features_dict)
     # write_entropy(vcg_v_node_degrees, "vcg_var", features_dict, v, c)
 
     # clause node degrees divided by number of active variables
@@ -90,15 +93,16 @@ def compute_base_features(clauses, c, v, num_active_vars, num_active_clauses):
     horn_clause_variable_count_norm = [x / c for x in horn_clause_variable_count]
     write_stats(horn_clause_variable_count_norm, "hc_var", features_dict)
     # write_entropy(horn_clause_variable_count, "hc_var", features_dict, v, c)
-    write_entropy_discrete(horn_clause_variable_count, c+1, "hc_var", features_dict)
+    write_entropy_discrete(horn_clause_variable_count, c + 1, "hc_var", features_dict)
 
     return features_dict
+
 
 # legacy
 
 
 def write_entropy(l, name, features_dict, c, number_of_outcomes):
-    entropy = array_stats.entropy_int_array(l, number_of_outcomes+1)
+    entropy = array_stats.entropy_int_array(l, number_of_outcomes + 1)
     print("saten", entropy)
     features_dict[name + "_entropy"] = entropy
 
