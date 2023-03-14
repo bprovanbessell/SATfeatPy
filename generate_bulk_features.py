@@ -6,7 +6,7 @@ import glob
 import csv
 
 
-def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv="features.csv", file_type="*"):
+def bulk_gen_features(path_to_cnfs="Testing/", results_csv="features.csv", file_type="*"):
     # for each file, we need to create a sat_instance for it
     # file_list = glob.glob(path_to_cnfs + "sat_4*.cnf")
     file_list = glob.glob(path_to_cnfs + file_type + ".cnf")
@@ -84,7 +84,7 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
         for i, file_name in enumerate(file_list):
             print(file_name)
             print("file ", i, " out of ", len(file_list))
-            sat_inst = SATInstance(file_name, preprocess=True)
+            sat_inst = SATInstance(file_name, preprocess=False)
             if sat_inst.solved:
                 continue
 
@@ -111,14 +111,12 @@ def bulk_gen_features(path_to_cnfs="/projects/satdb/dataset_final/", results_csv
 
 
 if __name__ == "__main__":
-    # path_to_cnfs = "cnf_examples/"
-    classes = ["clique_", "colour_", "cliquecoloring", "dominating", "matching", "op", "php", "subsetcard", "tiling", "tseitin"]
-    binary = ["sat", "unsat"]
-    path_to_cnfs = "/projects/satdb/dataset_final/"
-    file_type = binary[0] + "*" + classes[0] + "*"
-    results_csv = file_type + "_features.csv"
 
-    bulk_gen_features(path_to_cnfs=path_to_cnfs, results_csv=results_csv, file_type=file_type)
+    path_to_cnfs = "Testing/"
+    results_csv = "features.csv"
+    file_type = "*"
+
+    bulk_gen_features(path_to_cnfs, results_csv=results_csv, file_type=file_type)
 
     """
     sat clique

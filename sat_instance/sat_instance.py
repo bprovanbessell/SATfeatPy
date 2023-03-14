@@ -131,7 +131,7 @@ class SATInstance:
             print("Generating features from Ansotegui")
 
         alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses,
-                                                                  self.num_active_vars)
+                                                                  self.num_active_vars, self.v)
 
         vig = graph_features_ansotegui.create_vig(self.clauses, self.num_active_clauses, self.num_active_vars)
         cvig = graph_features_ansotegui.create_cvig(self.clauses, self.num_active_clauses, self.num_active_vars)

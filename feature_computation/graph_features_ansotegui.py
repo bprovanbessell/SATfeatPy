@@ -3,6 +3,8 @@ import networkx as nx
 import math
 import community as community_louvain
 import powerlaw
+import numpy as np
+import itertools
 """
 Graph features from Structure features for SAT instances classification (Ansotegui)
 ------
@@ -39,7 +41,7 @@ We can find this maximum partition with the community package (uses louvain meth
 """
 
 
-def estimate_power_law_alpha(clauses, c, v):
+def estimate_power_law_alpha(clauses, c, v, var):
     """
     Estimates the power law alpha (Code adapted from Ansotegui implementation)
     :param clauses:
@@ -47,7 +49,9 @@ def estimate_power_law_alpha(clauses, c, v):
     :param v:
     :return: best fit estimated alpha
     """
-    X, Y, Sylogx, Syx = variable_occurrences(clauses, c, v)
+
+    new_clauses = clause_rearrange(clauses, var)
+    X, Y, Sylogx, Syx = variable_occurrences(new_clauses, c, v)
     alpha = most_likely(X, Y, Sylogx, Syx)
 
     return alpha
@@ -449,3 +453,27 @@ def regression(X, Y):
         beta = 1
 
     return alpha, beta
+
+def clause_rearrange(clauses, v):
+
+    flat_clauses = np.absolute(list(itertools.chain(*clauses)))
+    not_variables = []
+
+    for i in range(1,v+1):
+        if i not in abs(flat_clauses):
+            not_variables.append(i)
+
+    new_clauses = []
+
+    if not_variables == []:
+        return clauses
+    else:
+        for k,j in enumerate(not_variables):
+            for clause in clauses:
+                for i,var in enumerate(clause):
+                    l = j-k
+                    if abs(var) > l:
+                        sing = np.sign(var)
+                        clause[i] = sing*(abs(var)-1)
+                new_clauses.append(clause)
+        return new_clauses
