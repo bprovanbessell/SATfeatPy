@@ -51,7 +51,14 @@ class DPLLProbing:
         self.reduced_vars = []
         self.reduced_clauses = []
         self.unit_props_log_nodes_dict = {}
+        self.search_space_measures_dict = {}
 
+        self.left_subtree_size = [0] * (self.sat_instance.v + 1)
+        self.branch_lengths = []
+        self.branch_probabilities = []
+        self.depths_knuth = []
+
+        self.probing_stopwatch = Stopwatch()
     # unit propagation
 
 # num_bin_clauses_with_var, int array containing the number of binary clauses with a certain variable (index),
@@ -279,6 +286,72 @@ class DPLLProbing:
         while(self.sat_instance.num_active_vars != orig_num_active_vars):
             self.backtrack()
 
+    def combined_probing(self):
+        self.start_probing()
+        self.reset_estimators_data()
+
+        while self.probing_stopwatch.lap() < self.time_limit:
+            if not self.make_decision_and_propagate():
+                self.update_estimators_data()
+                self.backtrack()
+
+        weighted_backtrack_estimate = self.calculate_weighted_backtrack_estimate()
+        recursive_estimate = self.estimate_tree_size(0)
+        knuths_estimate = self.calculate_knuths_estimate()
+
+        self.search_space_measures_dict["knuths_estimate"] = knuths_estimate
+        self.search_space_measures_dict["weighted_backtrack_estimate"] = weighted_backtrack_estimate
+        self.search_space_measures_dict["recursive_estimate"] = recursive_estimate
+
+    def reset_estimators_data(self):
+        self.left_subtree_size = [0] * (self.sat_instance.v + 1)
+        self.branch_lengths = []
+        self.branch_probabilities = []
+        self.depths_knuth = []
+
+    def update_estimators_data(self):
+        current_depth = len(self.reduced_vars)
+        self.left_subtree_size[current_depth - 1 if current_depth > 0 else 0] += 1
+        self.branch_lengths.append(current_depth)
+        self.branch_probabilities.append(2 ** -current_depth)
+        self.depths_knuth.append(current_depth)
+
+    def make_decision_and_propagate(self):
+        var = self.select_unassigned_variable()
+        if var is None:
+            return True  # No unassigned variables left
+
+        value = random.choice([True, False])
+        return self.set_var_and_prop(var, value)
+
+    def select_unassigned_variable(self):
+        for var in range(1, self.sat_instance.v + 1):
+            if self.sat_instance.var_states[var] == VarState.UNASSIGNED:
+                return var
+        return None
+
+    def calculate_weighted_backtrack_estimate(self):
+        if not self.branch_lengths:
+            return 0
+        weighted_sum = sum(prob * (2 ** (d + 1) - 1) for d, prob in zip(self.branch_lengths, self.branch_probabilities))
+        total_prob = sum(self.branch_probabilities)
+        return weighted_sum / total_prob if total_prob != 0 else 0
+
+    def estimate_tree_size(self, depth):
+        if depth >= self.sat_instance.v:
+            return 0
+        left_size = self.left_subtree_size[depth]
+        right_size = left_size  # Assuming right subtree is the same size as the left
+        return 1 + left_size + right_size
+
+    def calculate_knuths_estimate(self):
+        if not self.depths_knuth:
+            return 0
+        average_depth = sum(self.depths_knuth) / len(self.depths_knuth)
+        return 2 ** (average_depth + 1) - 1
+
+    def start_probing(self):
+        self.probing_stopwatch.start()
     def set_var_and_prop(self, var, value):
         """
         Sets the variable to the value, and then propagates the assignment

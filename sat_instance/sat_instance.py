@@ -111,7 +111,10 @@ class SATInstance:
 
         self.dpll_prober.search_space_probe()
 
+        self.dpll_prober.combined_probing()
+
         self.features_dict.update(self.dpll_prober.unit_props_log_nodes_dict)
+        self.features_dict.update(self.dpll_prober.search_space_measures_dict)
 
     def gen_local_search_probing_features(self):
         """
