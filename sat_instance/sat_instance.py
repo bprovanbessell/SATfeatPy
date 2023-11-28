@@ -133,6 +133,11 @@ class SATInstance:
         if self.verbose:
             print("Generating features from Ansotegui")
 
+        if self.preprocess == False:
+            print(self.v)
+            self.num_active_clauses = self.c
+            self.num_active_vars = self.v    
+        
         alpha = graph_features_ansotegui.estimate_power_law_alpha(self.clauses, self.num_active_clauses,
                                                                   self.num_active_vars)
 

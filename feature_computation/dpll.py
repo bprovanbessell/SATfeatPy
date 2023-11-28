@@ -338,10 +338,16 @@ class DPLLProbing:
         return weighted_sum / total_prob if total_prob != 0 else 0
 
     def estimate_tree_size(self, depth):
-        if depth >= self.sat_instance.v:
+        """
+        Estimate the size of the search tree using the recursive estimator method.
+        """
+        if depth >= len(self.left_subtree_size):
             return 0
+
         left_size = self.left_subtree_size[depth]
-        right_size = left_size  # Assuming right subtree is the same size as the left
+        right_size = self.estimate_tree_size(depth + 1)  # Recursive call for right subtree
+
+        # The size of the tree is the sum of the left subtree, right subtree, and the current node
         return 1 + left_size + right_size
 
     def calculate_knuths_estimate(self):

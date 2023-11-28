@@ -24,7 +24,7 @@ def local_search_probe(cnf_file, saps=True, gsat=True):
     # -gtimeout time_limit -> gtimeout as opposed to timeout
 
     # file = "cnf_examples/basic.cnf"
-    if not os.path.isdir("ubcsat/results/"):
+    if not os.path.isdir("results/"):
         os.mkdir("results")
 
     args_list = []
