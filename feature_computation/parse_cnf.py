@@ -1,5 +1,3 @@
-
-
 def parse_cnf(cnf_path):
     """
     Parse number of variables, number of clauses and the clauses from a standard .cnf file
@@ -14,16 +12,16 @@ def parse_cnf(cnf_path):
         v = 0
 
         for line in f:
-            if line[0] == 'c':
+            stripped_line = line.strip()
+            if not stripped_line or stripped_line[0] in {'c', 'p', '\n'}:
                 continue
-            if line[0] == 'p':
-                sizes = line.split(" ")
-                v = int(sizes[2])
-                c = int(sizes[3])
 
-            else:
-                # all following lines should represent a clause, so literals separated by spaces, with a 0 at the end,
-                # denoting the end of the line.
-                clauses_list.append([int(x) for x in line.split(" ")[:-1]])
+            # all following lines should represent a clause, so literals separated by spaces, with a 0 at the end,
+            # denoting the end of the line.
+            clause = [int(x) for x in stripped_line.split() if x != '0']
+            clauses_list.append(clause)
+
+        c = len(clauses_list)
+        v = max([abs(l) for clause in clauses_list for l in clause])
 
     return clauses_list, c, v
