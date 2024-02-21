@@ -27,9 +27,9 @@ if __name__ == "__main__":
     # N.b. ubcsat binary currently only runs on linux
     satinstance.gen_local_search_probing_features()
 
-    # satinstance.gen_ansotegui_features()
-    #
-    # satinstance.gen_manthey_alfonso_graph_features()
+    satinstance.gen_ansotegui_features()
+
+    satinstance.gen_manthey_alfonso_graph_features()
 
     print(satinstance.features_dict)
 

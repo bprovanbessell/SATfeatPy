@@ -296,7 +296,7 @@ class DPLLProbing:
                 self.backtrack()
 
         weighted_backtrack_estimate = self.calculate_weighted_backtrack_estimate()
-        recursive_estimate = self.estimate_tree_size(0)
+        recursive_estimate = self.estimate_tree_size()
         knuths_estimate = self.calculate_knuths_estimate()
 
         self.search_space_measures_dict["knuths_estimate"] = knuths_estimate
@@ -338,12 +338,17 @@ class DPLLProbing:
     def calculate_weighted_backtrack_estimate(self):
         if not self.branch_lengths:
             return 0
-        weighted_sum = sum(prob * (2 ** (d + 1) - 1) for d, prob in zip(self.branch_lengths, self.branch_probabilities))
+        weighted_sum = 0
+        for d, prob in zip(self.branch_lengths, self.branch_probabilities):
+            exponent = d + 1
+            weighted_sum += prob * (math.log(2) * exponent - 1)
+
         total_prob = sum(self.branch_probabilities)
         weighted_backtrack_estimate = weighted_sum / total_prob if total_prob != 0 else 0
         log_weighted_backtrack_estimate = math.log(weighted_backtrack_estimate + 1)  # Adding 1 to avoid log(0)
         return log_weighted_backtrack_estimate / self.sat_instance.v  # Normalizing by the number of variables
 
+<<<<<<< HEAD
     import math
 
     def estimate_branching_factor_reduction(self, depth):
@@ -381,14 +386,41 @@ class DPLLProbing:
         # Apply logarithm to scale down the size and normalize by the number of variables
         log_tree_size = math.log(tree_size + 1)  # Adding 1 to avoid log(0)
         return log_tree_size / self.sat_instance.v  # Normalizing by the number of variables
+=======
+    def estimate_tree_size(self):
+        """
+        Estimate the size of the search tree using an iterative approach.
+        """
+        total_size = 0
+        depth = 0
+
+        while depth < len(self.left_subtree_size):
+            left_size = self.left_subtree_size[depth]
+            total_size += 1 + left_size  # Add the size of the current node and its left subtree
+            depth += 1  # Move to the next level
+
+        return total_size
+>>>>>>> origin/main
 
     def calculate_knuths_estimate(self):
         if not self.depths_knuth:
             return 0
+
         average_depth = sum(self.depths_knuth) / len(self.depths_knuth)
+<<<<<<< HEAD
         knuths_estimate = 2 ** (average_depth + 1) - 1
         log_knuths_estimate = math.log(knuths_estimate + 1)  # Adding 1 to avoid log(0)
         return log_knuths_estimate / self.sat_instance.v  # Normalizing by the number of variables
+=======
+        # Calculate logarithm of 2 ** (average_depth + 1)
+        log_estimate = (average_depth + 1) * math.log(2)
+
+        # The original formula is 2 ** x - 1. As we can't directly compute log(2 ** x - 1),
+        # we use log(2 ** x) as an estimate. If the average_depth is small, you might adjust the estimate.
+        # For large average_depth, log(2 ** x - 1) ≈ log(2 ** x).
+
+        return log_estimate
+>>>>>>> origin/main
 
     def start_probing(self):
         self.probing_stopwatch.start()
