@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     except IndexError as E:
         print("no cnf path specified, using basic example")
-        cnf_path = "cnf_examples/basic.cnf"
+        cnf_path = "../or-60-20-5-UC-20.cnf.gz.no_w.cnf"
 
     if sys.platform == "darwin":
         # osx

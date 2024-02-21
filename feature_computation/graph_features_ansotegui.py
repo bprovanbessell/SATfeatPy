@@ -277,7 +277,7 @@ def create_vig(clauses, c, v):
     """
     Create a Variable incidence graph
     Set of vertices is the set of variables,
-    with weight function w(x, y) = sum( 1/ (|c| choose 2)) for x, y elem of c, for c elem F
+    with weight function w(x, y) = sum(1 / (|c| choose 2)) for x, y elem of c, for c elem F
 
     :param clauses:
     :param c:
@@ -285,24 +285,27 @@ def create_vig(clauses, c, v):
     :return: Variable node degrees and clause node degrees
     """
 
-    # we need to make sure that we avoid the duplicates within a clause
     vig = nx.Graph()
 
-    for k, clause in enumerate(clauses):
+    for clause in clauses:
+        # Ensure that the clause has at least two literals to compute the weight
+        if len(clause) < 2:
+            continue
 
-        # 1/ (|c| choose 2)
+        # Compute the weight as 1 / (|c| choose 2)
         weight = 1 / math.comb(len(clause), 2)
 
+        # Iterate through all pairs of variables in the clause to update the edge weights
         for i in range(len(clause)):
             for j in range(i + 1, len(clause)):
-                # integer for node keys
                 v_node_i = abs(clause[i])
                 v_node_j = abs(clause[j])
 
-                # get the weight of the edge if there is already an edge, otherwise 0 is the start of the sum
+                # Check if the edge already exists and update the weight accordingly
                 edge_weight = vig.get_edge_data(v_node_i, v_node_j, default={'weight': 0})['weight']
-
                 edge_weight += weight
+
+                # Add or update the edge with the new weight
                 vig.add_edge(v_node_i, v_node_j, weight=edge_weight)
 
     return vig

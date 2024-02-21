@@ -35,6 +35,7 @@ class SATInstance:
             print("Parsing cnf file")
         self.clauses, self.c, self.v = parse_cnf.parse_cnf(self.path_to_cnf)
 
+
         if self.v == 0 or self.c == 0:
             self.solved = True
             return

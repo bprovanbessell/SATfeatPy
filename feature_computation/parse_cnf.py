@@ -26,4 +26,7 @@ def parse_cnf(cnf_path):
                 # denoting the end of the line.
                 clauses_list.append([int(x) for x in line.split(" ")[:-1]])
 
+        c = len(clauses_list)
+        v = max([abs(l) for clause in clauses_list for l in clause])
+
     return clauses_list, c, v
