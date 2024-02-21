@@ -338,13 +338,16 @@ class DPLLProbing:
     def calculate_weighted_backtrack_estimate(self):
         if not self.branch_lengths:
             return 0
-        weighted_sum = sum(prob * (2 ** (d + 1) - 1) for d, prob in zip(self.branch_lengths, self.branch_probabilities))
-        total_prob = sum(self.branch_probabilities)
-        weighted_backtrack_estimate = weighted_sum / total_prob if total_prob != 0 else 0
-        log_weighted_backtrack_estimate = math.log(weighted_backtrack_estimate + 1)  # Adding 1 to avoid log(0)
-        return log_weighted_backtrack_estimate / self.sat_instance.v  # Normalizing by the number of variables
 
-    import math
+        # Use log to transform the calculation and avoid overflow
+        log_weighted_sum = sum(
+            math.log(prob) + (d + 1) * math.log(2) for d, prob in zip(self.branch_lengths, self.branch_probabilities))
+        total_log_prob = sum(math.log(prob) for prob in self.branch_probabilities)
+
+        # Convert back from log scale by exponentiating, and adjust for the '- 1' in the original formula
+        weighted_backtrack_estimate = math.exp(log_weighted_sum - total_log_prob) - 1
+
+        return weighted_backtrack_estimate
 
     def estimate_branching_factor_reduction(self, depth):
         # Base activity level for all variables
