@@ -89,11 +89,10 @@ def variable_occurrences(clauses, c, v):
     Syx = [0] * (n + 1)
     Sylogx = [0] * (n+1)
 
-    for i in range(n - 1, -1, -1):
-        if X[i] > 0:
-            Sylogx[i] = Sylogx[i + 1] + count_occurrences[i][1] / Sy * math.log(X[i])
-        else:
-            Sylogx[i] = Sylogx[i + 1]  # or some other appropriate value if X[i] is non-positive
+    for i in range(n-1, -1, -1):
+        Y[i] = Y[i+1] + count_occurrences[i][1] / Sy
+
+        Sylogx[i] = Sylogx[i+1] + count_occurrences[i][1] / Sy * math.log(X[i])
         Syx[i] = Syx[i + 1] + count_occurrences[i][1] / Sy * X[i]
 
     return X, Y, Sylogx, Syx
