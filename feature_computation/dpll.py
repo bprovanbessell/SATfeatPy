@@ -339,15 +339,24 @@ class DPLLProbing:
         if not self.branch_lengths:
             return 0
 
+        # Small positive constant to avoid math domain error when taking logarithm of zero
+        epsilon = 1e-10
+
+        # Adjust probabilities to be strictly positive by adding a small constant
+        adjusted_probs = [prob if prob > 0 else epsilon for prob in self.branch_probabilities]
+
         # Use log to transform the calculation and avoid overflow
         log_weighted_sum = sum(
-            math.log(prob) + (d + 1) * math.log(2) for d, prob in zip(self.branch_lengths, self.branch_probabilities))
-        total_log_prob = sum(math.log(prob) for prob in self.branch_probabilities)
+            math.log(prob) + (d + 1) * math.log(2) for d, prob in zip(self.branch_lengths, adjusted_probs))
+        total_log_prob = sum(math.log(prob) for prob in adjusted_probs)
 
         # Convert back from log scale by exponentiating, and adjust for the '- 1' in the original formula
         weighted_backtrack_estimate = math.exp(log_weighted_sum - total_log_prob) - 1
 
-        return weighted_backtrack_estimate
+        # Take the logarithm of the weighted backtrack estimate (adding epsilon to avoid log(0)) and divide by the number of variables
+        log_weighted_backtrack_estimate = math.log(weighted_backtrack_estimate + epsilon) / self.sat_instance.v
+
+        return log_weighted_backtrack_estimate
 
     def estimate_branching_factor_reduction(self, depth):
         # Base activity level for all variables
