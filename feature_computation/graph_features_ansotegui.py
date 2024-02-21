@@ -54,45 +54,34 @@ def estimate_power_law_alpha(clauses, c, v):
 
 
 def variable_occurrences(clauses, c, v):
-    """
-    Computes the number of occurrences of each variable, and extra values based on these occurrences needed to estimate the power law fit
-    :param clauses:
-    :param c:
-    :param v:
-    :return:
-    """
-    # variable count is needed
-    # index of the variable will contain the number of times it occurs in the cnf formula (in all clauses)
     variable_count = [0] * (v + 1)
 
     for clause in clauses:
         for literal in clause:
             variable_count[abs(literal)] += 1
 
-    # compute the function f_v(k), which is the number of variables that have a number of occurrences equal to k, divided by the number of variables n.
     f_v_k = [0] * (c + 1)
-
-    # there is no variable 0
     for count in variable_count[1:]:
         f_v_k[count] += 1
     count_occurrences = [(count, occurrences) for count, occurrences in enumerate(f_v_k) if occurrences != 0]
-    f_v_k = [x for x in f_v_k if x>0]
 
-    # should be the number or literal occurrences
     Sy = sum([occurrences for (count, occurrences) in count_occurrences])
-    # x is also used
-
-    n = len(f_v_k)
-    X = [count for (count, occurrences) in count_occurrences]
-    Y = [0] * (n+1)
-
+    n = len([x for x in f_v_k if x > 0])
+    X = [count for (count, occurrences) in count_occurrences if count > 0]  # Ensure X contains only positive values
+    Y = [0] * (n + 1)
     Syx = [0] * (n + 1)
-    Sylogx = [0] * (n+1)
+    Sylogx = [0] * (n + 1)
 
-    for i in range(n-1, -1, -1):
-        Y[i] = Y[i+1] + count_occurrences[i][1] / Sy
+    for i in range(n - 1, -1, -1):
+        Y[i] = Y[i + 1] + count_occurrences[i][1] / Sy
 
-        Sylogx[i] = Sylogx[i+1] + count_occurrences[i][1] / Sy * math.log(X[i])
+        # Ensure X[i] is positive before taking logarithm
+        if X[i] > 0:
+            Sylogx[i] = Sylogx[i + 1] + count_occurrences[i][1] / Sy * math.log(X[i])
+        else:
+            # Handle the case where X[i] <= 0, e.g., by using a very small positive number
+            Sylogx[i] = Sylogx[i + 1]
+
         Syx[i] = Syx[i + 1] + count_occurrences[i][1] / Sy * X[i]
 
     return X, Y, Sylogx, Syx
