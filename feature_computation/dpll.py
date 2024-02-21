@@ -397,10 +397,11 @@ class DPLLProbing:
     def calculate_knuths_estimate(self):
         if not self.depths_knuth:
             return 0
+
         average_depth = sum(self.depths_knuth) / len(self.depths_knuth)
-        knuths_estimate = 2 ** (average_depth + 1) - 1
-        log_knuths_estimate = math.log(knuths_estimate + 1)  # Adding 1 to avoid log(0)
-        return log_knuths_estimate / self.sat_instance.v  # Normalizing by the number of variables
+        log_knuths_estimate = (average_depth + 1) * math.log(2)
+        normalized_log_knuths_estimate = log_knuths_estimate / self.sat_instance.v
+        return normalized_log_knuths_estimate
 
     def start_probing(self):
         self.probing_stopwatch.start()
