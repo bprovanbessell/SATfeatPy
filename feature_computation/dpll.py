@@ -351,10 +351,10 @@ class DPLLProbing:
         total_log_prob = sum(math.log(prob) for prob in adjusted_probs)
 
         # Convert back from log scale by exponentiating, and adjust for the '- 1' in the original formula
-        weighted_backtrack_estimate = math.exp(log_weighted_sum - total_log_prob) - 1
+        weighted_backtrack_estimate = log_weighted_sum - total_log_prob
 
         # Take the logarithm of the weighted backtrack estimate (adding epsilon to avoid log(0)) and divide by the number of variables
-        log_weighted_backtrack_estimate = math.log(weighted_backtrack_estimate + epsilon) / self.sat_instance.v
+        log_weighted_backtrack_estimate = weighted_backtrack_estimate/ self.sat_instance.v
 
         return log_weighted_backtrack_estimate
 
