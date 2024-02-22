@@ -135,7 +135,7 @@ class SATInstance:
             print("Generating features from Ansotegui")
 
         if self.preprocess == False:
-            print(self.v)
+            # print(self.v)
             self.num_active_clauses = self.c
             self.num_active_vars = self.v    
         
