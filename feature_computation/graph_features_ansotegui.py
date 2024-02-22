@@ -52,9 +52,6 @@ def estimate_power_law_alpha(clauses, c, v):
 
     return alpha
 
-
-import math
-
 def variable_occurrences(clauses, c, v):
     variable_count = [0] * (v + 1)
 
@@ -74,7 +71,7 @@ def variable_occurrences(clauses, c, v):
     Sylogx = [0] * n
     Syx = [0] * n
 
-    for i in range(n-1, -1, -1):
+    for i in range(n-2, -1, -1):  # Adjusted the range here
         Y[i] = Y[i+1] + count_occurrences[i][1] / Sy if Sy > 0 else 0
         if X[i] > 0:  # Check to avoid math domain error
             Sylogx[i] = Sylogx[i+1] + count_occurrences[i][1] / Sy * math.log(X[i])
