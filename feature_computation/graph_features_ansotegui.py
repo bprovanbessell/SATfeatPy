@@ -53,6 +53,8 @@ def estimate_power_law_alpha(clauses, c, v):
     return alpha
 
 
+import math
+
 def variable_occurrences(clauses, c, v):
     variable_count = [0] * (v + 1)
 
@@ -65,24 +67,18 @@ def variable_occurrences(clauses, c, v):
         f_v_k[count] += 1
     count_occurrences = [(count, occurrences) for count, occurrences in enumerate(f_v_k) if occurrences != 0]
 
-    Sy = sum([occurrences for (count, occurrences) in count_occurrences])
-    n = len([x for x in f_v_k if x > 0])
-    X = [count for (count, occurrences) in count_occurrences if count > 0]  # Ensure X contains only positive values
-    Y = [0] * (n + 1)
-    Syx = [0] * (n + 1)
-    Sylogx = [0] * (n + 1)
+    Sy = sum(occurrences for count, occurrences in count_occurrences)
+    n = len(count_occurrences)
+    X = [count for count, occurrences in count_occurrences if count > 0]  # Ensure counts are positive for log
+    Y = [0] * n
+    Sylogx = [0] * n
+    Syx = [0] * n
 
-    for i in range(n - 1, -1, -1):
-        Y[i] = Y[i + 1] + count_occurrences[i][1] / Sy
-
-        # Ensure X[i] is positive before taking logarithm
-        if X[i] > 0:
-            Sylogx[i] = Sylogx[i + 1] + count_occurrences[i][1] / Sy * math.log(X[i])
-        else:
-            # Handle the case where X[i] <= 0, e.g., by using a very small positive number
-            Sylogx[i] = Sylogx[i + 1]
-
-        Syx[i] = Syx[i + 1] + count_occurrences[i][1] / Sy * X[i]
+    for i in range(n-1, -1, -1):
+        Y[i] = Y[i+1] + count_occurrences[i][1] / Sy if Sy > 0 else 0
+        if X[i] > 0:  # Check to avoid math domain error
+            Sylogx[i] = Sylogx[i+1] + count_occurrences[i][1] / Sy * math.log(X[i])
+            Syx[i] = Syx[i+1] + count_occurrences[i][1] / Sy * X[i]
 
     return X, Y, Sylogx, Syx
 
