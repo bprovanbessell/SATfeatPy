@@ -20,12 +20,12 @@ python generate_features.py path/to/cnf_file.cnf
 N.b. current implementation reliant on SatELite binaries, which only work on linux systems.
 
 **Dependencies**
-- Python 3.8  \
-- NetworkX 2.6.3  \
-- community 1.0.0 \
-- powerlaw 1.5  \
-- sklearn 1.0.2  \
-- scipy 1.7.3  \
+- Python 3.8  
+- NetworkX 2.6.3  
+- community 1.0.0 
+- powerlaw 1.5  
+- sklearn 1.0.2  
+- scipy 1.7.3  
 
 A binary for ubcsat is included in the ubcsat folder, however you may have to compile and add this yourself for full functionality.
 Please clone and compile [ubcsat](https://github.com/dtompkins/ubcsat/tree/beta), and put the resulting binary in the ubcsat folder, if the current binary does not work. We found the beta branch to be stable.
