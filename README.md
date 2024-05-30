@@ -14,7 +14,7 @@ Graph features of and Recursive Weight Heuristic from [3].
 Current command line usage, from project root directory.
 This will print a dictionary of the features. Abbreviations can be found in (see [features](documentation/features.md)). [TO DO].
 ```
-python features.py path/to/cnf_file.cnf
+python generate_features.py path/to/cnf_file.cnf
 ```
 
 N.b. current implementation reliant on SatELite binaries, which only work on linux systems.
@@ -53,3 +53,11 @@ Journal of artificial intelligence research, 32:565–606, 2008
 for sat instances classification. Journal of Applied Logic, 23:27–39, 2017  
 [3] Enrique Matos Alfonso and Norbert Manthey. New cnf features and formula classification. In
 POS@ SAT, pages 57–71, 2014
+
+**How to cite**
+If you use SATfeatPY, please cite the following paper:
+[1] Benjamin Provan-Bessell, Marco Dalla, Andrea Visentin, and Barry O’Sullivan, ‘SATfeatPy -- A Python-based Feature Extraction System for Satisfiability’, arXiv [cs.AI]. 2022.
+
+For the analysis of the features, please refer:
+[2] Marco Dalla, Benjamin Provan-Bessell, Andrea Visentin, and Barry O’Sullivan, ‘SAT Feature Analysis for Machine Learning Classification Tasks’, in Proceedings of the International Symposium on Combinatorial Search, 2023, vol. 16, pp. 138–142.
+
