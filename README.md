@@ -46,7 +46,7 @@ The steps below illustrate a brief example of how to use this tool.
 e.g. ```sat_instance.gen_basic_features().```
 5. The features generated can be found in the internal dictionary ```sat_instance.features_dict.```
 
-**Important references**
+## Important references ##
 [1] Lin Xu, Frank Hutter, Holger H Hoos, and Kevin Leyton-Brown. Satzilla: portfolio-based algorithm selection for sat. 
 Journal of artificial intelligence research, 32:565–606, 2008  
 [2] Carlos Ansótegui, Maria Luisa Bonet, Jesús Giráldez-Cru, and Jordi Levy. Structure features 
@@ -54,7 +54,7 @@ for sat instances classification. Journal of Applied Logic, 23:27–39, 2017
 [3] Enrique Matos Alfonso and Norbert Manthey. New cnf features and formula classification. In
 POS@ SAT, pages 57–71, 2014
 
-**How to cite**
+## How to cite ##
 If you use SATfeatPY, please cite the following paper:
 [1] Benjamin Provan-Bessell, Marco Dalla, Andrea Visentin, and Barry O’Sullivan, ‘SATfeatPy -- A Python-based Feature Extraction System for Satisfiability’, arXiv [cs.AI]. 2022.
 
