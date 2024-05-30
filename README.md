@@ -55,9 +55,9 @@ for sat instances classification. Journal of Applied Logic, 23:27–39, 2017
 POS@ SAT, pages 57–71, 2014
 
 ## How to cite ##
-If you use SATfeatPY, please cite the following paper:
+If you use SATfeatPY, please cite the following paper:__ 
 [1] Benjamin Provan-Bessell, Marco Dalla, Andrea Visentin, and Barry O’Sullivan, ‘SATfeatPy -- A Python-based Feature Extraction System for Satisfiability’, arXiv [cs.AI]. 2022.
 
-For the analysis of the features, please refer:
+For the analysis of the features, please refer:__
 [2] Marco Dalla, Benjamin Provan-Bessell, Andrea Visentin, and Barry O’Sullivan, ‘SAT Feature Analysis for Machine Learning Classification Tasks’, in Proceedings of the International Symposium on Combinatorial Search, 2023, vol. 16, pp. 138–142.
 
